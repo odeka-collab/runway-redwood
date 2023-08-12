@@ -7,6 +7,7 @@
     ]
   },
   "devDependencies": {
+    "@redwoodjs/cli-storybook": "6.0.6",
     "@redwoodjs/core": "6.0.6",
     "prettier-plugin-tailwindcss": "^0.4.1"
   },

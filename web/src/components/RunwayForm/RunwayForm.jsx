@@ -17,8 +17,28 @@ const RunwayForm = ({ children, defaultValues, onSubmit }) => {
     defaultValues: { ...(defaultValues ? defaultValues : DEFAULT_VALUE.data) },
   })
 
+  /**
+   * Workaround for ineffective `@redwoodjs/forms/NumberField` for <FieldArray>
+   */
+  function parseNumberFields(formValues) {
+    return onSubmit({
+      ...formValues,
+      funds: formValues?.funds?.map(({ amount, ...rest }) => ({
+        ...rest,
+        amount: parseInt(amount, 10),
+      })),
+      monthlyDebits: formValues?.monthlyDebits?.map(({ amount, ...rest }) => ({
+        ...rest,
+        amount: parseInt(amount, 10),
+      })),
+    })
+  }
+
   return (
-    <Form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+    <Form
+      onSubmit={handleSubmit(parseNumberFields)}
+      className="flex flex-col gap-2"
+    >
       {children({ control })}
       <Submit>Build Runway</Submit>
     </Form>

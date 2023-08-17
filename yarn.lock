@@ -8624,6 +8624,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"animejs@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "animejs@npm:3.2.1"
+  checksum: fcdff698fb56939f3585f81f40f9321e4e5932ca602b5109b323c2c7b97f66cb82b96ca48b7c595851b7e3a4e809b44583023d3c5a23a018fa2ffd8e42a0e160
+  languageName: node
+  linkType: hard
+
 "ansi-align@npm:^3.0.0":
   version: 3.0.1
   resolution: "ansi-align@npm:3.0.1"
@@ -24127,6 +24134,7 @@ __metadata:
     "@redwoodjs/router": 6.0.6
     "@redwoodjs/vite": 6.0.6
     "@redwoodjs/web": 6.0.6
+    animejs: ^3.2.1
     autoprefixer: ^10.4.14
     postcss: ^8.4.27
     postcss-loader: ^7.3.3

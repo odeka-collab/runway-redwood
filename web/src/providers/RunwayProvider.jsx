@@ -1,16 +1,10 @@
 export const RunwayContext = React.createContext()
 
-export const STEPS = {
-  FUNDS_AND_MONTHLY_DEBITS: 'FUNDS_AND_MONTHLY_DEBITS',
-  RENDER_RUNWAY: 'FUNDS_AND_MONTHLY_DEBITS',
-  INCOME: 'INCOME',
-}
-
 export const DEFAULT_VALUE = {
-  currentStep: STEPS.FUNDS_AND_MONTHLY_DEBITS,
   data: {
     funds: [{ name: '', amount: 0 }],
     monthlyDebits: [{ color: '#f00000', name: '', amount: 0 }],
+    monthlyCredits: [{ color: '#f00000', name: '', amount: 0 }],
   },
 }
 
@@ -18,8 +12,6 @@ export default function RunwayProvider({ children, initialState }) {
   const [state, dispatch] = React.useReducer(runwayReducer, {
     ...(initialState || DEFAULT_VALUE),
   })
-
-  state.renderData = buildRenderData(state?.data)
 
   return (
     <RunwayContext.Provider value={{ ...state, dispatch }}>
@@ -38,27 +30,43 @@ export function runwayReducer(state, { type, payload }) {
 }
 
 export function buildRenderData(data) {
-  const fundsTotal = sumAmount(data?.funds) || 0
-  const monthlyDebitsTotal = sumAmount(data?.monthlyDebits) || 0
+  const total = {
+    funds: sumAmount(data?.funds) || 0,
+    monthly: {
+      debit: sumAmount(data?.monthlyDebits) || 0,
+      credit: sumAmount(data?.monthlyCredits) || 0,
+    },
+  }
 
-  let remainingFunds = fundsTotal
-  const date = new Date()
   const months = []
+  const _date = new Date()
+  let _remainingFunds = total.funds
   do {
-    months.push({
-      label: date.toLocaleDateString('en-us', {
+    _date.setMonth(_date.getMonth() + 1)
+
+    const _month = {
+      label: _date.toLocaleDateString('en-us', {
         year: '2-digit',
         month: 'short',
       }),
-      debit: monthlyDebitsTotal,
-      funded: Math.min(monthlyDebitsTotal, remainingFunds),
-    })
-    date.setMonth(date.getMonth() + 1)
-    remainingFunds = remainingFunds - monthlyDebitsTotal
-  } while (monthlyDebitsTotal > 0 && remainingFunds > 0)
-  const renderData = { months }
+      debit: total.monthly.debit,
+      credit: total.monthly.credit,
+      balance: {
+        start: _remainingFunds,
+        end: _remainingFunds + total.monthly.credit - total.monthly.debit,
+      },
+    }
 
-  return renderData
+    months.push(_month)
+
+    _remainingFunds = _month.balance.end
+  } while (
+    total.monthly.debit > 0 &&
+    total.monthly.debit > total.monthly.credit &&
+    _remainingFunds > 0
+  )
+
+  return { months, total }
 }
 
 export function sumAmount(data) {

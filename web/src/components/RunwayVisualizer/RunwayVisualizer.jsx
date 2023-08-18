@@ -51,7 +51,7 @@ const RunwayVisualizer = ({ id = uuidv4(), data, ...props }) => {
     <section>
       {data?.months?.length > 0 && (
         <>
-          <RunwayView {...{ data, id: data.id || uuidv4() }} />
+          <RunwayVisualizerView {...{ data, id: data.id || uuidv4() }} />
         </>
       )}
       <pre>{JSON.stringify({ id, data, ...props }, null, 2)}</pre>
@@ -59,9 +59,9 @@ const RunwayVisualizer = ({ id = uuidv4(), data, ...props }) => {
   )
 }
 
-function RunwayView({ id, data: { months } }) {
+function RunwayVisualizerView({ id, data: { months } }) {
   const canvasRef = React.useRef()
-  const runway = useRunway({
+  const runway = useVisualizer({
     element: `.zdog-canvas-${id}`,
     canvasRef,
     months,
@@ -71,7 +71,7 @@ function RunwayView({ id, data: { months } }) {
   return <canvas ref={canvasRef} className={`zdog-canvas-${id}`} />
 }
 
-function useRunway({
+function useVisualizer({
   canvasRef,
   element,
   months,
@@ -128,6 +128,39 @@ function useRunway({
   }, [element, canvasRef, months, width, height, dragRotate])
 
   return state
+}
+
+function renderSegment({ label, debit, balance }) {
+  const bar = new Zdog.Box({
+    width: DISPLAY.SEGMENT.BAR.WIDTH,
+    height: 1,
+    depth: DISPLAY.SEGMENT.BAR.DEPTH,
+    ...(debit && balance.end >= 0
+      ? DISPLAY.SEGMENT.BAR.COLOR.FUNDED
+      : DISPLAY.SEGMENT.BAR.COLOR.PARTIAL),
+  })
+
+  const text = new Zdog.Text({
+    font: FONT,
+    value: label,
+    fontSize: DISPLAY.SEGMENT.TEXT.FONT_SIZE,
+    fill: true,
+    color:
+      debit && balance.end >= 0
+        ? DISPLAY.SEGMENT.TEXT.COLOR.FUNDED
+        : DISPLAY.SEGMENT.TEXT.COLOR.PARTIAL,
+    translate: {
+      x: -bar.width / 2,
+      y: bar.height / 2 + DISPLAY.SEGMENT.TEXT.MARGIN,
+      z: bar.depth / 2 + DISPLAY.SEGMENT.TEXT.MARGIN,
+    },
+  })
+
+  const root = new Zdog.Anchor()
+  root.addChild(bar)
+  root.addChild(text)
+
+  return { root, bar, text }
 }
 
 function useAnime(runway) {
@@ -190,39 +223,6 @@ function useAnime(runway) {
       })
     }
   }, [runway])
-}
-
-function renderSegment({ label, debit, funded }) {
-  const bar = new Zdog.Box({
-    width: DISPLAY.SEGMENT.BAR.WIDTH,
-    height: 1,
-    depth: DISPLAY.SEGMENT.BAR.DEPTH,
-    ...(!debit || funded >= debit
-      ? DISPLAY.SEGMENT.BAR.COLOR.FUNDED
-      : DISPLAY.SEGMENT.BAR.COLOR.PARTIAL),
-  })
-
-  const text = new Zdog.Text({
-    font: FONT,
-    value: label,
-    fontSize: DISPLAY.SEGMENT.TEXT.FONT_SIZE,
-    fill: true,
-    color:
-      !debit || funded >= debit
-        ? DISPLAY.SEGMENT.TEXT.COLOR.FUNDED
-        : DISPLAY.SEGMENT.TEXT.COLOR.PARTIAL,
-    translate: {
-      x: -bar.width / 2,
-      y: bar.height / 2 + DISPLAY.SEGMENT.TEXT.MARGIN,
-      z: bar.depth / 2 + DISPLAY.SEGMENT.TEXT.MARGIN,
-    },
-  })
-
-  const root = new Zdog.Anchor()
-  root.addChild(bar)
-  root.addChild(text)
-
-  return { root, bar, text }
 }
 
 export default RunwayVisualizer

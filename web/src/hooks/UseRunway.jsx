@@ -5,6 +5,7 @@ export default function useRunway() {
 
   async function update(data) {
     dispatch({ type: 'patch', payload: { data } })
+    return { ...state, data }
   }
 
   return {

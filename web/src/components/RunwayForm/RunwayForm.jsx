@@ -8,17 +8,20 @@ import {
 
 import { DEFAULT_VALUE } from 'src/providers/RunwayProvider'
 
-const APPEND_FUNDS_DEFAULT_VALUE = DEFAULT_VALUE.data.funds[0]
-const APPEND_MONTHLY_DEBITS_DEFAULT_VALUE = DEFAULT_VALUE.data.monthlyDebits[0]
+const FUNDS_DEFAULT_VALUE = DEFAULT_VALUE.data.funds[0]
+const MONTHLY_CREDITS_DEFAULT_VALUE = DEFAULT_VALUE.data.monthlyCredits[0]
+const MONTHLY_DEBITS_DEFAULT_VALUE = DEFAULT_VALUE.data.monthlyDebits[0]
 
-const RunwayForm = ({ children, defaultValues, onSubmit }) => {
-  children = children || AllFields
+const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
+  children = render || children || AllFields
+
   const { control, handleSubmit } = useForm({
     defaultValues: { ...(defaultValues ? defaultValues : DEFAULT_VALUE.data) },
   })
 
   /**
    * Workaround for ineffective `@redwoodjs/forms/NumberField` for <FieldArray>
+   * Manually parses each number field
    */
   function parseNumberFields(formValues) {
     return onSubmit({
@@ -31,6 +34,12 @@ const RunwayForm = ({ children, defaultValues, onSubmit }) => {
         ...rest,
         amount: parseInt(amount, 10),
       })),
+      monthlyCredits: formValues?.monthlyCredits?.map(
+        ({ amount, ...rest }) => ({
+          ...rest,
+          amount: parseInt(amount, 10),
+        })
+      ),
     })
   }
 
@@ -40,6 +49,16 @@ const RunwayForm = ({ children, defaultValues, onSubmit }) => {
       className="flex flex-col gap-2"
     >
       {children({ control })}
+      {onBack && (
+        <Button
+          onClick={(e) => {
+            e.preventDefault()
+            onBack()
+          }}
+        >
+          Back
+        </Button>
+      )}
       <Submit>Build Runway</Submit>
     </Form>
   )
@@ -49,6 +68,7 @@ RunwayForm.AllFields = AllFields
 RunwayForm.Funds = Funds
 RunwayForm.MonthlyDebits = MonthlyDebits
 RunwayForm.FieldArray = FieldArray
+RunwayForm.Income = Income
 export default RunwayForm
 
 function AllFields({
@@ -60,6 +80,7 @@ function AllFields({
     <>
       <Funds {...props} />
       <MonthlyDebits {...props} />
+      <Income {...props} />
     </>
   )
 }
@@ -71,14 +92,13 @@ export function Funds({ control, headerText = 'How much cash do you have?' }) {
       <FieldArray
         name="funds"
         control={control}
-        defaultAppendValue={{ ...APPEND_FUNDS_DEFAULT_VALUE }}
+        defaultAppendValue={{ ...FUNDS_DEFAULT_VALUE }}
       >
         {({ item, index }) => (
           <>
             <Controller
               control={control}
               name={`funds.${index}.name`}
-              rules={{ required: 'Required' }}
               defaultValue={item.name}
               render={({ field, fieldState }) => (
                 <label className="flex flex-col gap-2">
@@ -94,7 +114,6 @@ export function Funds({ control, headerText = 'How much cash do you have?' }) {
               control={control}
               name={`funds.${index}.amount`}
               rules={{
-                required: 'Required',
                 min: {
                   value: 0,
                   message: 'Invalid',
@@ -128,7 +147,7 @@ export function MonthlyDebits({
       <FieldArray
         name="monthlyDebits"
         control={control}
-        defaultAppendValue={{ ...APPEND_MONTHLY_DEBITS_DEFAULT_VALUE }}
+        defaultAppendValue={{ ...MONTHLY_DEBITS_DEFAULT_VALUE }}
       >
         {({ item, index }) => (
           <>
@@ -146,7 +165,6 @@ export function MonthlyDebits({
             <Controller
               control={control}
               name={`monthlyDebits.${index}.name`}
-              rules={{ required: 'Required' }}
               defaultValue={item.name}
               render={({ field, fieldState }) => (
                 <label className="flex flex-col gap-2">
@@ -162,7 +180,71 @@ export function MonthlyDebits({
               control={control}
               name={`monthlyDebits.${index}.amount`}
               rules={{
-                required: 'Required',
+                min: {
+                  value: 0,
+                  message: 'Invalid',
+                },
+              }}
+              defaultValue={item.amount}
+              render={({ field, fieldState }) => (
+                <label className="flex flex-col gap-2">
+                  Amount
+                  <input type="number" min={0} {...field} />
+                  {fieldState?.error?.message && (
+                    <span>{fieldState.error.message}</span>
+                  )}
+                </label>
+              )}
+            />
+          </>
+        )}
+      </FieldArray>
+    </>
+  )
+}
+
+export function Income({
+  control,
+  headerText = 'How much are you earning each month?',
+}) {
+  return (
+    <>
+      <h1>{headerText}</h1>
+      <FieldArray
+        name="monthlyCredits"
+        control={control}
+        defaultAppendValue={{ ...MONTHLY_CREDITS_DEFAULT_VALUE }}
+      >
+        {({ item, index }) => (
+          <>
+            <Controller
+              control={control}
+              name={`monthlyCredits.${index}.color`}
+              defaultValue={item.color}
+              render={({ field }) => (
+                <label className="flex flex-col gap-2">
+                  <input type="color" {...field} />
+                </label>
+              )}
+            />
+            <Controller
+              control={control}
+              name={`monthlyCredits.${index}.name`}
+              defaultValue={item.name}
+              render={({ field, fieldState }) => (
+                <label className="flex flex-col gap-2">
+                  Name
+                  <input type="text" {...field} />
+                  {fieldState?.error?.message && (
+                    <span>{fieldState.error.message}</span>
+                  )}
+                </label>
+              )}
+            />
+            <Controller
+              control={control}
+              name={`monthlyCredits.${index}.amount`}
+              rules={{
                 min: {
                   value: 0,
                   message: 'Invalid',
@@ -228,4 +310,8 @@ export function FieldArray({
       </button>
     </>
   )
+}
+
+function Button({ children, ...props }) {
+  return <button {...props}>{children}</button>
 }

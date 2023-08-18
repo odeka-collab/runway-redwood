@@ -1,15 +1,22 @@
 export const RunwayContext = React.createContext()
 
+export const STEPS = {
+  FUNDS_AND_MONTHLY_DEBITS: 'FUNDS_AND_MONTHLY_DEBITS',
+  RENDER_RUNWAY: 'FUNDS_AND_MONTHLY_DEBITS',
+  INCOME: 'INCOME',
+}
+
 export const DEFAULT_VALUE = {
+  currentStep: STEPS.FUNDS_AND_MONTHLY_DEBITS,
   data: {
     funds: [{ name: '', amount: 0 }],
     monthlyDebits: [{ color: '#f00000', name: '', amount: 0 }],
   },
 }
 
-export default function RunwayProvider({ children }) {
+export default function RunwayProvider({ children, initialState }) {
   const [state, dispatch] = React.useReducer(runwayReducer, {
-    ...DEFAULT_VALUE,
+    ...(initialState || DEFAULT_VALUE),
   })
 
   state.renderData = buildRenderData(state?.data)
@@ -33,7 +40,6 @@ export function runwayReducer(state, { type, payload }) {
 export function buildRenderData(data) {
   const fundsTotal = sumAmount(data?.funds) || 0
   const monthlyDebitsTotal = sumAmount(data?.monthlyDebits) || 0
-  console.log('buildRenderData()', { data, fundsTotal, monthlyDebitsTotal })
 
   let remainingFunds = fundsTotal
   const date = new Date()

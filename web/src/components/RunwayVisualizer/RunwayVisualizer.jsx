@@ -1,4 +1,5 @@
 import anime from 'animejs'
+import { v4 as uuidv4 } from 'uuid'
 import Zdog, { TAU } from 'zdog'
 import Zfont from 'zfont'
 
@@ -45,29 +46,29 @@ const DISPLAY = {
   },
 }
 
-const RunwayVisualizer = ({ renderData, ...rest }) => {
+const RunwayVisualizer = ({ id = uuidv4(), data, ...props }) => {
   return (
     <section>
-      {renderData?.months?.length > 0 && (
+      {data?.months?.length > 0 && (
         <>
-          <RunwayView months={renderData.months} />
+          <RunwayView {...{ data, id: data.id || uuidv4() }} />
         </>
       )}
-      <pre>{JSON.stringify({ renderData, ...rest }, null, 2)}</pre>
+      <pre>{JSON.stringify({ id, data, ...props }, null, 2)}</pre>
     </section>
   )
 }
 
-function RunwayView({ months }) {
+function RunwayView({ id, data: { months } }) {
   const canvasRef = React.useRef()
   const runway = useRunway({
-    element: '.zdog-canvas',
+    element: `.zdog-canvas-${id}`,
     canvasRef,
     months,
     dragRotate: true,
   })
   useAnime(runway)
-  return <canvas ref={canvasRef} className="zdog-canvas" />
+  return <canvas ref={canvasRef} className={`zdog-canvas-${id}`} />
 }
 
 function useRunway({

@@ -11,27 +11,37 @@ const FONT = new Zdog.Font({
 })
 
 const DISPLAY = {
+  AIRPLANE: {
+    COLOR: {
+      FUSELAGE: 'darkorange',
+      TAIL_Y: 'darkorange',
+      TAIL_X: 'darkcyan',
+      WINGS: 'darkcyan',
+      WINDOW: 'lightskyblue',
+    },
+    SIZE: 1,
+  },
   SEGMENT: {
     BAR: {
       WIDTH: 80,
-      HEIGHT: 240,
+      HEIGHT: 160,
       DEPTH: 60,
       COLOR: {
         FUNDED: {
-          frontFace: 'hsla(30, 89%, 52%, 1.0)',
-          rearFace: 'hsla(30, 68%, 52%, 1.0)',
-          leftFace: 'hsla(30, 68%, 52%, 1.0)',
-          rightFace: 'hsla(30, 68%, 52%, 1.0)',
-          topFace: 'hsla(30, 89%, 52%, 1.0)',
-          bottomFace: 'hsla(30, 68%, 52%, 1.0)',
+          frontFace: 'hsla(43, 74%, 49%, 1.0)',
+          rearFace: 'hsla(43, 89%, 38%, 1.0)',
+          leftFace: 'hsla(43, 74%, 49%, 1.0)',
+          rightFace: 'hsla(43, 89%, 38%, 1.0)',
+          topFace: 'hsla(43, 74%, 49%, 1.0)',
+          bottomFace: 'hsla(43, 89%, 38%, 1.0)',
         },
         PARTIAL: {
-          frontFace: 'hsla(30, 89%, 52%, 0.5)',
-          rearFace: 'hsla(30, 68%, 52%, 0.5)',
-          leftFace: 'hsla(30, 68%, 52%, 0.5)',
-          rightFace: 'hsla(30, 68%, 52%, 0.5)',
-          topFace: 'hsla(30, 89%, 52%, 0.5)',
-          bottomFace: 'hsla(30, 68%, 52%, 0.5)',
+          frontFace: 'hsla(43, 74%, 49%, 0.5)',
+          rearFace: 'hsla(43, 89%, 38%, 0.5)',
+          leftFace: 'hsla(43, 74%, 49%, 0.5)',
+          rightFace: 'hsla(43, 89%, 38%, 0.5)',
+          topFace: 'hsla(43, 74%, 49%, 0.5)',
+          bottomFace: 'hsla(43, 89%, 38%, 0.5)',
         },
       },
     },
@@ -96,15 +106,25 @@ function useVisualizer({
     })
 
     const root = new Zdog.Anchor()
-
     illo.addChild(root)
 
-    const segments = months.map((month, i) => {
+    const runway = { root: new Zdog.Anchor() }
+    root.addChild(runway.root)
+
+    runway.segments = months.map((month, i) => {
       const segment = renderSegment(month)
       segment.root.translate.x = i * DISPLAY.SEGMENT.BAR.WIDTH
-      root.addChild(segment.root)
+      runway.root.addChild(segment.root)
       return { root, ...segment }
     })
+
+    const airplane = renderAirplane()
+    airplane.root.translate.y =
+      -DISPLAY.SEGMENT.BAR.HEIGHT -
+      DISPLAY.SEGMENT.TEXT.MARGIN -
+      DISPLAY.AIRPLANE.SIZE
+
+    root.addChild(airplane.root)
 
     let _animationId
     if (dragRotate) {
@@ -113,12 +133,12 @@ function useVisualizer({
 
     function _animate() {
       // TODO: set drag state
-      // __must__ updateRenderGraph for drag rotation to work
+      // NB: __must__ updateRenderGraph for drag rotation to work
       illo.updateRenderGraph()
       _animationId = requestAnimationFrame(_animate)
     }
 
-    setState({ illo, root, segments, stage })
+    setState({ illo, root, runway, airplane, stage })
 
     return () => {
       if (dragRotate) {
@@ -163,6 +183,119 @@ function renderSegment({ label, debit, balance }) {
   return { root, bar, text }
 }
 
+function renderAirplane() {
+  const root = new Zdog.Anchor()
+
+  const fuselage = new Zdog.Group()
+
+  const cabin = new Zdog.Hemisphere({
+    diameter: DISPLAY.AIRPLANE.SIZE * 36,
+    color: DISPLAY.AIRPLANE.COLOR.FUSELAGE,
+    rotate: { x: TAU / 4, y: -TAU / 4 },
+  })
+
+  const firstClass = new Zdog.Cylinder({
+    diameter: cabin.diameter,
+    length: DISPLAY.AIRPLANE.SIZE * 10,
+    color: DISPLAY.AIRPLANE.COLOR.FUSELAGE,
+    translate: { x: DISPLAY.AIRPLANE.SIZE * -6 },
+    rotate: { x: TAU / 4, y: TAU / 4 },
+  })
+
+  const coach = new Zdog.Cone({
+    diameter: cabin.diameter,
+    length: DISPLAY.AIRPLANE.SIZE * 48,
+    color: DISPLAY.AIRPLANE.COLOR.FUSELAGE,
+    translate: { x: DISPLAY.AIRPLANE.SIZE * -12 },
+    rotate: { x: TAU / 4, y: TAU / 4 },
+  })
+
+  const tailV = new Zdog.Shape({
+    path: [
+      { x: DISPLAY.AIRPLANE.SIZE * -48, y: DISPLAY.AIRPLANE.SIZE * -2 },
+      { x: DISPLAY.AIRPLANE.SIZE * -68, y: DISPLAY.AIRPLANE.SIZE * -24 },
+      { x: DISPLAY.AIRPLANE.SIZE * -82, y: DISPLAY.AIRPLANE.SIZE * -24 },
+      { x: DISPLAY.AIRPLANE.SIZE * -70, y: DISPLAY.AIRPLANE.SIZE * -2 },
+    ],
+    closed: true,
+    stroke: DISPLAY.AIRPLANE.SIZE * 8,
+    color: DISPLAY.AIRPLANE.COLOR.TAIL_Y,
+    fill: DISPLAY.AIRPLANE.COLOR.TAIL_Y,
+  })
+
+  const tailR = tailV.copyGraph({
+    color: DISPLAY.AIRPLANE.COLOR.TAIL_X,
+    fill: DISPLAY.AIRPLANE.COLOR.TAIL_X,
+    rotate: { x: -TAU / 4 },
+    scale: 0.8,
+    translate: {
+      x: DISPLAY.AIRPLANE.SIZE * -24,
+      y: DISPLAY.AIRPLANE.SIZE * -12,
+      z: DISPLAY.AIRPLANE.SIZE * 8,
+    },
+  })
+
+  const tailL = tailR.copyGraph({
+    rotate: { x: TAU / 4 },
+    translate: {
+      x: DISPLAY.AIRPLANE.SIZE * -24,
+      y: DISPLAY.AIRPLANE.SIZE * -12,
+      z: DISPLAY.AIRPLANE.SIZE * -8,
+    },
+  })
+
+  const wingR = new Zdog.Shape({
+    path: [
+      { x: DISPLAY.AIRPLANE.SIZE * -12, y: DISPLAY.AIRPLANE.SIZE * -24 },
+      { x: DISPLAY.AIRPLANE.SIZE * -20, y: DISPLAY.AIRPLANE.SIZE * -56 },
+      { x: DISPLAY.AIRPLANE.SIZE * -42, y: DISPLAY.AIRPLANE.SIZE * -58 },
+      { x: DISPLAY.AIRPLANE.SIZE * -38, y: DISPLAY.AIRPLANE.SIZE * -14 },
+    ],
+    closed: true,
+    stroke: DISPLAY.AIRPLANE.SIZE * 8,
+    fill: DISPLAY.AIRPLANE.COLOR.WINGS,
+    color: DISPLAY.AIRPLANE.COLOR.WINGS,
+    rotate: { x: -TAU / 4 },
+  })
+
+  const wingL = wingR.copy({
+    rotate: { x: TAU / 4 },
+  })
+
+  const window = new Zdog.Ellipse({
+    diameter: DISPLAY.AIRPLANE.SIZE * 14,
+    quarters: 1,
+    stroke: DISPLAY.AIRPLANE.SIZE * 6,
+    color: DISPLAY.AIRPLANE.COLOR.WINDOW,
+    translate: { x: DISPLAY.AIRPLANE.SIZE * 6, y: DISPLAY.AIRPLANE.SIZE * -12 },
+    rotate: { x: TAU / 4, z: TAU / 8 },
+  })
+
+  fuselage.addChild(cabin)
+  fuselage.addChild(firstClass)
+  fuselage.addChild(coach)
+  root.addChild(fuselage)
+  root.addChild(wingR)
+  root.addChild(wingL)
+  root.addChild(tailV)
+  root.addChild(tailR)
+  root.addChild(tailL)
+  root.addChild(window)
+
+  return {
+    root,
+    cabin,
+    firstClass,
+    coach,
+    wingR,
+    wingL,
+    tailV,
+    tailR,
+    tailL,
+    window,
+  }
+}
+
 function useAnime(runway) {
   React.useEffect(() => {
     if (runway?.illo) {
@@ -174,7 +307,7 @@ function useAnime(runway) {
 
       timeline.add({
         targets: runway.root.rotate,
-        duration: runway.segments.length * (1000 - 700),
+        duration: runway.runway.segments.length * (1000 - 700),
         easing: 'easeInOutCubic',
         x: -TAU / 30,
         y: TAU / 18,
@@ -187,11 +320,11 @@ function useAnime(runway) {
       timeline.add(
         {
           targets: rootState.translate,
-          duration: runway.segments.length * (1000 - 700),
+          duration: runway.runway.segments.length * (1000 - 700),
           easing: 'easeInOutCubic',
-          x: -(runway.segments.length * DISPLAY.SEGMENT.BAR.WIDTH),
+          x: -(runway.runway.segments.length * DISPLAY.SEGMENT.BAR.WIDTH),
           update: function () {
-            runway.root.translate.x = rootState.translate.x
+            runway.runway.root.translate.x = rootState.translate.x
           },
         },
         500
@@ -199,7 +332,7 @@ function useAnime(runway) {
 
       const segmentTimeline = anime.timeline()
 
-      runway.segments.forEach((segment) => {
+      runway.runway.segments.forEach((segment) => {
         const segmentState = { height: 0 }
 
         segmentTimeline.add(
@@ -221,6 +354,16 @@ function useAnime(runway) {
           '-=700'
         )
       })
+
+      segmentTimeline.add(
+        {
+          targets: runway.airplane.root.rotate,
+          easing: 'easeInSine',
+          duration: 1000,
+          z: -TAU / 32,
+        },
+        '-=500'
+      )
     }
   }, [runway])
 }

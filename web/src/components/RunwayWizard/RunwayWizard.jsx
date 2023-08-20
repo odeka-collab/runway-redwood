@@ -22,16 +22,32 @@ const VIEWS = {
 const STEPS = {
   FUNDS_AND_MONTHLY_DEBITS: {
     name: 'FUNDS_AND_MONTHLY_DEBITS',
-    next: 'INCOME',
+    component: function FundsAndMonthlyDebits(props) {
+      return (
+        <>
+          <RunwayForm.Funds {...props} />
+          <RunwayForm.MonthlyDebits {...props} />
+        </>
+      )
+    },
+    next: 'MONTHLY_CREDITS',
   },
-  INCOME: {
-    name: 'INCOME',
+  MONTHLY_CREDITS: {
+    name: 'MONTHLY_CREDITS',
+    component: RunwayForm.MonthlyCredits,
     prev: 'FUNDS_AND_MONTHLY_DEBITS',
+    next: 'ONE_TIME_CREDITS',
+  },
+  ONE_TIME_CREDITS: {
+    name: 'ONE_TIME_CREDITS',
+    component: RunwayForm.OneTimeCredits,
+    prev: 'MONTHLY_CREDITS',
     next: 'EDIT_RUNWAY',
   },
   EDIT_RUNWAY: {
-    prev: 'INCOME',
     name: 'EDIT_RUNWAY',
+    component: RunwayForm.AllFields,
+    prev: 'MONTHLY_CREDITS',
   },
 }
 
@@ -44,7 +60,7 @@ function RunwayWizardStateMachine() {
   })
 
   async function onSubmit(formData) {
-    const updatedData = await update(formData)
+    await update(formData)
     setState({ ...state, view: VIEWS.RUNWAY })
   }
 
@@ -69,7 +85,12 @@ function RunwayWizardStateMachine() {
 
   switch (state.view) {
     case VIEWS.RUNWAY:
-      return <RunwayView {...{ data: buildRenderData(data), onBack, onNext }} />
+      return (
+        <>
+          <RunwayView {...{ data: buildRenderData(data), onBack, onNext }} />
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </>
+      )
     case VIEWS.FORM:
       return <FormView {...{ step: state?.step, data, onSubmit, onBack }} />
   }
@@ -86,39 +107,20 @@ function RunwayView({ data, onBack, onNext }) {
 }
 
 function FormView({ step, data, onSubmit, onBack }) {
-  switch (step?.name) {
-    case STEPS.EDIT_RUNWAY.name:
-      return (
-        <RunwayForm defaultValues={data} onSubmit={onSubmit} onBack={onBack} />
-      )
-    case STEPS.INCOME.name:
-      return (
-        <RunwayForm
-          defaultValues={data}
-          onSubmit={onSubmit}
-          onBack={onBack}
-          render={(props) => (
-            <>
-              <RunwayForm.Income {...props} />
-            </>
-          )}
-        />
-      )
-    case STEPS.FUNDS_AND_MONTHLY_DEBITS.name:
-    default:
-      return (
-        <RunwayForm
-          defaultValues={data}
-          onSubmit={onSubmit}
-          render={(props) => (
-            <>
-              <RunwayForm.Funds {...props} />
-              <RunwayForm.MonthlyDebits {...props} />
-            </>
-          )}
-        />
-      )
-  }
+  const CurrentStep = STEPS[step?.name]?.component
+
+  return (
+    <RunwayForm
+      defaultValues={data}
+      onSubmit={onSubmit}
+      render={(props) => (
+        <>
+          <CurrentStep {...props} />
+          {step?.prev && <Button onClick={onBack}>Back</Button>}
+        </>
+      )}
+    />
+  )
 }
 
 function getStepBasedOnData(data) {
@@ -127,11 +129,12 @@ function getStepBasedOnData(data) {
     credits: sumAmount(data?.monthlyCredits),
   }
 
+  return { ...STEPS.ONE_TIME_CREDITS }
   switch (true) {
     case total.debits > 0 && total.credits > 0:
       return { ...STEPS.EDIT_RUNWAY }
     case total.debits > 0:
-      return { ...STEPS.INCOME }
+      return { ...STEPS.MONTHLY_CREDITS }
     default:
       return { ...STEPS.FUNDS_AND_MONTHLY_DEBITS }
   }

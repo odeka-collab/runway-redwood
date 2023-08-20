@@ -1,7 +1,13 @@
 import {
+  ColorField,
   Controller,
+  DateField,
+  FieldError,
   Form,
+  Label,
+  NumberField,
   Submit,
+  TextField,
   useFieldArray,
   useForm,
 } from '@redwoodjs/forms'
@@ -11,44 +17,54 @@ import { DEFAULT_VALUE } from 'src/providers/RunwayProvider'
 const FUNDS_DEFAULT_VALUE = DEFAULT_VALUE.data.funds[0]
 const MONTHLY_CREDITS_DEFAULT_VALUE = DEFAULT_VALUE.data.monthlyCredits[0]
 const MONTHLY_DEBITS_DEFAULT_VALUE = DEFAULT_VALUE.data.monthlyDebits[0]
+const ONE_TIME_CREDITS_DEFAULT_VALUE = DEFAULT_VALUE.data.oneTimeCredits[0]
 
 const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
   children = render || children || AllFields
 
-  const { control, handleSubmit } = useForm({
+  const formMethods = useForm({
     defaultValues: { ...(defaultValues ? defaultValues : DEFAULT_VALUE.data) },
   })
 
+  const handleSubmit = (formValues) => {
+    onSubmit(_parseFormValues(formValues))
+  }
+
   /**
-   * Workaround for ineffective `@redwoodjs/forms/NumberField` for <FieldArray>
-   * Manually parses each number field
+   * Normalizes dates used by <DateField>. Converts date values to "YYYY-MM-DD" or null for the Unix epoch.
+   * @param {*} formValues
+   * @returns formValues with date values converted to "YYYY-MM-DD"|null
    */
-  function parseNumberFields(formValues) {
-    return onSubmit({
+  function _parseFormValues(formValues) {
+    return {
       ...formValues,
-      funds: formValues?.funds?.map(({ amount, ...rest }) => ({
-        ...rest,
-        amount: parseInt(amount, 10),
-      })),
-      monthlyDebits: formValues?.monthlyDebits?.map(({ amount, ...rest }) => ({
-        ...rest,
-        amount: parseInt(amount, 10),
-      })),
-      monthlyCredits: formValues?.monthlyCredits?.map(
-        ({ amount, ...rest }) => ({
-          ...rest,
-          amount: parseInt(amount, 10),
-        })
-      ),
-    })
+      oneTimeCredits: formValues.oneTimeCredits.map(_normalizeDate),
+    }
+  }
+
+  /**
+   * Normalizes the date value returned by <DateField>.
+   * Converts date values to "YYYY-MM-DD" or null for the Unix epoch.
+   * @param {string} options.date
+   * @returns
+   */
+  function _normalizeDate({ date, ...rest }) {
+    return {
+      ...rest,
+      date:
+        date.toISOString() === '1970-01-01T00:00:00.000Z'
+          ? null
+          : date.toISOString()?.replace(/T.*$/, ''),
+    }
   }
 
   return (
     <Form
-      onSubmit={handleSubmit(parseNumberFields)}
+      formMethods={formMethods}
+      onSubmit={handleSubmit}
       className="flex flex-col gap-2"
     >
-      {children({ control })}
+      {children({ ...formMethods })}
       {onBack && (
         <Button
           onClick={(e) => {
@@ -68,7 +84,8 @@ RunwayForm.AllFields = AllFields
 RunwayForm.Funds = Funds
 RunwayForm.MonthlyDebits = MonthlyDebits
 RunwayForm.FieldArray = FieldArray
-RunwayForm.Income = Income
+RunwayForm.MonthlyCredits = MonthlyCredits
+RunwayForm.OneTimeCredits = OneTimeCredits
 export default RunwayForm
 
 function AllFields({
@@ -80,65 +97,42 @@ function AllFields({
     <>
       <Funds {...props} />
       <MonthlyDebits {...props} />
-      <Income {...props} />
+      <MonthlyCredits {...props} />
+      <OneTimeCredits {...props} />
     </>
   )
 }
 
-export function Funds({ control, headerText = 'How much cash do you have?' }) {
+export function Funds({ headerText = 'How much cash do you have?' }) {
   return (
     <>
       <h1>{headerText}</h1>
       <FieldArray
         name="funds"
-        control={control}
         defaultAppendValue={{ ...FUNDS_DEFAULT_VALUE }}
-      >
-        {({ item, index }) => (
+        render={({ index }) => (
           <>
-            <Controller
-              control={control}
-              name={`funds.${index}.name`}
-              defaultValue={item.name}
-              render={({ field, fieldState }) => (
-                <label className="flex flex-col gap-2">
-                  Name
-                  <input type="text" {...field} />
-                  {fieldState?.error?.message && (
-                    <span>{fieldState.error.message}</span>
-                  )}
-                </label>
-              )}
-            />
-            <Controller
-              control={control}
+            <Label name={`funds.${index}.name`} className="flex flex-col gap-2">
+              Name
+              <TextField name={`funds.${index}.name`} />
+              <FieldError name={`funds.${index}.name`} />
+            </Label>
+            <Label
               name={`funds.${index}.amount`}
-              rules={{
-                min: {
-                  value: 0,
-                  message: 'Invalid',
-                },
-              }}
-              defaultValue={item.amount}
-              render={({ field, fieldState }) => (
-                <label className="flex flex-col gap-2">
-                  Amount
-                  <input type="number" min={0} {...field} />
-                  {fieldState?.error?.message && (
-                    <span>{fieldState.error.message}</span>
-                  )}
-                </label>
-              )}
-            />
+              className="flex flex-col gap-2"
+            >
+              Amount
+              <NumberField name={`funds.${index}.amount`} min={0} />
+              <FieldError name={`funds.${index}.amount`} />
+            </Label>
           </>
         )}
-      </FieldArray>
+      />
     </>
   )
 }
 
 export function MonthlyDebits({
-  control,
   headerText = 'How much are you spending each month?',
 }) {
   return (
@@ -146,65 +140,37 @@ export function MonthlyDebits({
       <h1>{headerText}</h1>
       <FieldArray
         name="monthlyDebits"
-        control={control}
         defaultAppendValue={{ ...MONTHLY_DEBITS_DEFAULT_VALUE }}
-      >
-        {({ item, index }) => (
+        render={({ index }) => (
           <>
-            <Controller
-              control={control}
+            <ColorField
               name={`monthlyDebits.${index}.color`}
               rules={{ required: 'Required' }}
-              defaultValue={item.color}
-              render={({ field }) => (
-                <label className="flex flex-col gap-2">
-                  <input type="color" {...field} />
-                </label>
-              )}
             />
-            <Controller
-              control={control}
+            <Label
               name={`monthlyDebits.${index}.name`}
-              defaultValue={item.name}
-              render={({ field, fieldState }) => (
-                <label className="flex flex-col gap-2">
-                  Name
-                  <input type="text" {...field} />
-                  {fieldState?.error?.message && (
-                    <span>{fieldState.error.message}</span>
-                  )}
-                </label>
-              )}
-            />
-            <Controller
-              control={control}
+              className="flex flex-col gap-2"
+            >
+              Name
+              <TextField name={`monthlyDebits.${index}.name`} />
+              <FieldError name={`monthlyDebits.${index}.name`} />
+            </Label>
+            <Label
               name={`monthlyDebits.${index}.amount`}
-              rules={{
-                min: {
-                  value: 0,
-                  message: 'Invalid',
-                },
-              }}
-              defaultValue={item.amount}
-              render={({ field, fieldState }) => (
-                <label className="flex flex-col gap-2">
-                  Amount
-                  <input type="number" min={0} {...field} />
-                  {fieldState?.error?.message && (
-                    <span>{fieldState.error.message}</span>
-                  )}
-                </label>
-              )}
-            />
+              className="flex flex-col gap-2"
+            >
+              Amount
+              <NumberField name={`monthlyDebits.${index}.amount`} min={0} />
+              <FieldError name={`monthlyDebits.${index}.amount`} />
+            </Label>
           </>
         )}
-      </FieldArray>
+      />
     </>
   )
 }
 
-export function Income({
-  control,
+export function MonthlyCredits({
   headerText = 'How much are you earning each month?',
 }) {
   return (
@@ -212,72 +178,110 @@ export function Income({
       <h1>{headerText}</h1>
       <FieldArray
         name="monthlyCredits"
-        control={control}
         defaultAppendValue={{ ...MONTHLY_CREDITS_DEFAULT_VALUE }}
-      >
-        {({ item, index }) => (
+        render={({ index }) => (
           <>
-            <Controller
-              control={control}
+            <ColorField
               name={`monthlyCredits.${index}.color`}
-              defaultValue={item.color}
-              render={({ field }) => (
-                <label className="flex flex-col gap-2">
-                  <input type="color" {...field} />
-                </label>
-              )}
+              rules={{ required: 'Required' }}
             />
-            <Controller
-              control={control}
+            <Label
               name={`monthlyCredits.${index}.name`}
-              defaultValue={item.name}
-              render={({ field, fieldState }) => (
-                <label className="flex flex-col gap-2">
-                  Name
-                  <input type="text" {...field} />
-                  {fieldState?.error?.message && (
-                    <span>{fieldState.error.message}</span>
-                  )}
-                </label>
-              )}
-            />
-            <Controller
-              control={control}
+              className="flex flex-col gap-2"
+            >
+              Name
+              <TextField name={`monthlyCredits.${index}.name`} />
+              <FieldError name={`monthlyCredits.${index}.name`} />
+            </Label>
+            <Label
               name={`monthlyCredits.${index}.amount`}
-              rules={{
-                min: {
-                  value: 0,
-                  message: 'Invalid',
-                },
-              }}
-              defaultValue={item.amount}
-              render={({ field, fieldState }) => (
-                <label className="flex flex-col gap-2">
-                  Amount
-                  <input type="number" min={0} {...field} />
-                  {fieldState?.error?.message && (
-                    <span>{fieldState.error.message}</span>
-                  )}
-                </label>
-              )}
-            />
+              className="flex flex-col gap-2"
+            >
+              Amount
+              <NumberField name={`monthlyCredits.${index}.amount`} min={0} />
+              <FieldError name={`monthlyCredits.${index}.amount`} />
+            </Label>
           </>
         )}
-      </FieldArray>
+      />
+    </>
+  )
+}
+
+export function OneTimeCredits({
+  headerText = 'Are you expecting any money?',
+  date: { start, end } = {},
+}) {
+  const today = new Date()
+  const nextYear = new Date()
+  nextYear.setFullYear(today.getFullYear() + 1)
+  start =
+    start ||
+    [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, '0'),
+      String(today.getDate()).padStart(2, '0'),
+    ].join('-')
+  end =
+    end ||
+    [
+      nextYear.getFullYear(),
+      String(nextYear.getMonth() + 1).padStart(2, '0'),
+      String(nextYear.getDate()).padStart(2, '0'),
+    ].join('-')
+
+  return (
+    <>
+      <h1>{headerText}</h1>
+      <FieldArray
+        name="oneTimeCredits"
+        defaultAppendValue={{ ...ONE_TIME_CREDITS_DEFAULT_VALUE }}
+        render={({ index }) => (
+          <>
+            <ColorField name={`oneTimeCredits.${index}.color`} />
+            <Label
+              name={`oneTimeCredits.${index}.name`}
+              className="flex flex-col gap-2"
+            >
+              Name
+              <TextField name={`oneTimeCredits.${index}.name`} />
+              <FieldError name={`oneTimeCredits.${index}.name`} />
+            </Label>
+            <Label
+              name={`oneTimeCredits.${index}.amount`}
+              className="flex flex-col gap-2"
+            >
+              Amount
+              <NumberField name={`oneTimeCredits.${index}.amount`} min={0} />
+              <FieldError name={`oneTimeCredits.${index}.amount`} />
+            </Label>
+            <Label
+              name={`oneTimeCredits.${index}.date`}
+              className="flex flex-col gap-2"
+            >
+              Date field is not being pre-populated when navigating
+              <DateField
+                name={`oneTimeCredits.${index}.date`}
+                min={start}
+                max={end}
+              />
+            </Label>
+          </>
+        )}
+      />
     </>
   )
 }
 
 export function FieldArray({
   children,
+  render,
   name,
-  control,
   defaultAppendValue = {},
 }) {
-  const { fields, append, remove } = useFieldArray({
-    name,
-    control,
-  })
+  children = render || children
+
+  const { fields, append, remove } = useFieldArray({ name })
 
   return (
     <>

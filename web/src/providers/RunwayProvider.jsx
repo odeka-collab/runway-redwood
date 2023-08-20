@@ -5,6 +5,7 @@ export const DEFAULT_VALUE = {
     funds: [{ name: '', amount: 0 }],
     monthlyDebits: [{ color: '#f00000', name: '', amount: 0 }],
     monthlyCredits: [{ color: '#f00000', name: '', amount: 0 }],
+    oneTimeCredits: [{ color: '#f00000', name: '', amount: 0, date: null }],
   },
 }
 
@@ -39,34 +40,67 @@ export function buildRenderData(data) {
   }
 
   const months = []
-  const _date = new Date()
+  const _currentDate = new Date()
+  const _endDate = new Date()
+  _endDate.setFullYear(_currentDate.getFullYear() + 1)
+
+  // Add to the balance:
+  // - past months credits
+  // - undated, one-time credits
+  total.funds += sumAmount(
+    data?.oneTimeCredits?.filter(({ date }) => {
+      if (!date) return false
+      const _d = new Date(date)
+      return _d < _currentDate && _d?.getMonth() !== _currentDate.getMonth()
+    })
+  )
+
   let _remainingFunds = total.funds
+
   do {
-    _date.setMonth(_date.getMonth() + 1)
+    const _currentMonthOneTimeCredits = sumAmount(
+      data?.oneTimeCredits?.filter(({ date }) =>
+        equalsYearAndMonth(date, _currentDate)
+      )
+    )
+
+    const _currentMonth = {
+      credit: total.monthly.credit + _currentMonthOneTimeCredits,
+      debit: total.monthly.debit,
+    }
 
     const _month = {
-      label: _date.toLocaleDateString('en-us', {
+      label: _currentDate.toLocaleDateString('en-us', {
         year: '2-digit',
         month: 'short',
       }),
-      debit: total.monthly.debit,
-      credit: total.monthly.credit,
+      ..._currentMonth,
       balance: {
         start: _remainingFunds,
-        end: _remainingFunds + total.monthly.credit - total.monthly.debit,
+        end: _remainingFunds + _currentMonth.credit - _currentMonth.debit,
       },
     }
 
     months.push(_month)
 
     _remainingFunds = _month.balance.end
+    _currentDate.setMonth(_currentDate.getMonth() + 1)
   } while (
-    total.monthly.debit > 0 &&
+    _currentDate < _endDate &&
     total.monthly.debit > total.monthly.credit &&
     _remainingFunds > 0
   )
 
   return { months, total }
+}
+
+export function equalsYearAndMonth(date1, date2) {
+  return (
+    date1 &&
+    date2 &&
+    new Date(date1).getFullYear() === new Date(date2).getFullYear() &&
+    new Date(date1).getMonth() === new Date(date2).getMonth()
+  )
 }
 
 export function sumAmount(data) {

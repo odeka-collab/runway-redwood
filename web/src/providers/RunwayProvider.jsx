@@ -5,6 +5,7 @@ export const DEFAULT_VALUE = {
     funds: [{ name: '', amount: 0 }],
     monthlyDebits: [{ color: '#f00000', name: '', amount: 0 }],
     monthlyCredits: [{ color: '#f00000', name: '', amount: 0 }],
+    oneTimeDebits: [{ color: '#f00000', name: '', amount: 0, date: null }],
     oneTimeCredits: [{ color: '#f00000', name: '', amount: 0, date: null }],
   },
 }
@@ -31,42 +32,91 @@ export function runwayReducer(state, { type, payload }) {
 }
 
 export function buildRenderData(data) {
+  if (!data) data = {}
+
+  const months = []
+  const _currentDate = new Date()
+  const _endDate = new Date()
+  _endDate.setMonth(_currentDate.getMonth() + 1)
+  _endDate.setFullYear(_currentDate.getFullYear() + 1)
+
+  // Ignore credits outside of date range
+  data.oneTimeCredits = data.oneTimeCredits?.filter(({ date }) => {
+    // Keep undated credits
+    if (!date) return true
+    date = convertStringToDate(date)
+    return date < _endDate && !equalsYearAndMonth(date, _endDate)
+  })
+
+  // Ignore debits outside of date range
+  data.oneTimeCredits = data.oneTimeCredits?.filter(({ date }) => {
+    // Keep undated debits
+    if (!date) return true
+    date = convertStringToDate(date)
+    return date < _endDate && !equalsYearAndMonth(date, _endDate)
+  })
+
   const total = {
     funds: sumAmount(data?.funds) || 0,
     monthly: {
       debit: sumAmount(data?.monthlyDebits) || 0,
       credit: sumAmount(data?.monthlyCredits) || 0,
     },
+    oneTime: {
+      debit: sumAmount(data?.oneTimeDebits) || 0,
+      credit: sumAmount(data?.oneTimeCredits) || 0,
+    },
   }
-
-  const months = []
-  const _currentDate = new Date()
-  const _endDate = new Date()
-  _endDate.setFullYear(_currentDate.getFullYear() + 1)
-
-  // Add to the balance:
-  // - past months credits
-  // - undated, one-time credits
-  total.funds += sumAmount(
-    data?.oneTimeCredits?.filter(({ date }) => {
-      if (!date) return false
-      const _d = new Date(date)
-      return _d < _currentDate && _d?.getMonth() !== _currentDate.getMonth()
-    })
-  )
 
   let _remainingFunds = total.funds
 
+  // Add past months & undated to initial balance
+  _remainingFunds += sumAmount(
+    data?.oneTimeCredits?.filter(({ date }) => {
+      if (!date) return true
+      date = convertStringToDate(date)
+      return date < _currentDate && !equalsYearAndMonth(date, _currentDate)
+    })
+  )
+
+  // Subtract past months & undated from initial balance
+  _remainingFunds -= sumAmount(
+    data?.oneTimeDebits?.filter(({ date }) => {
+      if (!date) return true
+      date = convertStringToDate(date)
+      return date < _currentDate && !equalsYearAndMonth(date, _currentDate)
+    })
+  )
+
+  let _remainingOneTimeCredits
+
   do {
+    _currentDate.setMonth(_currentDate.getMonth() + 1)
+
     const _currentMonthOneTimeCredits = sumAmount(
-      data?.oneTimeCredits?.filter(({ date }) =>
-        equalsYearAndMonth(date, _currentDate)
-      )
+      data?.oneTimeCredits?.filter(({ date }) => {
+        if (!date) return false
+        date = convertStringToDate(date)
+        return equalsYearAndMonth(date, _currentDate)
+      })
+    )
+
+    const _currentMonthOneTimeDebits = sumAmount(
+      data?.oneTimeDebits?.filter(({ date }) => {
+        if (!date) return false
+        date = convertStringToDate(date)
+        return equalsYearAndMonth(date, _currentDate)
+      })
     )
 
     const _currentMonth = {
       credit: total.monthly.credit + _currentMonthOneTimeCredits,
-      debit: total.monthly.debit,
+      debit: total.monthly.debit + _currentMonthOneTimeDebits,
+    }
+
+    _currentMonth.balance = {
+      start: _remainingFunds,
+      end: _remainingFunds + _currentMonth.credit - _currentMonth.debit,
     }
 
     const _month = {
@@ -75,34 +125,42 @@ export function buildRenderData(data) {
         month: 'short',
       }),
       ..._currentMonth,
-      balance: {
-        start: _remainingFunds,
-        end: _remainingFunds + _currentMonth.credit - _currentMonth.debit,
-      },
     }
 
     months.push(_month)
 
     _remainingFunds = _month.balance.end
-    _currentDate.setMonth(_currentDate.getMonth() + 1)
+
+    _remainingOneTimeCredits = sumAmount(
+      data?.oneTimeCredits?.filter(({ date }) => {
+        if (!date) return false
+        date = convertStringToDate(date)
+        return date >= _currentDate && !equalsYearAndMonth(date, _currentDate)
+      })
+    )
   } while (
     _currentDate < _endDate &&
-    total.monthly.debit > total.monthly.credit &&
-    _remainingFunds > 0
+    (_remainingFunds > 0 || _remainingOneTimeCredits > 0)
   )
 
   return { months, total }
+}
+
+export function convertStringToDate(yyyymmdd) {
+  if (!yyyymmdd) return
+  const [yyyy, mm, dd] = yyyymmdd.split('-')
+  return new Date(yyyy, parseInt(mm, 10) - 1, dd)
 }
 
 export function equalsYearAndMonth(date1, date2) {
   return (
     date1 &&
     date2 &&
-    new Date(date1).getFullYear() === new Date(date2).getFullYear() &&
-    new Date(date1).getMonth() === new Date(date2).getMonth()
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth()
   )
 }
 
 export function sumAmount(data) {
-  return data?.reduce((acc, { amount }) => acc + (amount || 0), 0)
+  return data?.reduce((acc, { amount }) => acc + (amount || 0), 0) || 0
 }

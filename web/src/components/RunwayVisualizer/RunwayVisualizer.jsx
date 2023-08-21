@@ -56,28 +56,28 @@ const DISPLAY = {
   },
 }
 
-const RunwayVisualizer = ({ id = uuidv4(), data, ...props }) => {
+const RunwayVisualizer = ({ data }) => {
   return (
-    <section>
-      {data?.months?.length > 0 && (
-        <>
-          <RunwayVisualizerView {...{ data, id: data.id || uuidv4() }} />
-        </>
-      )}
-      <pre>{JSON.stringify({ id, data, ...props }, null, 2)}</pre>
-    </section>
+    data?.months?.length > 0 && (
+      <section>
+        <RunwayVisualizerView {...{ data, id: data.id || uuidv4() }} />
+      </section>
+    )
   )
 }
 
 function RunwayVisualizerView({ id, data: { months } }) {
   const canvasRef = React.useRef()
+
   const runway = useVisualizer({
     element: `.zdog-canvas-${id}`,
     canvasRef,
     months,
     dragRotate: true,
   })
+
   useAnime(runway)
+
   return <canvas ref={canvasRef} className={`zdog-canvas-${id}`} />
 }
 
@@ -150,12 +150,13 @@ function useVisualizer({
   return state
 }
 
-function renderSegment({ label, debit, balance }) {
+function renderSegment({ label, balance }) {
   const bar = new Zdog.Box({
     width: DISPLAY.SEGMENT.BAR.WIDTH,
     height: 1,
     depth: DISPLAY.SEGMENT.BAR.DEPTH,
-    ...(debit && balance.end >= 0
+    // highlight when the month's ending balance is positive
+    ...(balance.end >= 0
       ? DISPLAY.SEGMENT.BAR.COLOR.FUNDED
       : DISPLAY.SEGMENT.BAR.COLOR.PARTIAL),
   })
@@ -166,7 +167,8 @@ function renderSegment({ label, debit, balance }) {
     fontSize: DISPLAY.SEGMENT.TEXT.FONT_SIZE,
     fill: true,
     color:
-      debit && balance.end >= 0
+      // highlight when the month's ending balance is positive
+      balance.end >= 0
         ? DISPLAY.SEGMENT.TEXT.COLOR.FUNDED
         : DISPLAY.SEGMENT.TEXT.COLOR.PARTIAL,
     translate: {

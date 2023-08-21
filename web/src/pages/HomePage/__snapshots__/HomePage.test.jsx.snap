@@ -11,78 +11,87 @@ exports[`HomePage renders the onboarding form 1`] = `
         <h1>
           How much cash do you have?
         </h1>
-        <div
-          class="flex gap-2"
+        <ul
+          class="flex flex-col gap-2"
         >
-          <fieldset
-            class="flex flex-col gap-2"
+          <li
+            class="flex gap-2"
           >
             <label
-              for="fund_name"
+              class="flex flex-col gap-2"
+              for="funds.0.name"
             >
               Name
+              <input
+                id="funds.0.name"
+                name="funds.0.name"
+                type="text"
+              />
             </label>
-            <input
-              id="fund_name"
-              name="fund_name"
-              type="text"
-            />
-          </fieldset>
-          <fieldset
-            class="flex flex-col gap-2"
-          >
             <label
-              for="fund_amount"
+              class="flex flex-col gap-2"
+              for="funds.0.amount"
             >
               Amount
+              <input
+                id="funds.0.amount"
+                min="0"
+                name="funds.0.amount"
+                type="number"
+              />
             </label>
-            <input
-              id="fund_amount"
-              name="fund_amount"
-              type="text"
-            />
-          </fieldset>
-        </div>
+          </li>
+        </ul>
+        <button
+          type="button"
+        >
+          add row
+        </button>
         <h1>
           How much are you spending each month?
         </h1>
-        <div
-          class="flex gap-2"
+        <ul
+          class="flex flex-col gap-2"
         >
-          <input
-            id="monthly_debit_color"
-            name="monthly_debit_color"
-            type="color"
-          />
-          <fieldset
-            class="flex flex-col gap-2"
+          <li
+            class="flex gap-2"
           >
+            <input
+              id="monthlyDebits.0.color"
+              name="monthlyDebits.0.color"
+              rules="[object Object]"
+              type="color"
+            />
             <label
-              for="monthly_debit_name"
+              class="flex flex-col gap-2"
+              for="monthlyDebits.0.name"
             >
               Name
+              <input
+                id="monthlyDebits.0.name"
+                name="monthlyDebits.0.name"
+                type="text"
+              />
             </label>
-            <input
-              id="monthly_debit_name"
-              name="monthly_debit_name"
-              type="text"
-            />
-          </fieldset>
-          <fieldset
-            class="flex flex-col gap-2"
-          >
             <label
-              for="monthly_debit_amount"
+              class="flex flex-col gap-2"
+              for="monthlyDebits.0.amount"
             >
               Amount
+              <input
+                id="monthlyDebits.0.amount"
+                min="0"
+                name="monthlyDebits.0.amount"
+                type="number"
+              />
             </label>
-            <input
-              id="monthly_debit_amount"
-              name="monthly_debit_amount"
-              type="text"
-            />
-          </fieldset>
-        </div>
+          </li>
+        </ul>
+        <button
+          type="button"
+        >
+          add row
+        </button>
         <button
           type="submit"
         >
@@ -98,78 +107,87 @@ exports[`HomePage renders the onboarding form 1`] = `
       <h1>
         How much cash do you have?
       </h1>
-      <div
-        class="flex gap-2"
+      <ul
+        class="flex flex-col gap-2"
       >
-        <fieldset
-          class="flex flex-col gap-2"
+        <li
+          class="flex gap-2"
         >
           <label
-            for="fund_name"
+            class="flex flex-col gap-2"
+            for="funds.0.name"
           >
             Name
+            <input
+              id="funds.0.name"
+              name="funds.0.name"
+              type="text"
+            />
           </label>
-          <input
-            id="fund_name"
-            name="fund_name"
-            type="text"
-          />
-        </fieldset>
-        <fieldset
-          class="flex flex-col gap-2"
-        >
           <label
-            for="fund_amount"
+            class="flex flex-col gap-2"
+            for="funds.0.amount"
           >
             Amount
+            <input
+              id="funds.0.amount"
+              min="0"
+              name="funds.0.amount"
+              type="number"
+            />
           </label>
-          <input
-            id="fund_amount"
-            name="fund_amount"
-            type="text"
-          />
-        </fieldset>
-      </div>
+        </li>
+      </ul>
+      <button
+        type="button"
+      >
+        add row
+      </button>
       <h1>
         How much are you spending each month?
       </h1>
-      <div
-        class="flex gap-2"
+      <ul
+        class="flex flex-col gap-2"
       >
-        <input
-          id="monthly_debit_color"
-          name="monthly_debit_color"
-          type="color"
-        />
-        <fieldset
-          class="flex flex-col gap-2"
+        <li
+          class="flex gap-2"
         >
+          <input
+            id="monthlyDebits.0.color"
+            name="monthlyDebits.0.color"
+            rules="[object Object]"
+            type="color"
+          />
           <label
-            for="monthly_debit_name"
+            class="flex flex-col gap-2"
+            for="monthlyDebits.0.name"
           >
             Name
+            <input
+              id="monthlyDebits.0.name"
+              name="monthlyDebits.0.name"
+              type="text"
+            />
           </label>
-          <input
-            id="monthly_debit_name"
-            name="monthly_debit_name"
-            type="text"
-          />
-        </fieldset>
-        <fieldset
-          class="flex flex-col gap-2"
-        >
           <label
-            for="monthly_debit_amount"
+            class="flex flex-col gap-2"
+            for="monthlyDebits.0.amount"
           >
             Amount
+            <input
+              id="monthlyDebits.0.amount"
+              min="0"
+              name="monthlyDebits.0.amount"
+              type="number"
+            />
           </label>
-          <input
-            id="monthly_debit_amount"
-            name="monthly_debit_amount"
-            type="text"
-          />
-        </fieldset>
-      </div>
+        </li>
+      </ul>
+      <button
+        type="button"
+      >
+        add row
+      </button>
       <button
         type="submit"
       >

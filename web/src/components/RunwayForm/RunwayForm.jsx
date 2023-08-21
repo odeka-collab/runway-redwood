@@ -1,6 +1,5 @@
 import {
   ColorField,
-  Controller,
   DateField,
   FieldError,
   Form,
@@ -18,6 +17,7 @@ const FUNDS_DEFAULT_VALUE = DEFAULT_VALUE.data.funds[0]
 const MONTHLY_CREDITS_DEFAULT_VALUE = DEFAULT_VALUE.data.monthlyCredits[0]
 const MONTHLY_DEBITS_DEFAULT_VALUE = DEFAULT_VALUE.data.monthlyDebits[0]
 const ONE_TIME_CREDITS_DEFAULT_VALUE = DEFAULT_VALUE.data.oneTimeCredits[0]
+const ONE_TIME_DEBITS_DEFAULT_VALUE = DEFAULT_VALUE.data.oneTimeDebits[0]
 
 const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
   children = render || children || AllFields
@@ -31,14 +31,15 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
   }
 
   /**
-   * Normalizes dates used by <DateField>. Converts date values to "YYYY-MM-DD" or null for the Unix epoch.
+   * Apply adjustments to handle form idiosyncracies
    * @param {*} formValues
-   * @returns formValues with date values converted to "YYYY-MM-DD"|null
+   * @returns parsed form values
    */
   function _parseFormValues(formValues) {
     return {
       ...formValues,
       oneTimeCredits: formValues.oneTimeCredits.map(_normalizeDate),
+      oneTimeDebits: formValues.oneTimeDebits.map(_normalizeDate),
     }
   }
 
@@ -52,9 +53,10 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
     return {
       ...rest,
       date:
+        !(date instanceof Date) ||
         date.toISOString() === '1970-01-01T00:00:00.000Z'
           ? null
-          : date.toISOString()?.replace(/T.*$/, ''),
+          : date?.toISOString()?.replace(/T.*$/, ''),
     }
   }
 
@@ -65,27 +67,30 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
       className="flex flex-col gap-2"
     >
       {children({ ...formMethods })}
-      {onBack && (
-        <Button
-          onClick={(e) => {
-            e.preventDefault()
-            onBack()
-          }}
-        >
-          Back
-        </Button>
-      )}
-      <Submit>Build Runway</Submit>
+      <div className="flex gap-2">
+        {onBack && (
+          <Button
+            onClick={(e) => {
+              e.preventDefault()
+              onBack()
+            }}
+          >
+            Back
+          </Button>
+        )}
+        <Submit>Build Runway</Submit>
+      </div>
     </Form>
   )
 }
 
 RunwayForm.AllFields = AllFields
-RunwayForm.Funds = Funds
-RunwayForm.MonthlyDebits = MonthlyDebits
 RunwayForm.FieldArray = FieldArray
+RunwayForm.Funds = Funds
 RunwayForm.MonthlyCredits = MonthlyCredits
+RunwayForm.MonthlyDebits = MonthlyDebits
 RunwayForm.OneTimeCredits = OneTimeCredits
+RunwayForm.OneTimeDebits = OneTimeDebits
 export default RunwayForm
 
 function AllFields({
@@ -99,11 +104,12 @@ function AllFields({
       <MonthlyDebits {...props} />
       <MonthlyCredits {...props} />
       <OneTimeCredits {...props} />
+      <OneTimeDebits {...props} />
     </>
   )
 }
 
-export function Funds({ headerText = 'How much cash do you have?' }) {
+export function Funds({ headerText = 'Current Funds' }) {
   return (
     <>
       <h1>{headerText}</h1>
@@ -211,6 +217,7 @@ export function MonthlyCredits({
 export function OneTimeCredits({
   headerText = 'Are you expecting any money?',
   date: { start, end } = {},
+  watch,
 }) {
   const today = new Date()
   const nextYear = new Date()
@@ -259,12 +266,102 @@ export function OneTimeCredits({
               name={`oneTimeCredits.${index}.date`}
               className="flex flex-col gap-2"
             >
-              Date field is not being pre-populated when navigating
+              Date
               <DateField
                 name={`oneTimeCredits.${index}.date`}
                 min={start}
                 max={end}
+                validation={{
+                  validate: {
+                    requiredIfAmountFieldPositive(value) {
+                      return watch(`oneTimeCredits.${index}.amount`) > 0 &&
+                        // given a null value, returns unix epoch
+                        value?.toISOString() === '1970-01-01T00:00:00.000Z'
+                        ? 'Required'
+                        : undefined
+                    },
+                  },
+                }}
               />
+              <FieldError name={`oneTimeCredits.${index}.date`} />
+            </Label>
+          </>
+        )}
+      />
+    </>
+  )
+}
+
+export function OneTimeDebits({
+  headerText = 'Are you expecting any expenses?',
+  date: { start, end } = {},
+  watch,
+}) {
+  const today = new Date()
+  const nextYear = new Date()
+  nextYear.setFullYear(today.getFullYear() + 1)
+  start =
+    start ||
+    [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, '0'),
+      String(today.getDate()).padStart(2, '0'),
+    ].join('-')
+  end =
+    end ||
+    [
+      nextYear.getFullYear(),
+      String(nextYear.getMonth() + 1).padStart(2, '0'),
+      String(nextYear.getDate()).padStart(2, '0'),
+    ].join('-')
+
+  return (
+    <>
+      <h1>{headerText}</h1>
+      <FieldArray
+        name="oneTimeDebits"
+        defaultAppendValue={{ ...ONE_TIME_DEBITS_DEFAULT_VALUE }}
+        render={({ index }) => (
+          <>
+            <ColorField name={`oneTimeDebits.${index}.color`} />
+            <Label
+              name={`oneTimeDebits.${index}.name`}
+              className="flex flex-col gap-2"
+            >
+              Name
+              <TextField name={`oneTimeDebits.${index}.name`} />
+              <FieldError name={`oneTimeDebits.${index}.name`} />
+            </Label>
+            <Label
+              name={`oneTimeDebits.${index}.amount`}
+              className="flex flex-col gap-2"
+            >
+              Amount
+              <NumberField name={`oneTimeDebits.${index}.amount`} min={0} />
+              <FieldError name={`oneTimeDebits.${index}.amount`} />
+            </Label>
+            <Label
+              name={`oneTimeDebits.${index}.date`}
+              className="flex flex-col gap-2"
+            >
+              Date
+              <DateField
+                name={`oneTimeDebits.${index}.date`}
+                min={start}
+                max={end}
+                validation={{
+                  validate: {
+                    requiredIfAmountFieldPositive(value) {
+                      return watch(`oneTimeDebits.${index}.amount`) > 0 &&
+                        // given a null value, returns unix epoch
+                        value?.toISOString() === '1970-01-01T00:00:00.000Z'
+                        ? 'Required'
+                        : undefined
+                    },
+                  },
+                }}
+              />
+              <FieldError name={`oneTimeDebits.${index}.date`} />
             </Label>
           </>
         )}

@@ -1,5 +1,6 @@
+import { ArrowCounterClockwise, Plus, Trash } from '@phosphor-icons/react'
+
 import {
-  ColorField,
   DateField,
   FieldError,
   Form,
@@ -58,15 +59,15 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
       oneTimeCredits:
         formValues.oneTimeCredits?.length > 1
           ? formValues.oneTimeCredits
-              ?.filter(_dirty(ONE_TIME_CREDITS_DEFAULT_VALUE))
               // Convert dates to YYYY-MM-DD for <DateField> required format
               ?.map(_normalizeDate)
+              ?.filter(_dirty(ONE_TIME_CREDITS_DEFAULT_VALUE))
           : formValues.oneTimeCredits?.map(_normalizeDate),
       oneTimeDebits:
         formValues.oneTimeDebits?.length > 1
           ? formValues.oneTimeDebits
-              ?.filter(_dirty(ONE_TIME_DEBITS_DEFAULT_VALUE))
               ?.map(_normalizeDate)
+              ?.filter(_dirty(ONE_TIME_DEBITS_DEFAULT_VALUE))
           : formValues.oneTimeDebits?.map(_normalizeDate),
     }
   }
@@ -77,8 +78,12 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
   }
 
   /**
-   * Normalizes the date value returned by <DateField>.
-   * Converts date values to "YYYY-MM-DD" or null for the Unix epoch.
+   * Normalizes the date value submitted by <DateField>.
+   * Converts to "YYYY-MM-DD" of the selected date, or null for the Unix epoch.
+   * The <DateField> submitted value will be one of:
+   *   - "YYYY-MM-DD" if the value was supplied when the <DateField> was created
+   *   - a Date object if a date was selected
+   *   - a Date object with the unix epoch value if `null` was supplied when the <DateField> was created
    * @param {string} options.date
    * @returns
    */
@@ -86,8 +91,10 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
     return {
       ...rest,
       date:
-        !(date instanceof Date) ||
-        date.toISOString() === '1970-01-01T00:00:00.000Z'
+        typeof date === 'string' && date.match(/^\d{4}-\d{2}-\d{2}$/)
+          ? date
+          : !(date instanceof Date) ||
+            date.toISOString() === '1970-01-01T00:00:00.000Z'
           ? null
           : date?.toISOString()?.replace(/T.*$/, ''),
     }
@@ -97,12 +104,13 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
     <Form
       formMethods={formMethods}
       onSubmit={handleSubmit}
-      className="flex flex-col gap-2"
+      className="flex flex-col gap-8"
     >
       {children({ ...formMethods })}
-      <div className="flex gap-2">
+      <div className="grid grid-flow-col space-x-2">
         {onBack && (
           <button
+            className="place-self-start rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
             onClick={(e) => {
               e.preventDefault()
               onBack()
@@ -111,7 +119,9 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
             Back
           </button>
         )}
-        <Submit>Build Runway</Submit>
+        <Submit className="place-self-end rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
+          Build Runway
+        </Submit>
       </div>
     </Form>
   )
@@ -145,26 +155,15 @@ function AllFields({
 export function Funds({ headerText = 'Current Funds' }) {
   return (
     <>
-      {headerText && <h2>{headerText}</h2>}
+      {headerText && <Header>{headerText}</Header>}
       <FieldArray
         name="funds"
         defaultAppendValue={{ ...FUNDS_DEFAULT_VALUE }}
         render={({ index }) => (
-          <>
-            <Label name={`funds.${index}.name`} className="flex flex-col gap-2">
-              Name
-              <TextField name={`funds.${index}.name`} />
-              <FieldError name={`funds.${index}.name`} />
-            </Label>
-            <Label
-              name={`funds.${index}.amount`}
-              className="flex flex-col gap-2"
-            >
-              Amount
-              <NumberField name={`funds.${index}.amount`} min={0} />
-              <FieldError name={`funds.${index}.amount`} />
-            </Label>
-          </>
+          <Row>
+            <NameFieldSet name={`funds.${index}.name`} />
+            <AmountFieldSet name={`funds.${index}.amount`} />
+          </Row>
         )}
       />
     </>
@@ -174,33 +173,15 @@ export function Funds({ headerText = 'Current Funds' }) {
 export function MonthlyDebits({ headerText = 'Monthly expenses' }) {
   return (
     <>
-      {headerText && <h2>{headerText}</h2>}
+      {headerText && <Header>{headerText}</Header>}
       <FieldArray
         name="monthlyDebits"
         defaultAppendValue={{ ...MONTHLY_DEBITS_DEFAULT_VALUE }}
         render={({ index }) => (
-          <>
-            <ColorField
-              name={`monthlyDebits.${index}.color`}
-              rules={{ required: 'Required' }}
-            />
-            <Label
-              name={`monthlyDebits.${index}.name`}
-              className="flex flex-col gap-2"
-            >
-              Name
-              <TextField name={`monthlyDebits.${index}.name`} />
-              <FieldError name={`monthlyDebits.${index}.name`} />
-            </Label>
-            <Label
-              name={`monthlyDebits.${index}.amount`}
-              className="flex flex-col gap-2"
-            >
-              Amount
-              <NumberField name={`monthlyDebits.${index}.amount`} min={0} />
-              <FieldError name={`monthlyDebits.${index}.amount`} />
-            </Label>
-          </>
+          <Row>
+            <NameFieldSet name={`monthlyDebits.${index}.name`} />
+            <AmountFieldSet name={`monthlyDebits.${index}.amount`} />
+          </Row>
         )}
       />
     </>
@@ -210,33 +191,15 @@ export function MonthlyDebits({ headerText = 'Monthly expenses' }) {
 export function MonthlyCredits({ headerText = 'Monthly income' }) {
   return (
     <>
-      {headerText && <h2>{headerText}</h2>}
+      {headerText && <Header>{headerText}</Header>}
       <FieldArray
         name="monthlyCredits"
         defaultAppendValue={{ ...MONTHLY_CREDITS_DEFAULT_VALUE }}
         render={({ index }) => (
-          <>
-            <ColorField
-              name={`monthlyCredits.${index}.color`}
-              rules={{ required: 'Required' }}
-            />
-            <Label
-              name={`monthlyCredits.${index}.name`}
-              className="flex flex-col gap-2"
-            >
-              Name
-              <TextField name={`monthlyCredits.${index}.name`} />
-              <FieldError name={`monthlyCredits.${index}.name`} />
-            </Label>
-            <Label
-              name={`monthlyCredits.${index}.amount`}
-              className="flex flex-col gap-2"
-            >
-              Amount
-              <NumberField name={`monthlyCredits.${index}.amount`} min={0} />
-              <FieldError name={`monthlyCredits.${index}.amount`} />
-            </Label>
-          </>
+          <Row>
+            <NameFieldSet name={`monthlyCredits.${index}.name`} />
+            <AmountFieldSet name={`monthlyCredits.${index}.amount`} />
+          </Row>
         )}
       />
     </>
@@ -268,53 +231,37 @@ export function OneTimeCredits({
 
   return (
     <>
-      {headerText && <h2>{headerText}</h2>}
+      {headerText && <Header>{headerText}</Header>}
       <FieldArray
         name="oneTimeCredits"
         defaultAppendValue={{ ...ONE_TIME_CREDITS_DEFAULT_VALUE }}
         render={({ index }) => (
-          <>
-            <ColorField name={`oneTimeCredits.${index}.color`} />
-            <Label
-              name={`oneTimeCredits.${index}.name`}
-              className="flex flex-col gap-2"
-            >
-              Name
-              <TextField name={`oneTimeCredits.${index}.name`} />
-              <FieldError name={`oneTimeCredits.${index}.name`} />
-            </Label>
-            <Label
-              name={`oneTimeCredits.${index}.amount`}
-              className="flex flex-col gap-2"
-            >
-              Amount
-              <NumberField name={`oneTimeCredits.${index}.amount`} min={0} />
-              <FieldError name={`oneTimeCredits.${index}.amount`} />
-            </Label>
-            <Label
+          <Row>
+            <NameFieldSet name={`oneTimeCredits.${index}.name`} />
+            <AmountFieldSet name={`oneTimeCredits.${index}.amount`} />
+            <DateFieldSet
               name={`oneTimeCredits.${index}.date`}
-              className="flex flex-col gap-2"
-            >
-              Date
-              <DateField
-                name={`oneTimeCredits.${index}.date`}
-                min={start}
-                max={end}
-                validation={{
-                  validate: {
-                    requiredIfAmountFieldPositive(value) {
-                      return watch(`oneTimeCredits.${index}.amount`) > 0 &&
-                        // given a null value, returns unix epoch
-                        value?.toISOString() === '1970-01-01T00:00:00.000Z'
-                        ? 'Required'
-                        : undefined
-                    },
+              min={start}
+              max={end}
+              validation={{
+                validate: {
+                  requiredIfAmountFieldPositive(value) {
+                    console.log(
+                      `oneTimeCredits.${index}.amount`,
+                      watch(`oneTimeCredits.${index}.amount`, value),
+                      value
+                    )
+                    return watch(`oneTimeCredits.${index}.amount`) > 0 &&
+                      // <DateField> given a null value, returns unix epoch
+                      (!value ||
+                        value.toISOString() === '1970-01-01T00:00:00.000Z')
+                      ? 'Required'
+                      : undefined
                   },
-                }}
-              />
-              <FieldError name={`oneTimeCredits.${index}.date`} />
-            </Label>
-          </>
+                },
+              }}
+            />
+          </Row>
         )}
       />
     </>
@@ -346,53 +293,37 @@ export function OneTimeDebits({
 
   return (
     <>
-      {headerText && <h2>{headerText}</h2>}
+      {headerText && <Header>{headerText}</Header>}
       <FieldArray
         name="oneTimeDebits"
         defaultAppendValue={{ ...ONE_TIME_DEBITS_DEFAULT_VALUE }}
         render={({ index }) => (
-          <>
-            <ColorField name={`oneTimeDebits.${index}.color`} />
-            <Label
-              name={`oneTimeDebits.${index}.name`}
-              className="flex flex-col gap-2"
-            >
-              Name
-              <TextField name={`oneTimeDebits.${index}.name`} />
-              <FieldError name={`oneTimeDebits.${index}.name`} />
-            </Label>
-            <Label
-              name={`oneTimeDebits.${index}.amount`}
-              className="flex flex-col gap-2"
-            >
-              Amount
-              <NumberField name={`oneTimeDebits.${index}.amount`} min={0} />
-              <FieldError name={`oneTimeDebits.${index}.amount`} />
-            </Label>
-            <Label
+          <Row>
+            <NameFieldSet name={`oneTimeDebits.${index}.name`} />
+            <AmountFieldSet name={`oneTimeDebits.${index}.amount`} />
+            <DateFieldSet
               name={`oneTimeDebits.${index}.date`}
-              className="flex flex-col gap-2"
-            >
-              Date
-              <DateField
-                name={`oneTimeDebits.${index}.date`}
-                min={start}
-                max={end}
-                validation={{
-                  validate: {
-                    requiredIfAmountFieldPositive(value) {
-                      return watch(`oneTimeDebits.${index}.amount`) > 0 &&
-                        // given a null value, returns unix epoch
-                        value?.toISOString() === '1970-01-01T00:00:00.000Z'
-                        ? 'Required'
-                        : undefined
-                    },
+              min={start}
+              max={end}
+              validation={{
+                validate: {
+                  requiredIfAmountFieldPositive(value) {
+                    console.log(
+                      `oneTimeDebits.${index}.amount`,
+                      watch(`oneTimeDebits.${index}.amount`),
+                      value
+                    )
+                    return watch(`oneTimeDebits.${index}.amount`) > 0 &&
+                      // <DateField> given a null value, returns unix epoch
+                      (!value ||
+                        value.toISOString() === '1970-01-01T00:00:00.000Z')
+                      ? 'Required'
+                      : undefined
                   },
-                }}
-              />
-              <FieldError name={`oneTimeDebits.${index}.date`} />
-            </Label>
-          </>
+                },
+              }}
+            />
+          </Row>
         )}
       />
     </>
@@ -410,13 +341,14 @@ export function FieldArray({
   const { fields, append, remove } = useFieldArray({ name })
 
   return (
-    <>
-      <ul className="flex flex-col gap-2">
+    <div className="flex flex-col items-center gap-10">
+      <ul className="flex w-full flex-col gap-8">
         {fields.map((item, index) => (
-          <li key={item.id} className="flex gap-2">
+          <li key={item.id} className="flex flex-wrap gap-2 space-y-3">
             {children({ item, index })}
             <button
               type="button"
+              className="ml-auto flex-shrink place-self-end rounded-lg border-4 border-double border-black p-2"
               onClick={(e) => {
                 e.preventDefault()
                 remove(index)
@@ -425,20 +357,92 @@ export function FieldArray({
                 }
               }}
             >
-              {fields.length === 1 ? 'Reset' : 'Delete'}
+              {fields.length === 1 ? (
+                <ArrowCounterClockwise
+                  className="h-4 w-auto"
+                  aria-label="reset row"
+                />
+              ) : (
+                <Trash className="h-4 w-auto" aria-label="delete row" />
+              )}
             </button>
           </li>
         ))}
       </ul>
       <button
         type="button"
+        className="rounded-lg border-4 border-double border-black px-4 py-2"
         onClick={(e) => {
           e.preventDefault()
           append({ ...defaultAppendValue })
         }}
       >
-        add row
+        <span className="flex justify-center gap-1 text-sm uppercase tracking-wide">
+          Add Row
+          <Plus className="h-4 w-auto" />
+        </span>
       </button>
-    </>
+    </div>
+  )
+}
+
+function Header({ children }) {
+  return <h2 className="p-8 text-center text-2xl">{children}</h2>
+}
+
+function Row({ children }) {
+  return <div className="flex flex-grow flex-wrap gap-2">{children}</div>
+}
+
+function NameFieldSet({ name }) {
+  return (
+    <Label
+      name={name}
+      className="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
+    >
+      Name
+      <TextField name={name} className="rounded-lg border border-black p-2" />
+    </Label>
+  )
+}
+
+function AmountFieldSet({ name }) {
+  return (
+    <Label
+      name={name}
+      className="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
+    >
+      Amount
+      <div className="relative flex">
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+          <span className="text-gray-500">$</span>
+        </div>
+        <NumberField
+          name={name}
+          min={0}
+          className="flex-grow rounded-lg border border-black p-2 pl-6"
+        />
+      </div>
+      <FieldError name={name} />
+    </Label>
+  )
+}
+
+function DateFieldSet({ name, min, max, validation }) {
+  return (
+    <Label
+      name={name}
+      className="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
+    >
+      Date
+      <DateField
+        name={name}
+        min={min}
+        max={max}
+        validation={validation}
+        className="flex-grow rounded-lg border border-black p-1.5"
+      />
+      <FieldError name={name} />
+    </Label>
   )
 }

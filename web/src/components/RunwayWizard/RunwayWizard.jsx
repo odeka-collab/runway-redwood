@@ -127,17 +127,7 @@ function RunwayWizardStateMachine() {
               stepName: state.step.name,
             }}
           />
-          <details className="m-1 mt-24 border-2 border-stone-200 p-2 text-stone-400">
-            <summary>DATA</summary>
-            <div className="md:grid md:grid-cols-2">
-              <pre className="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200">
-                {JSON.stringify(buildRenderData(data), null, 2)}
-              </pre>
-              <pre className="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200">
-                {JSON.stringify(data, null, 2)}
-              </pre>
-            </div>
-          </details>
+          <Details datas={[data, buildRenderData(data)]} />
         </>
       )
     case VIEWS.FORM:
@@ -151,12 +141,7 @@ function RunwayWizardStateMachine() {
               onBack: state.step.name !== 'EDIT_RUNWAY' ? onBack : undefined,
             }}
           />
-          <details className="m-1 mt-24 border-2 border-stone-200 p-2 text-stone-400">
-            <summary>DATA</summary>
-            <pre className="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200">
-              {JSON.stringify(data, null, 2)}
-            </pre>
-          </details>
+          <Details datas={[data]} />
         </>
       )
   }
@@ -167,13 +152,28 @@ function RunwayView({ stepName, data, onBack, onNext }) {
     <>
       <RunwayVisualizer data={data} />
       {stepName === 'EDIT_RUNWAY' ? (
-        <div>
-          <Button onClick={onBack}>Edit</Button>
+        <div className="flex flex-row justify-end">
+          <Button
+            className="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+            onClick={onBack}
+          >
+            Edit
+          </Button>
         </div>
       ) : (
-        <div>
-          <Button onClick={onBack}>Back</Button>
-          <Button onClick={onNext}>Next</Button>
+        <div className="flex flex-row justify-between gap-2">
+          <Button
+            className="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+            onClick={onBack}
+          >
+            Back
+          </Button>
+          <Button
+            className="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+            onClick={onNext}
+          >
+            Next
+          </Button>
         </div>
       )}
     </>
@@ -199,4 +199,23 @@ function Button({ children, ...props }) {
   return <button {...props}>{children}</button>
 }
 
+function Details({ datas }) {
+  return (
+    <details className="mt-24 border-2 border-stone-200 p-2 text-stone-400">
+      <summary>DATA</summary>
+      {datas?.length > 0 && (
+        <div className={`grid grid-cols-${datas.length}`}>
+          {datas.map((data, i) => (
+            <pre
+              key={i}
+              className="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200"
+            >
+              {JSON.stringify(data, null, 2)}
+            </pre>
+          ))}
+        </div>
+      )}
+    </details>
+  )
+}
 export default RunwayWizard

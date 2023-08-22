@@ -4764,6 +4764,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@phosphor-icons/react@npm:^2.0.10":
+  version: 2.0.10
+  resolution: "@phosphor-icons/react@npm:2.0.10"
+  peerDependencies:
+    react: ">= 16.8"
+    react-dom: ">= 16.8"
+  checksum: dba7900184b95cb05b7b88e5ea9ed56b1958066ab20fcb0c0af3110f05d442981fe30afdadb46154a9de7c0c4f3632ef555b1c5b1b429220d90fb40ec48d3717
+  languageName: node
+  linkType: hard
+
 "@pkgjs/parseargs@npm:^0.11.0":
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
@@ -24130,6 +24140,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "web@workspace:web"
   dependencies:
+    "@phosphor-icons/react": ^2.0.10
     "@redwoodjs/forms": 6.0.6
     "@redwoodjs/router": 6.0.6
     "@redwoodjs/vite": 6.0.6

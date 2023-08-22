@@ -22,8 +22,14 @@ const STEPS = {
     component: function FundsAndMonthlyDebits(props) {
       return (
         <>
-          <RunwayForm.Funds {...props} />
-          <RunwayForm.MonthlyDebits {...props} />
+          <RunwayForm.Funds
+            {...props}
+            headerText="How much cash do you have?"
+          />
+          <RunwayForm.MonthlyDebits
+            {...props}
+            headerText="How much are you spending each month?"
+          />
         </>
       )
     },
@@ -31,19 +37,40 @@ const STEPS = {
   },
   MONTHLY_CREDITS: {
     name: 'MONTHLY_CREDITS',
-    component: RunwayForm.MonthlyCredits,
+    component: function MonthlyCredits(props) {
+      return (
+        <RunwayForm.MonthlyCredits
+          {...props}
+          headerText="How much are you earning each month?"
+        />
+      )
+    },
     prev: 'FUNDS_AND_MONTHLY_DEBITS',
     next: 'ONE_TIME_CREDITS',
   },
   ONE_TIME_CREDITS: {
     name: 'ONE_TIME_CREDITS',
-    component: RunwayForm.OneTimeCredits,
+    component: function OneTimeCredits(props) {
+      return (
+        <RunwayForm.OneTimeCredits
+          {...props}
+          headerText="Are you expecting any money?"
+        />
+      )
+    },
     prev: 'MONTHLY_CREDITS',
     next: 'ONE_TIME_DEBITS',
   },
   ONE_TIME_DEBITS: {
     name: 'ONE_TIME_DEBITS',
-    component: RunwayForm.OneTimeDebits,
+    component: function OneTimeDebits(props) {
+      return (
+        <RunwayForm.OneTimeDebits
+          {...props}
+          headerText="Do you have any expenses coming up?"
+        />
+      )
+    },
     prev: 'ONE_TIME_CREDITS',
     next: 'EDIT_RUNWAY',
   },
@@ -92,42 +119,76 @@ function RunwayWizardStateMachine() {
     case VIEWS.RUNWAY:
       return (
         <>
-          <RunwayView {...{ data: buildRenderData(data), onBack, onNext }} />
-          <pre className="m-4 border-2 border-double border-stone-400 bg-slate-800 p-1 text-stone-100">
-            {JSON.stringify(buildRenderData(data), null, 2)}
-          </pre>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
+          <RunwayView
+            {...{
+              data: buildRenderData(data),
+              onBack,
+              onNext,
+              stepName: state.step.name,
+            }}
+          />
+          <details className="m-1 mt-24 border-2 border-stone-200 p-2 text-stone-400">
+            <summary>DATA</summary>
+            <div className="md:grid md:grid-cols-2">
+              <pre className="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200">
+                {JSON.stringify(buildRenderData(data), null, 2)}
+              </pre>
+              <pre className="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200">
+                {JSON.stringify(data, null, 2)}
+              </pre>
+            </div>
+          </details>
         </>
       )
     case VIEWS.FORM:
       return (
         <>
-          <FormView {...{ step: state?.step, data, onSubmit, onBack }} />
-          <pre className="m-4 border-2 border-double border-stone-400 bg-slate-800 p-1 text-stone-100">
-            {JSON.stringify(data, null, 2)}
-          </pre>
+          <FormView
+            {...{
+              step: state?.step,
+              data,
+              onSubmit,
+              onBack: state.step.name !== 'EDIT_RUNWAY' ? onBack : undefined,
+            }}
+          />
+          <details className="m-1 mt-24 border-2 border-stone-200 p-2 text-stone-400">
+            <summary>DATA</summary>
+            <pre className="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200">
+              {JSON.stringify(data, null, 2)}
+            </pre>
+          </details>
         </>
       )
   }
 }
 
-function RunwayView({ data, onBack, onNext }) {
+function RunwayView({ stepName, data, onBack, onNext }) {
   return (
     <>
       <RunwayVisualizer data={data} />
-      <Button onClick={onBack}>Back</Button>
-      <Button onClick={onNext}>Next</Button>
+      {stepName === 'EDIT_RUNWAY' ? (
+        <div>
+          <Button onClick={onBack}>Edit</Button>
+        </div>
+      ) : (
+        <div>
+          <Button onClick={onBack}>Back</Button>
+          <Button onClick={onNext}>Next</Button>
+        </div>
+      )}
     </>
   )
 }
 
 function FormView({ step, data, onSubmit, onBack }) {
-  const CurrentStep = STEPS[step?.name]?.component
+  const CurrentStep = step?.component
+
+  if (!CurrentStep) return null
 
   return (
     <RunwayForm
       defaultValues={data}
-      {...(step?.prev && { onBack })}
+      {...(step.prev && { onBack })}
       onSubmit={onSubmit}
       render={CurrentStep}
     />

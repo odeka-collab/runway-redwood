@@ -8,9 +8,9 @@ exports[`HomePage renders the onboarding form 1`] = `
       <form
         class="flex flex-col gap-2"
       >
-        <h1>
+        <h2>
           How much cash do you have?
-        </h1>
+        </h2>
         <ul
           class="flex flex-col gap-2"
         >
@@ -40,6 +40,11 @@ exports[`HomePage renders the onboarding form 1`] = `
                 type="number"
               />
             </label>
+            <button
+              type="button"
+            >
+              Reset
+            </button>
           </li>
         </ul>
         <button
@@ -47,9 +52,9 @@ exports[`HomePage renders the onboarding form 1`] = `
         >
           add row
         </button>
-        <h1>
+        <h2>
           How much are you spending each month?
-        </h1>
+        </h2>
         <ul
           class="flex flex-col gap-2"
         >
@@ -85,6 +90,11 @@ exports[`HomePage renders the onboarding form 1`] = `
                 type="number"
               />
             </label>
+            <button
+              type="button"
+            >
+              Reset
+            </button>
           </li>
         </ul>
         <button
@@ -92,21 +102,74 @@ exports[`HomePage renders the onboarding form 1`] = `
         >
           add row
         </button>
-        <button
-          type="submit"
+        <div
+          class="flex gap-2"
         >
-          Build Runway
-        </button>
+          <button
+            type="submit"
+          >
+            Build Runway
+          </button>
+        </div>
       </form>
+      <details
+        class="m-1 mt-24 border-2 border-stone-200 p-2 text-stone-400"
+      >
+        <summary>
+          DATA
+        </summary>
+        <pre
+          class="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200"
+        >
+          {
+  "funds": [
+    {
+      "name": "",
+      "amount": 0
+    }
+  ],
+  "monthlyDebits": [
+    {
+      "color": "#f00000",
+      "name": "",
+      "amount": 0
+    }
+  ],
+  "monthlyCredits": [
+    {
+      "color": "#f00000",
+      "name": "",
+      "amount": 0
+    }
+  ],
+  "oneTimeDebits": [
+    {
+      "color": "#f00000",
+      "name": "",
+      "amount": 0,
+      "date": null
+    }
+  ],
+  "oneTimeCredits": [
+    {
+      "color": "#f00000",
+      "name": "",
+      "amount": 0,
+      "date": null
+    }
+  ]
+}
+        </pre>
+      </details>
     </div>
   </body>,
   "container": <div>
     <form
       class="flex flex-col gap-2"
     >
-      <h1>
+      <h2>
         How much cash do you have?
-      </h1>
+      </h2>
       <ul
         class="flex flex-col gap-2"
       >
@@ -136,6 +199,11 @@ exports[`HomePage renders the onboarding form 1`] = `
               type="number"
             />
           </label>
+          <button
+            type="button"
+          >
+            Reset
+          </button>
         </li>
       </ul>
       <button
@@ -143,9 +211,9 @@ exports[`HomePage renders the onboarding form 1`] = `
       >
         add row
       </button>
-      <h1>
+      <h2>
         How much are you spending each month?
-      </h1>
+      </h2>
       <ul
         class="flex flex-col gap-2"
       >
@@ -181,6 +249,11 @@ exports[`HomePage renders the onboarding form 1`] = `
               type="number"
             />
           </label>
+          <button
+            type="button"
+          >
+            Reset
+          </button>
         </li>
       </ul>
       <button
@@ -188,12 +261,65 @@ exports[`HomePage renders the onboarding form 1`] = `
       >
         add row
       </button>
-      <button
-        type="submit"
+      <div
+        class="flex gap-2"
       >
-        Build Runway
-      </button>
+        <button
+          type="submit"
+        >
+          Build Runway
+        </button>
+      </div>
     </form>
+    <details
+      class="m-1 mt-24 border-2 border-stone-200 p-2 text-stone-400"
+    >
+      <summary>
+        DATA
+      </summary>
+      <pre
+        class="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200"
+      >
+        {
+  "funds": [
+    {
+      "name": "",
+      "amount": 0
+    }
+  ],
+  "monthlyDebits": [
+    {
+      "color": "#f00000",
+      "name": "",
+      "amount": 0
+    }
+  ],
+  "monthlyCredits": [
+    {
+      "color": "#f00000",
+      "name": "",
+      "amount": 0
+    }
+  ],
+  "oneTimeDebits": [
+    {
+      "color": "#f00000",
+      "name": "",
+      "amount": 0,
+      "date": null
+    }
+  ],
+  "oneTimeCredits": [
+    {
+      "color": "#f00000",
+      "name": "",
+      "amount": 0,
+      "date": null
+    }
+  ]
+}
+      </pre>
+    </details>
   </div>,
   "debug": [Function],
   "findAllByAltText": [Function],

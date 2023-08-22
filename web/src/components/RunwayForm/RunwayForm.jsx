@@ -31,16 +31,49 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
   }
 
   /**
-   * Apply adjustments to handle form idiosyncracies
+   * Apply adjustments to handle form data clean-up & idiosyncracies
    * @param {*} formValues
    * @returns parsed form values
    */
   function _parseFormValues(formValues) {
     return {
-      ...formValues,
-      oneTimeCredits: formValues.oneTimeCredits.map(_normalizeDate),
-      oneTimeDebits: formValues.oneTimeDebits.map(_normalizeDate),
+      funds:
+        // Maintain at least 1 row for each <ArrayField>
+        formValues.funds?.length > 1
+          ? // Remove any pristine rows
+            formValues.funds?.filter(_dirty(FUNDS_DEFAULT_VALUE))
+          : formValues.funds,
+      monthlyDebits:
+        formValues.monthlyDebits?.length > 1
+          ? formValues.monthlyDebits?.filter(
+              _dirty(MONTHLY_DEBITS_DEFAULT_VALUE)
+            )
+          : formValues.monthlyDebits,
+      monthlyCredits:
+        formValues.monthlyCredits?.length > 1
+          ? formValues.monthlyCredits?.filter(
+              _dirty(MONTHLY_CREDITS_DEFAULT_VALUE)
+            )
+          : formValues.monthlyCredits,
+      oneTimeCredits:
+        formValues.oneTimeCredits?.length > 1
+          ? formValues.oneTimeCredits
+              ?.filter(_dirty(ONE_TIME_CREDITS_DEFAULT_VALUE))
+              // Convert dates to YYYY-MM-DD for <DateField> required format
+              ?.map(_normalizeDate)
+          : formValues.oneTimeCredits?.map(_normalizeDate),
+      oneTimeDebits:
+        formValues.oneTimeDebits?.length > 1
+          ? formValues.oneTimeDebits
+              ?.filter(_dirty(ONE_TIME_DEBITS_DEFAULT_VALUE))
+              ?.map(_normalizeDate)
+          : formValues.oneTimeDebits?.map(_normalizeDate),
     }
+  }
+
+  function _dirty(defaultValues) {
+    // -eslint-disable-next-line no-unused-vars
+    return (values) => JSON.stringify(values) !== JSON.stringify(defaultValues)
   }
 
   /**
@@ -69,14 +102,14 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
       {children({ ...formMethods })}
       <div className="flex gap-2">
         {onBack && (
-          <Button
+          <button
             onClick={(e) => {
               e.preventDefault()
               onBack()
             }}
           >
             Back
-          </Button>
+          </button>
         )}
         <Submit>Build Runway</Submit>
       </div>
@@ -102,9 +135,9 @@ function AllFields({
     <>
       <Funds {...props} />
       <MonthlyDebits {...props} />
+      <OneTimeDebits {...props} />
       <MonthlyCredits {...props} />
       <OneTimeCredits {...props} />
-      <OneTimeDebits {...props} />
     </>
   )
 }
@@ -112,7 +145,7 @@ function AllFields({
 export function Funds({ headerText = 'Current Funds' }) {
   return (
     <>
-      <h1>{headerText}</h1>
+      {headerText && <h2>{headerText}</h2>}
       <FieldArray
         name="funds"
         defaultAppendValue={{ ...FUNDS_DEFAULT_VALUE }}
@@ -138,12 +171,10 @@ export function Funds({ headerText = 'Current Funds' }) {
   )
 }
 
-export function MonthlyDebits({
-  headerText = 'How much are you spending each month?',
-}) {
+export function MonthlyDebits({ headerText = 'Monthly expenses' }) {
   return (
     <>
-      <h1>{headerText}</h1>
+      {headerText && <h2>{headerText}</h2>}
       <FieldArray
         name="monthlyDebits"
         defaultAppendValue={{ ...MONTHLY_DEBITS_DEFAULT_VALUE }}
@@ -176,12 +207,10 @@ export function MonthlyDebits({
   )
 }
 
-export function MonthlyCredits({
-  headerText = 'How much are you earning each month?',
-}) {
+export function MonthlyCredits({ headerText = 'Monthly income' }) {
   return (
     <>
-      <h1>{headerText}</h1>
+      {headerText && <h2>{headerText}</h2>}
       <FieldArray
         name="monthlyCredits"
         defaultAppendValue={{ ...MONTHLY_CREDITS_DEFAULT_VALUE }}
@@ -215,7 +244,7 @@ export function MonthlyCredits({
 }
 
 export function OneTimeCredits({
-  headerText = 'Are you expecting any money?',
+  headerText = 'Other income',
   date: { start, end } = {},
   watch,
 }) {
@@ -239,7 +268,7 @@ export function OneTimeCredits({
 
   return (
     <>
-      <h1>{headerText}</h1>
+      {headerText && <h2>{headerText}</h2>}
       <FieldArray
         name="oneTimeCredits"
         defaultAppendValue={{ ...ONE_TIME_CREDITS_DEFAULT_VALUE }}
@@ -293,7 +322,7 @@ export function OneTimeCredits({
 }
 
 export function OneTimeDebits({
-  headerText = 'Are you expecting any expenses?',
+  headerText = 'Other expenses',
   date: { start, end } = {},
   watch,
 }) {
@@ -317,7 +346,7 @@ export function OneTimeDebits({
 
   return (
     <>
-      <h1>{headerText}</h1>
+      {headerText && <h2>{headerText}</h2>}
       <FieldArray
         name="oneTimeDebits"
         defaultAppendValue={{ ...ONE_TIME_DEBITS_DEFAULT_VALUE }}
@@ -386,17 +415,18 @@ export function FieldArray({
         {fields.map((item, index) => (
           <li key={item.id} className="flex gap-2">
             {children({ item, index })}
-            {(index > 0 || (index === 0 && fields.length > 1)) && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault()
-                  remove(index)
-                }}
-              >
-                delete row
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault()
+                remove(index)
+                if (fields.length === 1) {
+                  append({ ...defaultAppendValue })
+                }
+              }}
+            >
+              {fields.length === 1 ? 'Reset' : 'Delete'}
+            </button>
           </li>
         ))}
       </ul>
@@ -411,8 +441,4 @@ export function FieldArray({
       </button>
     </>
   )
-}
-
-function Button({ children, ...props }) {
-  return <button {...props}>{children}</button>
 }

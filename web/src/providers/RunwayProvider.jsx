@@ -3,10 +3,10 @@ export const RunwayContext = React.createContext()
 export const DEFAULT_VALUE = {
   data: {
     funds: [{ name: '', amount: 0 }],
-    monthlyDebits: [{ color: '#f00000', name: '', amount: 0 }],
-    monthlyCredits: [{ color: '#f00000', name: '', amount: 0 }],
-    oneTimeDebits: [{ color: '#f00000', name: '', amount: 0, date: null }],
-    oneTimeCredits: [{ color: '#f00000', name: '', amount: 0, date: null }],
+    monthlyDebits: [{ name: '', amount: 0 }],
+    monthlyCredits: [{ name: '', amount: 0 }],
+    oneTimeDebits: [{ name: '', amount: 0, date: null }],
+    oneTimeCredits: [{ name: '', amount: 0, date: null }],
   },
 }
 

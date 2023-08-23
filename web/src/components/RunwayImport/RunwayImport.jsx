@@ -1,3 +1,5 @@
+import { CopySimple, UploadSimple } from '@phosphor-icons/react'
+
 import {
   FieldError,
   Form,
@@ -20,6 +22,7 @@ const RunwayImport = () => {
   const { toggle } = useModal()
   const { data, update } = useRunway()
 
+  // Hide the message after some delay
   React.useEffect(() => {
     if (state?.copyStatus) {
       const id = setInterval(() => {
@@ -90,10 +93,14 @@ const RunwayImport = () => {
                 onCopy()
               }}
             >
-              Copy
+              <span className="flex items-center gap-2">
+                <CopySimple className="h-4 w-auto" />
+                Copy
+              </span>
             </Button>
-            <Submit className="rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
+            <Submit className="flex items-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
               Load
+              <UploadSimple className="h-4 w-auto" />
             </Submit>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { render } from '@redwoodjs/testing/web'
 
-import DefaultLayout from './DefaultLayout'
+import DefaultLayout from 'src/layouts/DefaultLayout'
+import Providers from 'src/providers'
 
 //   Improve this test with help from the Redwood Testing Doc:
 //   https://redwoodjs.com/docs/testing#testing-pages-layouts
@@ -8,7 +9,11 @@ import DefaultLayout from './DefaultLayout'
 describe('DefaultLayout', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<DefaultLayout />)
+      render(
+        <Providers>
+          <DefaultLayout />
+        </Providers>
+      )
     }).not.toThrow()
   })
 })

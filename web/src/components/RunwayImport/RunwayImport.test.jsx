@@ -1,6 +1,7 @@
 import { render } from '@redwoodjs/testing/web'
 
-import RunwayImport from './RunwayImport'
+import RunwayImport from 'src/components/RunwayImport'
+import Providers from 'src/providers'
 
 //   Improve this test with help from the Redwood Testing Doc:
 //    https://redwoodjs.com/docs/testing#testing-components
@@ -8,7 +9,11 @@ import RunwayImport from './RunwayImport'
 describe('RunwayImport', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<RunwayImport />)
+      render(
+        <Providers>
+          <RunwayImport />
+        </Providers>
+      )
     }).not.toThrow()
   })
 })

@@ -1,14 +1,16 @@
 import { render } from '@redwoodjs/testing/web'
 
-import RunwayWizard from './RunwayWizard'
-
-//   Improve this test with help from the Redwood Testing Doc:
-//    https://redwoodjs.com/docs/testing#testing-components
+import RunwayWizard from 'src/components/RunwayWizard'
+import Providers from 'src/providers'
 
 describe('RunwayWizard', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<RunwayWizard />)
+      render(
+        <Providers>
+          <RunwayWizard />
+        </Providers>
+      )
     }).not.toThrow()
   })
 })

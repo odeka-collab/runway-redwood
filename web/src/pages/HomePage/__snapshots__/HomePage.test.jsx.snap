@@ -9,39 +9,376 @@ exports[`HomePage renders the onboarding form 1`] = `
         class="flex flex-col gap-8"
       >
         <h2
-          class="p-8 text-center text-2xl"
+          class="py-8 text-center text-2xl"
         >
           How much cash do you have?
         </h2>
         <div
-          class="flex flex-col items-center gap-10"
+          class="flex flex-col items-stretch sm:items-end gap-4 sm:gap-6"
         >
           <ul
-            class="flex w-full flex-col gap-8"
+            class="flex w-full flex-col gap-4 sm:gap-2"
           >
             <li
-              class="flex flex-wrap gap-2 space-y-3"
+              class="group/label flex flex-wrap items-stretch gap-2 sm:items-end"
             >
               <div
                 class="flex flex-grow flex-wrap gap-2"
               >
-                <label
-                  class="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-                  for="funds.0.name"
+                <div
+                  class="flex flex-grow flex-col flex-wrap gap-2 sm:flex-row"
                 >
-                  Name
+                  <div
+                    class="flex flex-grow flex-col flex-wrap gap-2"
+                  >
+                    <label
+                      class="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+                      for="funds.0.name"
+                    >
+                      Name
+                    </label>
+                    <input
+                      class="rounded-lg border border-black p-2"
+                      id="funds.0.name"
+                      name="funds.0.name"
+                      type="text"
+                    />
+                  </div>
+                  <div
+                    class="flex flex-grow flex-col flex-wrap gap-2"
+                  >
+                    <label
+                      class="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+                      for="funds.0.amount"
+                    >
+                      Amount
+                    </label>
+                    <div
+                      class="relative flex"
+                    >
+                      <div
+                        class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                      >
+                        <span
+                          class="text-gray-500"
+                        >
+                          $
+                        </span>
+                      </div>
+                      <input
+                        class="flex-grow rounded-lg border border-black p-2 pl-6"
+                        id="funds.0.amount"
+                        min="0"
+                        name="funds.0.amount"
+                        type="number"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="ml-auto mt-0 flex-grow rounded-lg border-4 border-double border-black p-2 xs:mt-6 xs:flex-shrink xs:flex-grow-0 sm:mt-0"
+                type="button"
+              >
+                <span
+                  class="flex items-center justify-evenly"
+                >
+                  <span
+                    class="flex items-center gap-2"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="h-4 w-auto"
+                      fill="currentColor"
+                      height="1em"
+                      viewBox="0 0 256 256"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"
+                      />
+                    </svg>
+                    <span
+                      class="xs:hidden"
+                    >
+                      Reset
+                    </span>
+                  </span>
+                </span>
+              </button>
+            </li>
+          </ul>
+          <button
+            class="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+            type="button"
+          >
+            <span
+              class="flex items-center justify-center gap-1 text-xs uppercase tracking-wide"
+            >
+              Add funds
+              <svg
+                class="h-4 w-auto"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 256 256"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+        <h2
+          class="py-8 text-center text-2xl"
+        >
+          How much are you spending each month?
+        </h2>
+        <div
+          class="flex flex-col items-stretch sm:items-end gap-4 sm:gap-6"
+        >
+          <ul
+            class="flex w-full flex-col gap-4 sm:gap-2"
+          >
+            <li
+              class="group/label flex flex-wrap items-stretch gap-2 sm:items-end"
+            >
+              <div
+                class="flex flex-grow flex-wrap gap-2"
+              >
+                <div
+                  class="flex flex-grow flex-col flex-wrap gap-2 sm:flex-row"
+                >
+                  <div
+                    class="flex flex-grow flex-col flex-wrap gap-2"
+                  >
+                    <label
+                      class="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+                      for="monthlyDebits.0.name"
+                    >
+                      Name
+                    </label>
+                    <input
+                      class="rounded-lg border border-black p-2"
+                      id="monthlyDebits.0.name"
+                      name="monthlyDebits.0.name"
+                      type="text"
+                    />
+                  </div>
+                  <div
+                    class="flex flex-grow flex-col flex-wrap gap-2"
+                  >
+                    <label
+                      class="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+                      for="monthlyDebits.0.amount"
+                    >
+                      Amount
+                    </label>
+                    <div
+                      class="relative flex"
+                    >
+                      <div
+                        class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
+                      >
+                        <span
+                          class="text-gray-500"
+                        >
+                          $
+                        </span>
+                      </div>
+                      <input
+                        class="flex-grow rounded-lg border border-black p-2 pl-6"
+                        id="monthlyDebits.0.amount"
+                        min="0"
+                        name="monthlyDebits.0.amount"
+                        type="number"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="ml-auto mt-0 flex-grow rounded-lg border-4 border-double border-black p-2 xs:mt-6 xs:flex-shrink xs:flex-grow-0 sm:mt-0"
+                type="button"
+              >
+                <span
+                  class="flex items-center justify-evenly"
+                >
+                  <span
+                    class="flex items-center gap-2"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="h-4 w-auto"
+                      fill="currentColor"
+                      height="1em"
+                      viewBox="0 0 256 256"
+                      width="1em"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"
+                      />
+                    </svg>
+                    <span
+                      class="xs:hidden"
+                    >
+                      Reset
+                    </span>
+                  </span>
+                </span>
+              </button>
+            </li>
+          </ul>
+          <button
+            class="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+            type="button"
+          >
+            <span
+              class="flex items-center justify-center gap-1 text-xs uppercase tracking-wide"
+            >
+              Add expense
+              <svg
+                class="h-4 w-auto"
+                fill="currentColor"
+                height="1em"
+                viewBox="0 0 256 256"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+        <div
+          class="mt-2 flex flex-col gap-2 border-t-4 border-double border-black pt-4 sm:flex-row sm:justify-between"
+        >
+          <button
+            class="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase sm:ml-auto"
+            type="submit"
+          >
+            Build Runway
+            <svg
+              class="h-4 w-auto"
+              fill="currentColor"
+              height="1em"
+              viewBox="0 0 256 256"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M176,216a8,8,0,0,1-8,8H24a8,8,0,0,1,0-16H168A8,8,0,0,1,176,216ZM247.86,93.15a8,8,0,0,1-3.76,5.39l-147.41,88a40.18,40.18,0,0,1-20.26,5.52,39.78,39.78,0,0,1-27.28-10.87l-.12-.12L13,145.8a16,16,0,0,1,4.49-26.21l3-1.47a8,8,0,0,1,6.08-.4l28.26,9.54L75,115.06,53.17,93.87A16,16,0,0,1,57.7,67.4l.32-.13,7.15-2.71a8,8,0,0,1,5.59,0L124.7,84.38,176.27,53.6a39.82,39.82,0,0,1,51.28,9.12l.12.15,18.64,23.89A8,8,0,0,1,247.86,93.15Zm-19.74-3.7-13-16.67a23.88,23.88,0,0,0-30.68-5.42l-54.8,32.72a8.06,8.06,0,0,1-6.87.64L68,80.58l-4,1.53.21.2L93.57,110.8a8,8,0,0,1-1.43,12.58L59.93,142.87a8,8,0,0,1-6.7.73l-28.67-9.67-.19.1-.37.17a.71.71,0,0,1,.13.12l36,35.26a23.85,23.85,0,0,0,28.42,3.18Z"
+              />
+            </svg>
+          </button>
+        </div>
+      </form>
+      <details
+        class="mt-24 border-2 border-stone-200 p-1.5 text-stone-400"
+      >
+        <summary>
+          DEVELOPER
+        </summary>
+        <div
+          class="grid grid-cols-1"
+        >
+          <pre
+            class="my-2 overflow-x-auto border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200"
+          >
+            {
+  "funds": [
+    {
+      "name": "",
+      "amount": 0
+    }
+  ],
+  "monthlyDebits": [
+    {
+      "name": "",
+      "amount": 0
+    }
+  ],
+  "monthlyCredits": [
+    {
+      "name": "",
+      "amount": 0
+    }
+  ],
+  "oneTimeDebits": [
+    {
+      "name": "",
+      "amount": 0,
+      "date": null
+    }
+  ],
+  "oneTimeCredits": [
+    {
+      "name": "",
+      "amount": 0,
+      "date": null
+    }
+  ]
+}
+          </pre>
+        </div>
+      </details>
+    </div>
+  </body>,
+  "container": <div>
+    <form
+      class="flex flex-col gap-8"
+    >
+      <h2
+        class="py-8 text-center text-2xl"
+      >
+        How much cash do you have?
+      </h2>
+      <div
+        class="flex flex-col items-stretch sm:items-end gap-4 sm:gap-6"
+      >
+        <ul
+          class="flex w-full flex-col gap-4 sm:gap-2"
+        >
+          <li
+            class="group/label flex flex-wrap items-stretch gap-2 sm:items-end"
+          >
+            <div
+              class="flex flex-grow flex-wrap gap-2"
+            >
+              <div
+                class="flex flex-grow flex-col flex-wrap gap-2 sm:flex-row"
+              >
+                <div
+                  class="flex flex-grow flex-col flex-wrap gap-2"
+                >
+                  <label
+                    class="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+                    for="funds.0.name"
+                  >
+                    Name
+                  </label>
                   <input
                     class="rounded-lg border border-black p-2"
                     id="funds.0.name"
                     name="funds.0.name"
                     type="text"
                   />
-                </label>
-                <label
-                  class="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-                  for="funds.0.amount"
+                </div>
+                <div
+                  class="flex flex-grow flex-col flex-wrap gap-2"
                 >
-                  Amount
+                  <label
+                    class="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+                    for="funds.0.amount"
+                  >
+                    Amount
+                  </label>
                   <div
                     class="relative flex"
                   >
@@ -62,85 +399,110 @@ exports[`HomePage renders the onboarding form 1`] = `
                       type="number"
                     />
                   </div>
-                </label>
+                </div>
               </div>
-              <button
-                class="ml-auto flex-shrink place-self-end rounded-lg border-4 border-double border-black p-2"
-                type="button"
-              >
-                <svg
-                  aria-label="reset row"
-                  class="h-4 w-auto"
-                  fill="currentColor"
-                  height="1em"
-                  viewBox="0 0 256 256"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"
-                  />
-                </svg>
-              </button>
-            </li>
-          </ul>
-          <button
-            class="rounded-lg border-4 border-double border-black px-4 py-2"
-            type="button"
-          >
-            <span
-              class="flex justify-center gap-1 text-sm uppercase tracking-wide"
+            </div>
+            <button
+              class="ml-auto mt-0 flex-grow rounded-lg border-4 border-double border-black p-2 xs:mt-6 xs:flex-shrink xs:flex-grow-0 sm:mt-0"
+              type="button"
             >
-              add row
-              <svg
-                class="h-4 w-auto"
-                fill="currentColor"
-                height="1em"
-                viewBox="0 0 256 256"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
+              <span
+                class="flex items-center justify-evenly"
               >
-                <path
-                  d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"
-                />
-              </svg>
-            </span>
-          </button>
-        </div>
-        <h2
-          class="p-8 text-center text-2xl"
+                <span
+                  class="flex items-center gap-2"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="h-4 w-auto"
+                    fill="currentColor"
+                    height="1em"
+                    viewBox="0 0 256 256"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"
+                    />
+                  </svg>
+                  <span
+                    class="xs:hidden"
+                  >
+                    Reset
+                  </span>
+                </span>
+              </span>
+            </button>
+          </li>
+        </ul>
+        <button
+          class="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+          type="button"
         >
-          How much are you spending each month?
-        </h2>
-        <div
-          class="flex flex-col items-center gap-10"
-        >
-          <ul
-            class="flex w-full flex-col gap-8"
+          <span
+            class="flex items-center justify-center gap-1 text-xs uppercase tracking-wide"
           >
-            <li
-              class="flex flex-wrap gap-2 space-y-3"
+            Add funds
+            <svg
+              class="h-4 w-auto"
+              fill="currentColor"
+              height="1em"
+              viewBox="0 0 256 256"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"
+              />
+            </svg>
+          </span>
+        </button>
+      </div>
+      <h2
+        class="py-8 text-center text-2xl"
+      >
+        How much are you spending each month?
+      </h2>
+      <div
+        class="flex flex-col items-stretch sm:items-end gap-4 sm:gap-6"
+      >
+        <ul
+          class="flex w-full flex-col gap-4 sm:gap-2"
+        >
+          <li
+            class="group/label flex flex-wrap items-stretch gap-2 sm:items-end"
+          >
+            <div
+              class="flex flex-grow flex-wrap gap-2"
             >
               <div
-                class="flex flex-grow flex-wrap gap-2"
+                class="flex flex-grow flex-col flex-wrap gap-2 sm:flex-row"
               >
-                <label
-                  class="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-                  for="monthlyDebits.0.name"
+                <div
+                  class="flex flex-grow flex-col flex-wrap gap-2"
                 >
-                  Name
+                  <label
+                    class="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+                    for="monthlyDebits.0.name"
+                  >
+                    Name
+                  </label>
                   <input
                     class="rounded-lg border border-black p-2"
                     id="monthlyDebits.0.name"
                     name="monthlyDebits.0.name"
                     type="text"
                   />
-                </label>
-                <label
-                  class="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-                  for="monthlyDebits.0.amount"
+                </div>
+                <div
+                  class="flex flex-grow flex-col flex-wrap gap-2"
                 >
-                  Amount
+                  <label
+                    class="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+                    for="monthlyDebits.0.amount"
+                  >
+                    Amount
+                  </label>
                   <div
                     class="relative flex"
                   >
@@ -161,304 +523,50 @@ exports[`HomePage renders the onboarding form 1`] = `
                       type="number"
                     />
                   </div>
-                </label>
+                </div>
               </div>
-              <button
-                class="ml-auto flex-shrink place-self-end rounded-lg border-4 border-double border-black p-2"
-                type="button"
-              >
-                <svg
-                  aria-label="reset row"
-                  class="h-4 w-auto"
-                  fill="currentColor"
-                  height="1em"
-                  viewBox="0 0 256 256"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"
-                  />
-                </svg>
-              </button>
-            </li>
-          </ul>
-          <button
-            class="rounded-lg border-4 border-double border-black px-4 py-2"
-            type="button"
-          >
-            <span
-              class="flex justify-center gap-1 text-sm uppercase tracking-wide"
-            >
-              add row
-              <svg
-                class="h-4 w-auto"
-                fill="currentColor"
-                height="1em"
-                viewBox="0 0 256 256"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"
-                />
-              </svg>
-            </span>
-          </button>
-        </div>
-        <div
-          class="grid grid-flow-col space-x-2"
-        >
-          <button
-            class="place-self-end rounded-lg border-4 border-double border-black px-4 py-2"
-            type="submit"
-          >
-            Build Runway
-          </button>
-        </div>
-      </form>
-      <details
-        class="mt-24 border-2 border-stone-200 p-2 text-stone-400"
-      >
-        <summary>
-          DATA
-        </summary>
-        <div
-          class="grid grid-cols-1"
-        >
-          <pre
-            class="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200"
-          >
-            {
-  "funds": [
-    {
-      "name": "",
-      "amount": 0
-    }
-  ],
-  "monthlyDebits": [
-    {
-      "color": "#f00000",
-      "name": "",
-      "amount": 0
-    }
-  ],
-  "monthlyCredits": [
-    {
-      "color": "#f00000",
-      "name": "",
-      "amount": 0
-    }
-  ],
-  "oneTimeDebits": [
-    {
-      "color": "#f00000",
-      "name": "",
-      "amount": 0,
-      "date": null
-    }
-  ],
-  "oneTimeCredits": [
-    {
-      "color": "#f00000",
-      "name": "",
-      "amount": 0,
-      "date": null
-    }
-  ]
-}
-          </pre>
-        </div>
-      </details>
-    </div>
-  </body>,
-  "container": <div>
-    <form
-      class="flex flex-col gap-8"
-    >
-      <h2
-        class="p-8 text-center text-2xl"
-      >
-        How much cash do you have?
-      </h2>
-      <div
-        class="flex flex-col items-center gap-10"
-      >
-        <ul
-          class="flex w-full flex-col gap-8"
-        >
-          <li
-            class="flex flex-wrap gap-2 space-y-3"
-          >
-            <div
-              class="flex flex-grow flex-wrap gap-2"
-            >
-              <label
-                class="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-                for="funds.0.name"
-              >
-                Name
-                <input
-                  class="rounded-lg border border-black p-2"
-                  id="funds.0.name"
-                  name="funds.0.name"
-                  type="text"
-                />
-              </label>
-              <label
-                class="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-                for="funds.0.amount"
-              >
-                Amount
-                <div
-                  class="relative flex"
-                >
-                  <div
-                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-                  >
-                    <span
-                      class="text-gray-500"
-                    >
-                      $
-                    </span>
-                  </div>
-                  <input
-                    class="flex-grow rounded-lg border border-black p-2 pl-6"
-                    id="funds.0.amount"
-                    min="0"
-                    name="funds.0.amount"
-                    type="number"
-                  />
-                </div>
-              </label>
             </div>
             <button
-              class="ml-auto flex-shrink place-self-end rounded-lg border-4 border-double border-black p-2"
+              class="ml-auto mt-0 flex-grow rounded-lg border-4 border-double border-black p-2 xs:mt-6 xs:flex-shrink xs:flex-grow-0 sm:mt-0"
               type="button"
             >
-              <svg
-                aria-label="reset row"
-                class="h-4 w-auto"
-                fill="currentColor"
-                height="1em"
-                viewBox="0 0 256 256"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
+              <span
+                class="flex items-center justify-evenly"
               >
-                <path
-                  d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"
-                />
-              </svg>
+                <span
+                  class="flex items-center gap-2"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="h-4 w-auto"
+                    fill="currentColor"
+                    height="1em"
+                    viewBox="0 0 256 256"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"
+                    />
+                  </svg>
+                  <span
+                    class="xs:hidden"
+                  >
+                    Reset
+                  </span>
+                </span>
+              </span>
             </button>
           </li>
         </ul>
         <button
-          class="rounded-lg border-4 border-double border-black px-4 py-2"
+          class="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
           type="button"
         >
           <span
-            class="flex justify-center gap-1 text-sm uppercase tracking-wide"
+            class="flex items-center justify-center gap-1 text-xs uppercase tracking-wide"
           >
-            add row
-            <svg
-              class="h-4 w-auto"
-              fill="currentColor"
-              height="1em"
-              viewBox="0 0 256 256"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"
-              />
-            </svg>
-          </span>
-        </button>
-      </div>
-      <h2
-        class="p-8 text-center text-2xl"
-      >
-        How much are you spending each month?
-      </h2>
-      <div
-        class="flex flex-col items-center gap-10"
-      >
-        <ul
-          class="flex w-full flex-col gap-8"
-        >
-          <li
-            class="flex flex-wrap gap-2 space-y-3"
-          >
-            <div
-              class="flex flex-grow flex-wrap gap-2"
-            >
-              <label
-                class="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-                for="monthlyDebits.0.name"
-              >
-                Name
-                <input
-                  class="rounded-lg border border-black p-2"
-                  id="monthlyDebits.0.name"
-                  name="monthlyDebits.0.name"
-                  type="text"
-                />
-              </label>
-              <label
-                class="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-                for="monthlyDebits.0.amount"
-              >
-                Amount
-                <div
-                  class="relative flex"
-                >
-                  <div
-                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-                  >
-                    <span
-                      class="text-gray-500"
-                    >
-                      $
-                    </span>
-                  </div>
-                  <input
-                    class="flex-grow rounded-lg border border-black p-2 pl-6"
-                    id="monthlyDebits.0.amount"
-                    min="0"
-                    name="monthlyDebits.0.amount"
-                    type="number"
-                  />
-                </div>
-              </label>
-            </div>
-            <button
-              class="ml-auto flex-shrink place-self-end rounded-lg border-4 border-double border-black p-2"
-              type="button"
-            >
-              <svg
-                aria-label="reset row"
-                class="h-4 w-auto"
-                fill="currentColor"
-                height="1em"
-                viewBox="0 0 256 256"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z"
-                />
-              </svg>
-            </button>
-          </li>
-        </ul>
-        <button
-          class="rounded-lg border-4 border-double border-black px-4 py-2"
-          type="button"
-        >
-          <span
-            class="flex justify-center gap-1 text-sm uppercase tracking-wide"
-          >
-            add row
+            Add expense
             <svg
               class="h-4 w-auto"
               fill="currentColor"
@@ -475,27 +583,39 @@ exports[`HomePage renders the onboarding form 1`] = `
         </button>
       </div>
       <div
-        class="grid grid-flow-col space-x-2"
+        class="mt-2 flex flex-col gap-2 border-t-4 border-double border-black pt-4 sm:flex-row sm:justify-between"
       >
         <button
-          class="place-self-end rounded-lg border-4 border-double border-black px-4 py-2"
+          class="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase sm:ml-auto"
           type="submit"
         >
           Build Runway
+          <svg
+            class="h-4 w-auto"
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 256 256"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M176,216a8,8,0,0,1-8,8H24a8,8,0,0,1,0-16H168A8,8,0,0,1,176,216ZM247.86,93.15a8,8,0,0,1-3.76,5.39l-147.41,88a40.18,40.18,0,0,1-20.26,5.52,39.78,39.78,0,0,1-27.28-10.87l-.12-.12L13,145.8a16,16,0,0,1,4.49-26.21l3-1.47a8,8,0,0,1,6.08-.4l28.26,9.54L75,115.06,53.17,93.87A16,16,0,0,1,57.7,67.4l.32-.13,7.15-2.71a8,8,0,0,1,5.59,0L124.7,84.38,176.27,53.6a39.82,39.82,0,0,1,51.28,9.12l.12.15,18.64,23.89A8,8,0,0,1,247.86,93.15Zm-19.74-3.7-13-16.67a23.88,23.88,0,0,0-30.68-5.42l-54.8,32.72a8.06,8.06,0,0,1-6.87.64L68,80.58l-4,1.53.21.2L93.57,110.8a8,8,0,0,1-1.43,12.58L59.93,142.87a8,8,0,0,1-6.7.73l-28.67-9.67-.19.1-.37.17a.71.71,0,0,1,.13.12l36,35.26a23.85,23.85,0,0,0,28.42,3.18Z"
+            />
+          </svg>
         </button>
       </div>
     </form>
     <details
-      class="mt-24 border-2 border-stone-200 p-2 text-stone-400"
+      class="mt-24 border-2 border-stone-200 p-1.5 text-stone-400"
     >
       <summary>
-        DATA
+        DEVELOPER
       </summary>
       <div
         class="grid grid-cols-1"
       >
         <pre
-          class="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200"
+          class="my-2 overflow-x-auto border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200"
         >
           {
   "funds": [
@@ -506,21 +626,18 @@ exports[`HomePage renders the onboarding form 1`] = `
   ],
   "monthlyDebits": [
     {
-      "color": "#f00000",
       "name": "",
       "amount": 0
     }
   ],
   "monthlyCredits": [
     {
-      "color": "#f00000",
       "name": "",
       "amount": 0
     }
   ],
   "oneTimeDebits": [
     {
-      "color": "#f00000",
       "name": "",
       "amount": 0,
       "date": null
@@ -528,7 +645,6 @@ exports[`HomePage renders the onboarding form 1`] = `
   ],
   "oneTimeCredits": [
     {
-      "color": "#f00000",
       "name": "",
       "amount": 0,
       "date": null

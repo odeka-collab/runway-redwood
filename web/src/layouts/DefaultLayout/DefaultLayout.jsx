@@ -1,4 +1,4 @@
-import { ArrowsDownUp, X } from '@phosphor-icons/react'
+import { FloppyDiskBack, X } from '@phosphor-icons/react'
 
 import Button from 'src/components/Button/Button'
 import useModal from 'src/hooks/UseModal'
@@ -15,8 +15,8 @@ const DefaultLayout = ({ children }) => {
             <X className="h-4 w-auto" />
           ) : (
             <span className="flex items-center gap-1 text-xs">
+              <FloppyDiskBack className="h-4 w-auto" aria-hidden />
               Save / Load
-              <ArrowsDownUp className="h-4 w-auto" />
             </span>
           )}
         </Button>

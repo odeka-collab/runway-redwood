@@ -1,3 +1,8 @@
+import {
+  ArrowFatLeft,
+  ArrowFatRight,
+  PencilSimple,
+} from '@phosphor-icons/react'
 import { v4 as uuidv4 } from 'uuid'
 
 import Button from 'src/components/Button/Button'
@@ -6,20 +11,19 @@ import RunwayImport from 'src/components/RunwayImport/RunwayImport'
 import RunwayVisualizer from 'src/components/RunwayVisualizer/RunwayVisualizer'
 import useModal from 'src/hooks/UseModal'
 import useRunway from 'src/hooks/UseRunway'
-import RunwayProvider, { buildRenderData } from 'src/providers/RunwayProvider'
-import { BracketsCurly } from '@phosphor-icons/react'
+import { buildRenderData } from 'src/providers/RunwayProvider'
 
-const RunwayWizard = ({ initialState }) => {
+const RunwayWizard = () => {
   const { open } = useModal()
 
   return (
-    <RunwayProvider initialState={initialState}>
+    <>
       <RunwayWizardStateMachine
-        // always re-render the form to sync with <RunwayProvider> data
+        // always re-render to sync with <RunwayProvider> data
         key={uuidv4()}
       />
       {open && <RunwayImport />}
-    </RunwayProvider>
+    </>
   )
 }
 
@@ -90,6 +94,7 @@ const STEPS = {
     name: 'EDIT_RUNWAY',
     component: RunwayForm.AllFields,
     prev: 'MONTHLY_CREDITS',
+    display: 'compact',
   },
 }
 
@@ -167,12 +172,27 @@ function RunwayView({ stepName, data, onBack, onNext }) {
       <RunwayVisualizer data={data} />
       {stepName === 'EDIT_RUNWAY' ? (
         <div className="flex justify-end">
-          <Button onClick={onBack}>Edit</Button>
+          <Button onClick={onBack}>
+            <span className="flex items-center gap-2">
+              <PencilSimple className="h-4 w-auto" />
+              Edit
+            </span>
+          </Button>
         </div>
       ) : (
         <div className="flex justify-between gap-2">
-          <Button onClick={onBack}>Back</Button>
-          <Button onClick={onNext}>Next</Button>
+          <Button onClick={onBack}>
+            <span className="flex items-center gap-2">
+              <ArrowFatLeft className="h-4 w-auto" />
+              Back
+            </span>
+          </Button>
+          <Button onClick={onNext}>
+            <span className="flex items-center gap-2">
+              Next
+              <ArrowFatRight className="h-4 w-auto" />
+            </span>
+          </Button>
         </div>
       )}
     </>
@@ -190,20 +210,21 @@ function FormView({ step, data, onSubmit, onBack }) {
       {...(step.prev && { onBack })}
       onSubmit={onSubmit}
       render={CurrentStep}
+      display={step.display}
     />
   )
 }
 
 function Details({ datas }) {
   return (
-    <details className="mt-24 border-2 border-stone-200 p-2 text-stone-400">
+    <details className="mt-24 border-2 border-stone-200 p-1.5 text-stone-400">
       <summary>DEVELOPER</summary>
       {datas?.length > 0 && (
         <div className={`grid grid-cols-${datas.length}`}>
           {datas.map((data, i) => (
             <pre
               key={i}
-              className="my-2 border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200"
+              className="my-2 overflow-x-auto border-2 border-double border-slate-400 bg-slate-800 p-1 text-stone-200"
             >
               {JSON.stringify(data, null, 2)}
             </pre>

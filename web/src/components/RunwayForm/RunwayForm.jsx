@@ -1,6 +1,7 @@
 import {
   AirplaneTakeoff,
   ArrowCounterClockwise,
+  ArrowFatLeft,
   Plus,
   Trash,
 } from '@phosphor-icons/react'
@@ -26,14 +27,21 @@ const MONTHLY_DEBITS_DEFAULT_VALUE = DEFAULT_VALUE.data.monthlyDebits[0]
 const ONE_TIME_CREDITS_DEFAULT_VALUE = DEFAULT_VALUE.data.oneTimeCredits[0]
 const ONE_TIME_DEBITS_DEFAULT_VALUE = DEFAULT_VALUE.data.oneTimeDebits[0]
 
-const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
+const RunwayForm = ({
+  children,
+  render,
+  defaultValues,
+  display,
+  onSubmit,
+  onBack,
+}) => {
   children = render || children || AllFields
 
   const formMethods = useForm({
     defaultValues: { ...(defaultValues ? defaultValues : DEFAULT_VALUE.data) },
   })
 
-  const handleSubmit = (formValues) => {
+  function handleSubmit(formValues) {
     onSubmit(_parseFormValues(formValues))
   }
 
@@ -90,8 +98,8 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
    *   - "YYYY-MM-DD" if the value was supplied when the <DateField> was created
    *   - a Date object if a date was selected
    *   - a Date object with the unix epoch value if `null` was supplied when the <DateField> was created
-   * @param {string} options.date
-   * @returns
+   * @param {string} options.date The <DateField> submitted value
+   * @returns {string} YYYY-MM-DD
    */
   function _normalizeDate({ date, ...rest }) {
     return {
@@ -110,22 +118,25 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
     <Form
       formMethods={formMethods}
       onSubmit={handleSubmit}
-      className="flex flex-col gap-8"
+      className={
+        display === 'compact' ? 'flex flex-col gap-2' : 'flex flex-col gap-8'
+      }
     >
-      {children({ ...formMethods })}
-      <div className="grid grid-flow-col space-x-2">
+      {children({ ...formMethods, display })}
+      <div className="mt-2 flex flex-col gap-2 border-t-4 border-double border-black pt-4 sm:flex-row sm:justify-between">
         {onBack && (
           <button
-            className="place-self-start rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+            className="flex items-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
             onClick={(e) => {
               e.preventDefault()
               onBack()
             }}
           >
+            <ArrowFatLeft className="h-4 w-auto" />
             Back
           </button>
         )}
-        <Submit className="flex items-center gap-2 place-self-end rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
+        <Submit className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase sm:ml-auto">
           Build Runway
           <AirplaneTakeoff className="h-4 w-auto" />
         </Submit>
@@ -159,17 +170,19 @@ function AllFields({
   )
 }
 
-export function Funds({ headerText = 'Current Funds' }) {
+export function Funds({ headerText = 'Current Funds', display }) {
   return (
     <>
-      {headerText && <Header>{headerText}</Header>}
+      {headerText && <Header display={display}>{headerText}</Header>}
       <FieldArray
         name="funds"
+        appendLabel="Add funds"
         defaultAppendValue={{ ...FUNDS_DEFAULT_VALUE }}
+        display={display}
         render={({ index }) => (
           <Row>
-            <NameFieldSet name={`funds.${index}.name`} />
-            <AmountFieldSet name={`funds.${index}.amount`} />
+            <TextFieldSet name={`funds.${index}.name`} />
+            <CurrencyFieldSet name={`funds.${index}.amount`} />
           </Row>
         )}
       />
@@ -177,17 +190,19 @@ export function Funds({ headerText = 'Current Funds' }) {
   )
 }
 
-export function MonthlyDebits({ headerText = 'Monthly expenses' }) {
+export function MonthlyDebits({ headerText = 'Monthly expenses', display }) {
   return (
     <>
-      {headerText && <Header>{headerText}</Header>}
+      {headerText && <Header display={display}>{headerText}</Header>}
       <FieldArray
         name="monthlyDebits"
+        appendLabel="Add expense"
         defaultAppendValue={{ ...MONTHLY_DEBITS_DEFAULT_VALUE }}
+        display={display}
         render={({ index }) => (
           <Row>
-            <NameFieldSet name={`monthlyDebits.${index}.name`} />
-            <AmountFieldSet name={`monthlyDebits.${index}.amount`} />
+            <TextFieldSet name={`monthlyDebits.${index}.name`} />
+            <CurrencyFieldSet name={`monthlyDebits.${index}.amount`} />
           </Row>
         )}
       />
@@ -195,17 +210,19 @@ export function MonthlyDebits({ headerText = 'Monthly expenses' }) {
   )
 }
 
-export function MonthlyCredits({ headerText = 'Monthly income' }) {
+export function MonthlyCredits({ headerText = 'Monthly income', display }) {
   return (
     <>
-      {headerText && <Header>{headerText}</Header>}
+      {headerText && <Header display={display}>{headerText}</Header>}
       <FieldArray
         name="monthlyCredits"
+        appendLabel="Add income"
         defaultAppendValue={{ ...MONTHLY_CREDITS_DEFAULT_VALUE }}
+        display={display}
         render={({ index }) => (
           <Row>
-            <NameFieldSet name={`monthlyCredits.${index}.name`} />
-            <AmountFieldSet name={`monthlyCredits.${index}.amount`} />
+            <TextFieldSet name={`monthlyCredits.${index}.name`} />
+            <CurrencyFieldSet name={`monthlyCredits.${index}.amount`} />
           </Row>
         )}
       />
@@ -215,37 +232,24 @@ export function MonthlyCredits({ headerText = 'Monthly income' }) {
 
 export function OneTimeCredits({
   headerText = 'Other income',
-  date: { start, end } = {},
+  dateRange,
+  display,
   watch,
 }) {
-  const today = new Date()
-  const nextYear = new Date()
-  nextYear.setFullYear(today.getFullYear() + 1)
-  start =
-    start ||
-    [
-      today.getFullYear(),
-      String(today.getMonth() + 1).padStart(2, '0'),
-      String(today.getDate()).padStart(2, '0'),
-    ].join('-')
-  end =
-    end ||
-    [
-      nextYear.getFullYear(),
-      String(nextYear.getMonth() + 1).padStart(2, '0'),
-      String(nextYear.getDate()).padStart(2, '0'),
-    ].join('-')
+  const { start, end } = initDateRange(dateRange)
 
   return (
     <>
-      {headerText && <Header>{headerText}</Header>}
+      {headerText && <Header display={display}>{headerText}</Header>}
       <FieldArray
         name="oneTimeCredits"
+        appendLabel="Add income"
         defaultAppendValue={{ ...ONE_TIME_CREDITS_DEFAULT_VALUE }}
+        display={display}
         render={({ index }) => (
           <Row>
-            <NameFieldSet name={`oneTimeCredits.${index}.name`} />
-            <AmountFieldSet name={`oneTimeCredits.${index}.amount`} />
+            <TextFieldSet name={`oneTimeCredits.${index}.name`} />
+            <CurrencyFieldSet name={`oneTimeCredits.${index}.amount`} />
             <DateFieldSet
               name={`oneTimeCredits.${index}.date`}
               min={start}
@@ -272,37 +276,24 @@ export function OneTimeCredits({
 
 export function OneTimeDebits({
   headerText = 'Other expenses',
-  date: { start, end } = {},
+  dateRange,
+  display,
   watch,
 }) {
-  const today = new Date()
-  const nextYear = new Date()
-  nextYear.setFullYear(today.getFullYear() + 1)
-  start =
-    start ||
-    [
-      today.getFullYear(),
-      String(today.getMonth() + 1).padStart(2, '0'),
-      String(today.getDate()).padStart(2, '0'),
-    ].join('-')
-  end =
-    end ||
-    [
-      nextYear.getFullYear(),
-      String(nextYear.getMonth() + 1).padStart(2, '0'),
-      String(nextYear.getDate()).padStart(2, '0'),
-    ].join('-')
+  const { start, end } = initDateRange(dateRange)
 
   return (
     <>
-      {headerText && <Header>{headerText}</Header>}
+      {headerText && <Header display={display}>{headerText}</Header>}
       <FieldArray
         name="oneTimeDebits"
+        appendLabel="Add expense"
         defaultAppendValue={{ ...ONE_TIME_DEBITS_DEFAULT_VALUE }}
+        display={display}
         render={({ index }) => (
           <Row>
-            <NameFieldSet name={`oneTimeDebits.${index}.name`} />
-            <AmountFieldSet name={`oneTimeDebits.${index}.amount`} />
+            <TextFieldSet name={`oneTimeDebits.${index}.name`} />
+            <CurrencyFieldSet name={`oneTimeDebits.${index}.amount`} />
             <DateFieldSet
               name={`oneTimeDebits.${index}.date`}
               min={start}
@@ -331,6 +322,8 @@ export function FieldArray({
   children,
   render,
   name,
+  display,
+  appendLabel = 'Add Row',
   defaultAppendValue = {},
 }) {
   children = render || children
@@ -338,16 +331,23 @@ export function FieldArray({
   const { fields, append, remove } = useFieldArray({ name })
 
   return (
-    <div className="flex flex-col items-center gap-10">
-      <ul className="flex w-full flex-col gap-8">
+    <div
+      className={`flex flex-col items-stretch sm:items-end ${
+        display === 'compact' ? 'gap-4' : 'gap-4 sm:gap-6'
+      }`}
+    >
+      <ul className={`flex w-full flex-col gap-4 sm:gap-2`}>
         {fields.map((item, index) => (
-          <li key={item.id || index} className="flex flex-wrap items-end gap-2">
+          <li
+            key={item.id || index}
+            className="group/label flex flex-wrap items-stretch gap-2 sm:items-end"
+          >
             <div className="flex flex-grow flex-wrap gap-2">
               {children({ item, index })}
             </div>
             <button
               type="button"
-              className="ml-auto flex-shrink rounded-lg border-4 border-double border-black p-2"
+              className="ml-auto mt-0 flex-grow rounded-lg border-4 border-double border-black p-2 xs:mt-6 xs:flex-shrink xs:flex-grow-0 sm:mt-0"
               onClick={(e) => {
                 e.preventDefault()
                 remove(index)
@@ -357,12 +357,19 @@ export function FieldArray({
               }}
             >
               {fields.length === 1 ? (
-                <ArrowCounterClockwise
-                  className="h-4 w-auto"
-                  aria-label="reset row"
-                />
+                <span className="flex items-center justify-evenly">
+                  <span className="flex items-center gap-2">
+                    <ArrowCounterClockwise className="h-4 w-auto" aria-hidden />
+                    <span className="xs:hidden">Reset</span>
+                  </span>
+                </span>
               ) : (
-                <Trash className="h-4 w-auto" aria-label="delete row" />
+                <span className="flex items-center justify-evenly">
+                  <span className="flex items-center gap-2">
+                    <Trash className="h-4 w-auto" aria-hidden />
+                    <span className="xs:hidden">Delete</span>
+                  </span>
+                </span>
               )}
             </button>
           </li>
@@ -376,7 +383,7 @@ export function FieldArray({
         }}
       >
         <span className="flex items-center justify-center gap-1 text-xs uppercase tracking-wide">
-          Add Row
+          {appendLabel}
           <Plus className="h-4 w-auto" />
         </span>
       </Button>
@@ -384,61 +391,71 @@ export function FieldArray({
   )
 }
 
-function Header({ children }) {
-  return <h2 className="p-8 text-center text-2xl">{children}</h2>
+function Header({ children, display }) {
+  const className =
+    display === 'compact' ? 'text-xl' : 'py-8 text-center text-2xl'
+
+  return <h2 className={className}>{children}</h2>
 }
 
 function Row({ children }) {
-  return <div className="flex flex-grow flex-wrap gap-2">{children}</div>
-}
-
-function NameFieldSet({ name }) {
   return (
-    <Label
-      name={name}
-      className="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-    >
-      Name
-      <TextField name={name} className="rounded-lg border border-black p-2" />
-    </Label>
+    <div className="flex flex-grow flex-col flex-wrap gap-2 sm:flex-row">
+      {children}
+    </div>
   )
 }
 
-function AmountFieldSet({ name }) {
+function TextFieldSet({ name, label = 'Name' }) {
   return (
-    <Label
-      name={name}
-      className="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-    >
-      <span className="flex justify-between">
-        Amount
-        <FieldError name={name} className="font-semibold text-red-700" />
-      </span>
+    <div className="flex flex-grow flex-col flex-wrap gap-2">
+      <Label
+        name={name}
+        className="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+      >
+        {label}
+      </Label>
+      <TextField name={name} className="rounded-lg border border-black p-2" />
+    </div>
+  )
+}
+
+function CurrencyFieldSet({ label = 'Amount', name, min = 0 }) {
+  return (
+    <div className="flex flex-grow flex-col flex-wrap gap-2">
+      <Label
+        name={name}
+        className="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+      >
+        {label}
+      </Label>
       <div className="relative flex">
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <span className="text-gray-500">$</span>
         </div>
         <NumberField
           name={name}
-          min={0}
+          min={min}
           className="flex-grow rounded-lg border border-black p-2 pl-6"
           errorClassName="border-red-700"
         />
       </div>
-    </Label>
+    </div>
   )
 }
 
-function DateFieldSet({ name, min, max, validation }) {
+function DateFieldSet({ label = 'Date', name, min, max, validation }) {
   return (
-    <Label
-      name={name}
-      className="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
-    >
-      <span className="flex justify-between">
-        Date
-        <FieldError name={name} className="font-semibold text-red-700" />
-      </span>
+    <div className="flex flex-grow flex-col flex-wrap gap-2">
+      <Label
+        name={name}
+        className="text-xs uppercase group-first-of-type/label:inline sm:hidden sm:text-sm"
+      >
+        <span className="flex justify-between">
+          {label}
+          <FieldError name={name} className="font-semibold text-red-700" />
+        </span>
+      </Label>
       <DateField
         name={name}
         min={min}
@@ -447,6 +464,29 @@ function DateFieldSet({ name, min, max, validation }) {
         className="flex-grow rounded-lg border border-black p-1.5"
         errorClassName="flex-grow rounded-lg border border-red-700 p-1.5"
       />
-    </Label>
+    </div>
   )
+}
+
+function initDateRange(dateRange) {
+  let { start, end } = dateRange || {}
+  const today = new Date()
+  const nextYear = new Date()
+  nextYear.setFullYear(today.getFullYear() + 1)
+  start =
+    start ||
+    [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, '0'),
+      String(today.getDate()).padStart(2, '0'),
+    ].join('-')
+  end =
+    end ||
+    [
+      nextYear.getFullYear(),
+      String(nextYear.getMonth() + 1).padStart(2, '0'),
+      String(nextYear.getDate()).padStart(2, '0'),
+    ].join('-')
+
+  return { start, end }
 }

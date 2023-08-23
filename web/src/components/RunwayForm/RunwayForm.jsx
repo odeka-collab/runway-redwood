@@ -1,4 +1,9 @@
-import { ArrowCounterClockwise, Plus, Trash } from '@phosphor-icons/react'
+import {
+  AirplaneTakeoff,
+  ArrowCounterClockwise,
+  Plus,
+  Trash,
+} from '@phosphor-icons/react'
 
 import {
   DateField,
@@ -12,6 +17,7 @@ import {
   useForm,
 } from '@redwoodjs/forms'
 
+import Button from 'src/components/Button/Button'
 import { DEFAULT_VALUE } from 'src/providers/RunwayProvider'
 
 const FUNDS_DEFAULT_VALUE = DEFAULT_VALUE.data.funds[0]
@@ -119,8 +125,9 @@ const RunwayForm = ({ children, render, defaultValues, onSubmit, onBack }) => {
             Back
           </button>
         )}
-        <Submit className="place-self-end rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
+        <Submit className="flex items-center gap-2 place-self-end rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
           Build Runway
+          <AirplaneTakeoff className="h-4 w-auto" />
         </Submit>
       </div>
     </Form>
@@ -246,11 +253,6 @@ export function OneTimeCredits({
               validation={{
                 validate: {
                   requiredIfAmountFieldPositive(value) {
-                    console.log(
-                      `oneTimeCredits.${index}.amount`,
-                      watch(`oneTimeCredits.${index}.amount`, value),
-                      value
-                    )
                     return watch(`oneTimeCredits.${index}.amount`) > 0 &&
                       // <DateField> given a null value, returns unix epoch
                       (!value ||
@@ -308,11 +310,6 @@ export function OneTimeDebits({
               validation={{
                 validate: {
                   requiredIfAmountFieldPositive(value) {
-                    console.log(
-                      `oneTimeDebits.${index}.amount`,
-                      watch(`oneTimeDebits.${index}.amount`),
-                      value
-                    )
                     return watch(`oneTimeDebits.${index}.amount`) > 0 &&
                       // <DateField> given a null value, returns unix epoch
                       (!value ||
@@ -344,11 +341,13 @@ export function FieldArray({
     <div className="flex flex-col items-center gap-10">
       <ul className="flex w-full flex-col gap-8">
         {fields.map((item, index) => (
-          <li key={item.id} className="flex flex-wrap gap-2 space-y-3">
-            {children({ item, index })}
+          <li key={item.id || index} className="flex flex-wrap items-end gap-2">
+            <div className="flex flex-grow flex-wrap gap-2">
+              {children({ item, index })}
+            </div>
             <button
               type="button"
-              className="ml-auto flex-shrink place-self-end rounded-lg border-4 border-double border-black p-2"
+              className="ml-auto flex-shrink rounded-lg border-4 border-double border-black p-2"
               onClick={(e) => {
                 e.preventDefault()
                 remove(index)
@@ -369,19 +368,18 @@ export function FieldArray({
           </li>
         ))}
       </ul>
-      <button
+      <Button
         type="button"
-        className="rounded-lg border-4 border-double border-black px-4 py-2"
         onClick={(e) => {
           e.preventDefault()
           append({ ...defaultAppendValue })
         }}
       >
-        <span className="flex justify-center gap-1 text-sm uppercase tracking-wide">
+        <span className="flex items-center justify-center gap-1 text-xs uppercase tracking-wide">
           Add Row
           <Plus className="h-4 w-auto" />
         </span>
-      </button>
+      </Button>
     </div>
   )
 }
@@ -412,7 +410,10 @@ function AmountFieldSet({ name }) {
       name={name}
       className="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
     >
-      Amount
+      <span className="flex justify-between">
+        Amount
+        <FieldError name={name} className="font-semibold text-red-700" />
+      </span>
       <div className="relative flex">
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <span className="text-gray-500">$</span>
@@ -421,9 +422,9 @@ function AmountFieldSet({ name }) {
           name={name}
           min={0}
           className="flex-grow rounded-lg border border-black p-2 pl-6"
+          errorClassName="border-red-700"
         />
       </div>
-      <FieldError name={name} />
     </Label>
   )
 }
@@ -434,15 +435,18 @@ function DateFieldSet({ name, min, max, validation }) {
       name={name}
       className="flex flex-grow flex-col flex-wrap gap-2 text-sm uppercase"
     >
-      Date
+      <span className="flex justify-between">
+        Date
+        <FieldError name={name} className="font-semibold text-red-700" />
+      </span>
       <DateField
         name={name}
         min={min}
         max={max}
         validation={validation}
         className="flex-grow rounded-lg border border-black p-1.5"
+        errorClassName="flex-grow rounded-lg border border-red-700 p-1.5"
       />
-      <FieldError name={name} />
     </Label>
   )
 }

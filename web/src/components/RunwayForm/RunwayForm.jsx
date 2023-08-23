@@ -119,14 +119,16 @@ const RunwayForm = ({
       formMethods={formMethods}
       onSubmit={handleSubmit}
       className={
-        display === 'compact' ? 'flex flex-col gap-2' : 'flex flex-col gap-8'
+        display === 'compact'
+          ? 'flex flex-col gap-2'
+          : 'flex flex-col gap-4 sm:gap-8'
       }
     >
       {children({ ...formMethods, display })}
-      <div className="mt-2 flex flex-col gap-2 border-t-4 border-double border-black pt-4 sm:flex-row sm:justify-between">
+      <div className="mt-2 flex flex-col-reverse gap-2 border-t-4 border-double border-black pt-4 sm:flex-row sm:justify-between sm:pt-8">
         {onBack && (
           <button
-            className="flex items-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+            className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
             onClick={(e) => {
               e.preventDefault()
               onBack()
@@ -393,7 +395,7 @@ export function FieldArray({
 
 function Header({ children, display }) {
   const className =
-    display === 'compact' ? 'text-xl' : 'py-8 text-center text-2xl'
+    display === 'compact' ? 'text-xl' : 'py-4 sm:py-8 text-center text-2xl'
 
   return <h2 className={className}>{children}</h2>
 }

@@ -7,7 +7,7 @@ Zfont.init(Zdog)
 
 // Set up a font to use
 const FONT = new Zdog.Font({
-  src: '../../fonts/Ubuntu-Regular.ttf',
+  src: '/fonts/Ubuntu-Regular.ttf',
 })
 
 const DISPLAY = {

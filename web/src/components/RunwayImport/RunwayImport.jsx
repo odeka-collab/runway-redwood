@@ -76,7 +76,7 @@ const RunwayImport = () => {
           className="h-96 rounded border border-black bg-stone-200 p-2"
         />
         <FieldError name="data" />
-        <div className="flex justify-between gap-2">
+        <div className="flex flex-col-reverse justify-between gap-2 xs:flex-row">
           <Button
             onClick={(e) => {
               e.preventDefault()
@@ -85,7 +85,7 @@ const RunwayImport = () => {
           >
             Cancel
           </Button>
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 xs:flex-row">
             {state?.copyStatus && <span className="">{state.copyStatus}</span>}
             <Button
               onClick={(e) => {
@@ -93,12 +93,12 @@ const RunwayImport = () => {
                 onCopy()
               }}
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center justify-center gap-2">
                 <CopySimple className="h-4 w-auto" />
                 Copy
               </span>
             </Button>
-            <Submit className="flex items-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
+            <Submit className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
               Load
               <UploadSimple className="h-4 w-auto" />
             </Submit>

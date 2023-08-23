@@ -358,14 +358,14 @@ export function FieldArray({
             >
               {fields.length === 1 ? (
                 <span className="flex items-center justify-evenly">
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2 text-xs uppercase ">
                     <ArrowCounterClockwise className="h-4 w-auto" aria-hidden />
                     <span className="xs:hidden">Reset</span>
                   </span>
                 </span>
               ) : (
                 <span className="flex items-center justify-evenly">
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2 text-xs uppercase ">
                     <Trash className="h-4 w-auto" aria-hidden />
                     <span className="xs:hidden">Delete</span>
                   </span>

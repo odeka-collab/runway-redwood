@@ -130,7 +130,11 @@ const RunwayForm = ({
       }
     >
       {children({ ...formMethods, display })}
-      <div className="mt-2 flex flex-col-reverse gap-2 border-t-4 border-double border-black pt-4 sm:flex-row sm:justify-between sm:pt-8">
+      <div
+        className={`flex flex-col-reverse gap-2 border-t-4 border-double border-black pt-4 sm:flex-row sm:justify-between ${
+          display === 'compact' ? 'sm:pt-2' : 'sm:pt-8'
+        }`}
+      >
         {onBack && (
           <button
             className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
@@ -149,7 +153,7 @@ const RunwayForm = ({
             onClick={handleSave}
           >
             <FloppyDiskBack className="h-4 w-auto" />
-            <span className="inline sm:hidden">Save</span>
+            <span className="inline sm:hidden">Save / Load</span>
           </Button>
           <Submit className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
             Build Runway
@@ -356,9 +360,9 @@ export function FieldArray({
         {fields.map((item, index) => (
           <li
             key={item.id || index}
-            className="group/label flex flex-wrap items-stretch gap-2 sm:items-end"
+            className="group/label flex flex-wrap gap-2 sm:items-end"
           >
-            <div className="flex flex-grow flex-wrap gap-2">
+            <div className="flex w-full flex-grow flex-wrap gap-2 xs:w-auto">
               {children({ item, index })}
             </div>
             <button

@@ -101,6 +101,8 @@ const STEPS = {
 const DEFAULT_STEP = STEPS.FUNDS_AND_MONTHLY_DEBITS
 
 function RunwayWizardStateMachine({ initialState }) {
+  const { toggle } = useModal()
+
   const { update, data } = useRunway()
 
   const [state, setState] = React.useState(
@@ -110,9 +112,14 @@ function RunwayWizardStateMachine({ initialState }) {
     }
   )
 
-  async function onSubmit(formData) {
+  async function onSubmit(formData, options = {}) {
     await update(formData)
-    setState({ ...state, view: VIEWS.RUNWAY })
+
+    if (options?.save) {
+      toggle()
+    } else {
+      setState({ ...state, view: VIEWS.RUNWAY })
+    }
   }
 
   async function onBack() {

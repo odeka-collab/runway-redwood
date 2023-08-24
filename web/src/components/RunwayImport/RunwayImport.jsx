@@ -64,6 +64,7 @@ const RunwayImport = () => {
         }}
       >
         <h2 className="flex items-center gap-2 text-2xl">Save / Load</h2>
+        <p>Copy your Runway data to the clipboard, or paste data to load.</p>
         <Label name="data" className="text-sm uppercase">
           Runway data
         </Label>

@@ -2,6 +2,7 @@ import {
   AirplaneTakeoff,
   ArrowCounterClockwise,
   ArrowFatLeft,
+  FloppyDiskBack,
   Plus,
   Trash,
 } from '@phosphor-icons/react'
@@ -40,6 +41,11 @@ const RunwayForm = ({
   const formMethods = useForm({
     defaultValues: { ...(defaultValues ? defaultValues : DEFAULT_VALUE.data) },
   })
+
+  function handleSave(e) {
+    e.preventDefault()
+    onSubmit(_parseFormValues(formMethods.getValues()), { save: true })
+  }
 
   function handleSubmit(formValues) {
     onSubmit(_parseFormValues(formValues))
@@ -137,10 +143,19 @@ const RunwayForm = ({
             Back
           </button>
         )}
-        <Submit className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase sm:ml-auto">
-          Build Runway
-          <AirplaneTakeoff className="h-4 w-auto" />
-        </Submit>
+        <div className="flex flex-col-reverse items-stretch gap-2 sm:ml-auto sm:flex-row">
+          <Button
+            className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase sm:p-3"
+            onClick={handleSave}
+          >
+            <FloppyDiskBack className="h-4 w-auto" />
+            <span className="inline sm:hidden">Save</span>
+          </Button>
+          <Submit className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
+            Build Runway
+            <AirplaneTakeoff className="h-4 w-auto" />
+          </Submit>
+        </div>
       </div>
     </Form>
   )

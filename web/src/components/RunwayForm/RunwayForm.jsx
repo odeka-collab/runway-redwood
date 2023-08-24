@@ -52,38 +52,37 @@ const RunwayForm = ({
    */
   function _parseFormValues(formValues) {
     return {
-      funds:
-        // Maintain at least 1 row for each <ArrayField>
-        formValues.funds?.length > 1
-          ? // Remove any pristine rows
-            formValues.funds?.filter(_dirty(FUNDS_DEFAULT_VALUE))
-          : formValues.funds,
-      monthlyDebits:
-        formValues.monthlyDebits?.length > 1
-          ? formValues.monthlyDebits?.filter(
-              _dirty(MONTHLY_DEBITS_DEFAULT_VALUE)
-            )
-          : formValues.monthlyDebits,
-      monthlyCredits:
-        formValues.monthlyCredits?.length > 1
-          ? formValues.monthlyCredits?.filter(
-              _dirty(MONTHLY_CREDITS_DEFAULT_VALUE)
-            )
-          : formValues.monthlyCredits,
-      oneTimeCredits:
-        formValues.oneTimeCredits?.length > 1
-          ? formValues.oneTimeCredits
-              // Convert dates to YYYY-MM-DD for <DateField> required format
-              ?.map(_normalizeDate)
-              ?.filter(_dirty(ONE_TIME_CREDITS_DEFAULT_VALUE))
-          : formValues.oneTimeCredits?.map(_normalizeDate),
-      oneTimeDebits:
-        formValues.oneTimeDebits?.length > 1
-          ? formValues.oneTimeDebits
-              ?.map(_normalizeDate)
-              ?.filter(_dirty(ONE_TIME_DEBITS_DEFAULT_VALUE))
-          : formValues.oneTimeDebits?.map(_normalizeDate),
+      funds: _cleanUpDefaults(FUNDS_DEFAULT_VALUE, formValues.funds),
+      monthlyDebits: _cleanUpDefaults(
+        MONTHLY_DEBITS_DEFAULT_VALUE,
+        formValues.monthlyDebits
+      ),
+      monthlyCredits: _cleanUpDefaults(
+        MONTHLY_CREDITS_DEFAULT_VALUE,
+        formValues.monthlyCredits
+      ),
+      oneTimeCredits: _cleanUpDefaults(
+        ONE_TIME_CREDITS_DEFAULT_VALUE,
+        // Convert dates to YYYY-MM-DD for <DateField> required format
+        formValues.oneTimeCredits?.map(_normalizeDate)
+      ),
+      oneTimeDebits: _cleanUpDefaults(
+        ONE_TIME_DEBITS_DEFAULT_VALUE,
+        formValues.oneTimeDebits?.map(_normalizeDate)
+      ),
     }
+  }
+
+  function _cleanUpDefaults(defaultValues, row) {
+    // Keep edited rows
+    row = row?.filter(_dirty(defaultValues))
+
+    // Maintain at least 1 pristine row
+    if (!row?.length) {
+      return [defaultValues]
+    }
+
+    return row
   }
 
   function _dirty(defaultValues) {

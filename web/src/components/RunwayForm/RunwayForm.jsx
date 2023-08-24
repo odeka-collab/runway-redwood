@@ -462,7 +462,7 @@ function DateFieldSet({ label = 'Date', name, min, max, validation }) {
         min={min}
         max={max}
         validation={validation}
-        className="flex-grow rounded-lg border border-black p-1.5"
+        className="w-full flex-grow rounded-lg border border-black p-1.5"
         errorClassName="flex-grow rounded-lg border border-red-700 p-1.5"
       />
     </div>

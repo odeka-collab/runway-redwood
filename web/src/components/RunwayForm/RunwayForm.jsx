@@ -7,11 +7,13 @@ import {
   Question,
   Trash,
 } from '@phosphor-icons/react'
+import { v4 as uuidv4 } from 'uuid'
 
 import {
   DateField,
   FieldError,
   Form,
+  HiddenField,
   Label,
   NumberField,
   Submit,
@@ -23,16 +25,13 @@ import {
 import Button from 'src/components/Button/Button'
 import { DEFAULT_VALUE } from 'src/providers/RunwayProvider'
 
-const FUNDS_DEFAULT_VALUE = { ...DEFAULT_VALUE.data.funds[0] }
-const MONTHLY_CREDITS_DEFAULT_VALUE = {
-  ...DEFAULT_VALUE.data.monthlyCredits[0],
-}
-const MONTHLY_DEBITS_DEFAULT_VALUE = { ...DEFAULT_VALUE.data.monthlyDebits[0] }
-const ONE_TIME_CREDITS_DEFAULT_VALUE = {
-  ...DEFAULT_VALUE.data.oneTimeCredits[0],
-}
-const ONE_TIME_DEBITS_DEFAULT_VALUE = { ...DEFAULT_VALUE.data.oneTimeDebits[0] }
-const SCENARIOS_DEFAULT_VALUE = { ...DEFAULT_VALUE.data.scenarios[0] }
+const FUNDS_DEFAULT_APPEND_VALUE = DEFAULT_VALUE.data.funds[0]
+const MONTHLY_CREDITS_DEFAULT_APPEND_VALUE =
+  DEFAULT_VALUE.data.monthlyCredits[0]
+const MONTHLY_DEBITS_DEFAULT_APPEND_VALUE = DEFAULT_VALUE.data.monthlyDebits[0]
+const ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE =
+  DEFAULT_VALUE.data.oneTimeCredits[0]
+const ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE = DEFAULT_VALUE.data.oneTimeDebits[0]
 
 const RunwayForm = ({
   children,
@@ -45,91 +44,170 @@ const RunwayForm = ({
 }) => {
   children = render || children || AllFields
 
-  const formMethods = useForm({
-    defaultValues: { ...(defaultValues ? defaultValues : DEFAULT_VALUE.data) },
-  })
+  const formMethods = useForm({ defaultValues })
+
+  function handleBack(e) {
+    e.preventDefault()
+    formMethods.reset()
+    onBack()
+  }
 
   function handleSave(e) {
     e.preventDefault()
-    onSubmit(_parseFormValues(formMethods.getValues()), { save: true })
+    onSubmit(sanitize(formMethods.getValues()), { save: true })
   }
 
   function handleSubmit(formValues) {
-    onSubmit(_parseFormValues(formValues))
+    onSubmit(sanitize(formValues))
   }
 
   /**
-   * Apply adjustments to handle form data clean-up & idiosyncracies
+   * Form data clean-up:
+   * - remove excess fields with default values
+   * - format dates
    * @param {*} formValues
-   * @returns parsed form values
+   * @returns sanitized form values
    */
-  function _parseFormValues(formValues) {
+  function sanitize(formValues) {
     return {
-      funds: _cleanUpDefaults(formValues.funds, {
-        defaultValues: FUNDS_DEFAULT_VALUE,
-      }),
-      monthlyDebits: _cleanUpDefaults(formValues.monthlyDebits, {
-        defaultValues: MONTHLY_DEBITS_DEFAULT_VALUE,
-      }),
-      monthlyCredits: _cleanUpDefaults(formValues.monthlyCredits, {
-        defaultValues: MONTHLY_CREDITS_DEFAULT_VALUE,
-      }),
-      oneTimeCredits: _cleanUpDefaults(
-        // Convert dates to YYYY-MM-DD for <DateField> required format
-        formValues.oneTimeCredits?.map(_normalizeDate),
-        { defaultValues: ONE_TIME_CREDITS_DEFAULT_VALUE }
-      ),
-      oneTimeDebits: _cleanUpDefaults(
-        formValues.oneTimeDebits?.map(_normalizeDate),
-        { defaultValues: ONE_TIME_DEBITS_DEFAULT_VALUE }
-      ),
-      scenarios: _cleanUpDefaults(
-        formValues.scenarios?.map((scenario) => ({
-          ...scenario,
-          funds: _cleanUpDefaults(scenario.funds, {
-            defaultValues: FUNDS_DEFAULT_VALUE,
-            minRows: 0,
+      ...formValues,
+      id: formValues.id || uuidv4(), // id used by visualizater
+      ...(formValues.funds?.length > 0 && {
+        funds: formValues.funds.reduce(
+          reduceDefaultAppendValue({
+            key: 'funds',
+            defaultAppendValue: FUNDS_DEFAULT_APPEND_VALUE,
           }),
-          monthlyDebits: _cleanUpDefaults(scenario.monthlyDebits, {
-            defaultValues: MONTHLY_DEBITS_DEFAULT_VALUE,
-            minRows: 0,
+          []
+        ),
+      }),
+      ...(formValues.monthlyDebits?.length > 0 && {
+        monthlyDebits: formValues.monthlyDebits.reduce(
+          reduceDefaultAppendValue({
+            key: 'monthlyDebits',
+            defaultAppendValue: MONTHLY_DEBITS_DEFAULT_APPEND_VALUE,
           }),
-          monthlyCredits: _cleanUpDefaults(scenario.monthlyCredits, {
-            defaultValues: MONTHLY_CREDITS_DEFAULT_VALUE,
-            minRows: 0,
+          []
+        ),
+      }),
+      ...(formValues.monthlyCredits?.length > 0 && {
+        monthlyCredits: formValues.monthlyCredits.reduce(
+          reduceDefaultAppendValue({
+            key: 'monthlyCredits',
+            defaultAppendValue: MONTHLY_CREDITS_DEFAULT_APPEND_VALUE,
           }),
-          oneTimeCredits: _cleanUpDefaults(
-            scenario.oneTimeCredits?.map(_normalizeDate),
-            { defaultValues: ONE_TIME_CREDITS_DEFAULT_VALUE, minRows: 0 }
-          ),
-          oneTimeDebits: _cleanUpDefaults(
-            scenario.oneTimeDebits?.map(_normalizeDate),
-            {
-              defaultValues: ONE_TIME_DEBITS_DEFAULT_VALUE,
-              minRows: 0,
-            }
-          ),
-        })),
-        { defaultValues: SCENARIOS_DEFAULT_VALUE, minRow: 0 }
-      ),
+          []
+        ),
+      }),
+      ...(formValues.oneTimeCredits?.length > 0 && {
+        oneTimeCredits: formValues.oneTimeCredits.map(normalizeDate).reduce(
+          reduceDefaultAppendValue({
+            key: 'oneTimeCredits',
+            defaultAppendValue: ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE,
+          }),
+          []
+        ),
+      }),
+      ...(formValues.oneTimeDebits?.length > 0 && {
+        oneTimeDebits: formValues.oneTimeDebits.map(normalizeDate).reduce(
+          reduceDefaultAppendValue({
+            key: 'oneTimeDebits',
+            defaultAppendValue: ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE,
+          }),
+          []
+        ),
+      }),
+      ...(formValues.scenarios?.length > 0 && {
+        scenarios: formValues.scenarios
+          .reduce(
+            reduceDefaultAppendValue({
+              key: 'scenarios',
+              defaultAppendValue: {
+                funds: formMethods.getValues('funds'),
+                monthlyDebits: formMethods.getValues('monthlyDebits'),
+                monthlyCredits: formMethods.getValues('monthlyCredits'),
+                oneTimeCredits: formMethods.getValues('oneTimeCredits'),
+                oneTimeDebits: formMethods.getValues('oneTimeDebits'),
+              },
+            }),
+            []
+          )
+          .map((scenario, i) => ({
+            ...scenario,
+            id: scenario.id || uuidv4(), // id used by visualizater
+            ...(scenario.funds?.length > 0 && {
+              funds: scenario.funds.reduce(
+                reduceDefaultAppendValue({
+                  key: `scenarios.${i}.funds`,
+                  defaultAppendValue: FUNDS_DEFAULT_APPEND_VALUE,
+                }),
+                []
+              ),
+            }),
+            ...(scenario.monthlyDebits?.length > 0 && {
+              monthlyDebits: scenario.monthlyDebits.reduce(
+                reduceDefaultAppendValue({
+                  key: `scenarios.${i}.monthlyDebits`,
+                  defaultAppendValue: MONTHLY_DEBITS_DEFAULT_APPEND_VALUE,
+                }),
+                []
+              ),
+            }),
+            ...(scenario.monthlyCredits?.length > 0 && {
+              monthlyCredits: scenario.monthlyCredits.reduce(
+                reduceDefaultAppendValue({
+                  key: `scenarios.${i}.monthlyCredits`,
+                  defaultAppendValue: MONTHLY_CREDITS_DEFAULT_APPEND_VALUE,
+                }),
+                []
+              ),
+            }),
+            ...(scenario.oneTimeCredits?.length > 0 && {
+              oneTimeCredits: scenario.oneTimeCredits.map(normalizeDate).reduce(
+                reduceDefaultAppendValue({
+                  key: `scenarios.${i}.oneTimeCredits`,
+                  defaultAppendValue: ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE,
+                }),
+                []
+              ),
+            }),
+            ...(scenario.oneTimeDebits?.length > 0 && {
+              oneTimeDebits: scenario.oneTimeDebits.map(normalizeDate).reduce(
+                reduceDefaultAppendValue({
+                  key: `scenarios.${i}.oneTimeDebits`,
+                  defaultAppendValue: ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE,
+                }),
+                []
+              ),
+            }),
+          })),
+      }),
     }
   }
 
-  function _cleanUpDefaults(row, { defaultValues, minRows = 1 }) {
-    // Keep edited rows
-    row = row?.filter(_dirty(defaultValues))
+  function reduceDefaultAppendValue({
+    key,
+    defaultAppendValue,
+    minRows = true,
+  }) {
+    return (acc, row, i) => {
+      // Keep rows with values
+      if (isValued({ name: `${key}.${i}`, defaultAppendValue })) {
+        acc = [...acc, row]
+      }
 
-    // Maintain at least 1 pristine row
-    if (minRows && !row?.length) {
-      return [defaultValues]
+      // Maintain at least 1 pristine row
+      if (minRows && !acc.length) {
+        acc = [defaultAppendValue]
+      }
+
+      return acc
     }
-
-    return row
   }
 
-  function _dirty(defaultValues) {
-    // -eslint-disable-next-line no-unused-vars
-    return (values) => JSON.stringify(values) !== JSON.stringify(defaultValues)
+  function isValued({ name, defaultAppendValue }) {
+    const { id: _, ...formValues } = formMethods.getValues(name)
+    return JSON.stringify(formValues) !== JSON.stringify(defaultAppendValue)
   }
 
   /**
@@ -142,7 +220,7 @@ const RunwayForm = ({
    * @param {string} options.date The <DateField> submitted value
    * @returns {string} YYYY-MM-DD
    */
-  function _normalizeDate({ date, ...rest }) {
+  function normalizeDate({ date, ...rest }) {
     return {
       ...rest,
       date:
@@ -165,6 +243,7 @@ const RunwayForm = ({
           : 'flex flex-col gap-4 sm:gap-8'
       }
     >
+      <HiddenField name="id" />
       {children({ ...formMethods, display })}
       <div
         className={`flex flex-col-reverse gap-2 border-t-4 border-double border-black pt-4 sm:flex-row sm:justify-between ${
@@ -174,10 +253,7 @@ const RunwayForm = ({
         {onBack && (
           <button
             className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
-            onClick={(e) => {
-              e.preventDefault()
-              onBack()
-            }}
+            onClick={handleBack}
           >
             <ArrowFatLeft className="h-4 w-auto" />
             Back
@@ -251,7 +327,7 @@ export function Funds({
       <FieldArray
         name={name}
         appendLabel="Add funds"
-        defaultAppendValue={{ ...FUNDS_DEFAULT_VALUE }}
+        defaultAppendValue={{ ...FUNDS_DEFAULT_APPEND_VALUE }}
         display={display}
         minRows={minRows}
         render={({ index }) => (
@@ -277,7 +353,7 @@ export function MonthlyDebits({
       <FieldArray
         name={name}
         appendLabel="Add expense"
-        defaultAppendValue={{ ...MONTHLY_DEBITS_DEFAULT_VALUE }}
+        defaultAppendValue={{ ...MONTHLY_DEBITS_DEFAULT_APPEND_VALUE }}
         display={display}
         minRows={minRows}
         render={({ index }) => (
@@ -303,7 +379,7 @@ export function MonthlyCredits({
       <FieldArray
         name={name}
         appendLabel="Add income"
-        defaultAppendValue={{ ...MONTHLY_CREDITS_DEFAULT_VALUE }}
+        defaultAppendValue={{ ...MONTHLY_CREDITS_DEFAULT_APPEND_VALUE }}
         display={display}
         minRows={minRows}
         render={({ index }) => (
@@ -333,7 +409,7 @@ export function OneTimeCredits({
       <FieldArray
         name={name}
         appendLabel="Add income"
-        defaultAppendValue={{ ...ONE_TIME_CREDITS_DEFAULT_VALUE }}
+        defaultAppendValue={{ ...ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE }}
         display={display}
         minRows={minRows}
         render={({ index }) => (
@@ -380,7 +456,7 @@ export function OneTimeDebits({
       <FieldArray
         name={name}
         appendLabel="Add expense"
-        defaultAppendValue={{ ...ONE_TIME_DEBITS_DEFAULT_VALUE }}
+        defaultAppendValue={{ ...ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE }}
         display={display}
         minRows={minRows}
         render={({ index }) => (
@@ -411,14 +487,22 @@ export function OneTimeDebits({
   )
 }
 
-export function Scenarios({ headerText = 'Scenarios', display, watch }) {
+export function Scenarios({
+  headerText = 'Scenarios',
+  display,
+  watch,
+  getValues,
+}) {
+  // eslint-disable-next-line no-unused-vars
+  const { id, name, scenarios, ...defaultAppendValue } = getValues()
+
   return (
     <>
       {headerText && <Header>{headerText}</Header>}
       <ScenarioArray
         name="scenarios"
         appendLabel="Add scenario"
-        defaultAppendValue={{ ...SCENARIOS_DEFAULT_VALUE }}
+        defaultAppendValue={defaultAppendValue}
         display={display}
         deleteLabel="Delete Scenario"
         resetLabel="Reset Scenario"
@@ -431,6 +515,7 @@ export function Scenarios({ headerText = 'Scenarios', display, watch }) {
 function Scenario({ index, display, watch }) {
   return (
     <div className="flex flex-grow flex-col gap-2">
+      <HiddenField name={`scenarios.${index}.id`} />
       <div className="flex items-end gap-4">
         <h3 className="text-xl font-semibold">What if&hellip;</h3>
         <TextFieldSet
@@ -470,7 +555,7 @@ function Scenario({ index, display, watch }) {
         />
         <OneTimeCredits
           {...{
-            name: `scenarios.${index}.onTimeCredits`,
+            name: `scenarios.${index}.oneTimeCredits`,
             minRows: 0,
             display,
             watch,
@@ -503,13 +588,13 @@ export function FieldArray({
       }`}
     >
       <ul className={`flex w-full flex-col gap-4 sm:gap-2`}>
-        {fields.map((item, index) => (
+        {fields.map((field, index) => (
           <li
-            key={item.id || index}
+            key={field.id}
             className="group/label flex flex-wrap gap-2 sm:items-end"
           >
             <div className="flex w-full flex-grow flex-wrap gap-2 xs:w-auto">
-              {children({ item, index })}
+              {children({ field, index })}
             </div>
             <button
               type="button"
@@ -574,6 +659,12 @@ export function ScenarioArray({
   children = render || children
 
   const { fields, append, remove } = useFieldArray({ name })
+
+  React.useEffect(() => {
+    if (!fields?.length) {
+      append({ ...defaultAppendValue })
+    }
+  }, [defaultAppendValue, fields, append])
 
   return (
     <div

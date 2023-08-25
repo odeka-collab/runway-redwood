@@ -13,20 +13,6 @@ import useModal from 'src/hooks/UseModal'
 import useRunway from 'src/hooks/UseRunway'
 import { buildRenderData } from 'src/providers/RunwayProvider'
 
-const RunwayWizard = () => {
-  const { open } = useModal()
-
-  return (
-    <>
-      <RunwayWizardStateMachine
-        // always re-render to sync with <RunwayProvider> data
-        key={uuidv4()}
-      />
-      {open && <RunwayImport />}
-    </>
-  )
-}
-
 const VIEWS = {
   FORM: 'FORM',
   RUNWAY: 'RUNWAY',
@@ -107,17 +93,29 @@ const STEPS = {
 
 const DEFAULT_STEP = STEPS.FUNDS_AND_MONTHLY_DEBITS
 
-function RunwayWizardStateMachine({ initialState }) {
+function RunwayWizard() {
+  const { open } = useModal()
+
+  return (
+    <>
+      <RunwayWizardStateMachine
+        // always re-render to sync with <RunwayProvider> data
+        key={uuidv4()}
+      />
+      {open && <RunwayImport />}
+    </>
+  )
+}
+
+function RunwayWizardStateMachine() {
   const { toggle } = useModal()
 
   const { update, data } = useRunway()
 
-  const [state, setState] = React.useState(
-    initialState || {
-      view: 'FORM',
-      step: getInitialStepBasedOnData(data),
-    }
-  )
+  const [state, setState] = React.useState({
+    view: 'FORM',
+    step: getInitialStepBasedOnData(data),
+  })
 
   async function onSubmit(formData, options = {}) {
     await update(formData)
@@ -224,8 +222,6 @@ function RunwayView({ stepName, data, onBack, onNext }) {
 
 function FormView({ step, data, onSubmit, onBack, onClickScenarios }) {
   const CurrentStep = step?.component
-
-  if (!CurrentStep) return null
 
   return (
     <RunwayForm

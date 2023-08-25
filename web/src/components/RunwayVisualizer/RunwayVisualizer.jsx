@@ -1,5 +1,4 @@
 import anime from 'animejs'
-import { v4 as uuidv4 } from 'uuid'
 import Zdog, { TAU } from 'zdog'
 import Zfont from 'zfont'
 
@@ -24,7 +23,7 @@ const DISPLAY = {
   SEGMENT: {
     BAR: {
       WIDTH: 80,
-      HEIGHT: 160,
+      HEIGHT: 110,
       DEPTH: 60,
       COLOR: {
         FUNDED: {
@@ -57,20 +56,56 @@ const DISPLAY = {
 }
 
 const RunwayVisualizer = ({ data }) => {
+  const [scenario, setScenario] = React.useState(data?.scenarios?.[0])
+
   return (
     data?.months?.length > 0 && (
       <section>
-        <RunwayVisualizerView {...{ data, id: data.id || uuidv4() }} />
+        <h3 className="text-lg uppercase">Current runway</h3>
+        <figure>
+          <RunwayVisualizerView data={data} />
+        </figure>
+        {data?.scenarios?.length > 0 && (
+          <>
+            <div className="flex items-end gap-2">
+              <h3 className="text-lg uppercase">What if...</h3>
+              <select
+                onChange={(e) => {
+                  setScenario(
+                    data.scenarios.find(
+                      ({ name }) => name === e.currentTarget.value
+                    )
+                  )
+                }}
+                className="text-2xl"
+              >
+                {!data?.scenarios?.[0] && <option>Select</option>}
+                {data?.scenarios.map((scenario, i) => (
+                  <option key={i} value={scenario.name}>
+                    {scenario.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {scenario && (
+              <figure>
+                <RunwayVisualizerView data={scenario} />
+              </figure>
+            )}
+          </>
+        )}
       </section>
     )
   )
 }
 
-function RunwayVisualizerView({ id, data: { months } }) {
+function RunwayVisualizerView({ data: { id, months } }) {
   const canvasRef = React.useRef()
 
+  id = `zdog-canvas-${id}`
+
   const runway = useVisualizer({
-    element: `.zdog-canvas-${id}`,
+    element: `.${id}`,
     canvasRef,
     months,
     dragRotate: true,
@@ -78,7 +113,7 @@ function RunwayVisualizerView({ id, data: { months } }) {
 
   useAnime(runway)
 
-  return <canvas ref={canvasRef} className={`zdog-canvas-${id}`} />
+  return <canvas ref={canvasRef} className={id} />
 }
 
 function useVisualizer({
@@ -94,7 +129,7 @@ function useVisualizer({
   React.useEffect(() => {
     const stage = {
       width: width || canvasRef.current.parentElement.clientWidth,
-      height: height || Math.floor(window.innerHeight * (2 / 3)),
+      height: height || Math.floor(window.innerHeight * (1 / 3)),
     }
 
     canvasRef.current.width = stage.width

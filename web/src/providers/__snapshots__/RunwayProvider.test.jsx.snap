@@ -1013,6 +1013,15 @@ exports[`RunwayProvider buildRenderData() transforms form data to visualizer sch
         "debit": 5,
         "label": "Apr 25",
       },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
     ],
     "total": {
       "funds": 10,
@@ -1021,7 +1030,3889 @@ exports[`RunwayProvider buildRenderData() transforms form data to visualizer sch
         "debit": 4,
       },
       "oneTime": {
-        "credit": 7,
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 11`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 12`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {},
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 13`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {
+        "name": "Empty scenario",
+      },
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 0,
+              "start": 0,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "May 24",
+          },
+        ],
+        "name": "Empty scenario",
+        "total": {
+          "funds": 0,
+          "monthly": {
+            "credit": 0,
+            "debit": 0,
+          },
+          "oneTime": {
+            "credit": 0,
+            "debit": 0,
+          },
+        },
+      },
+    ],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 14`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {
+        "funds": [
+          {
+            "amount": 10,
+            "name": "",
+          },
+        ],
+        "name": "Found money in the couch",
+      },
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "May 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Jun 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Jul 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Aug 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Sep 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Oct 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Nov 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Dec 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Jan 25",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Feb 25",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Mar 25",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Apr 25",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "May 25",
+          },
+        ],
+        "name": "Found money in the couch",
+        "total": {
+          "funds": 10,
+          "monthly": {
+            "credit": 0,
+            "debit": 0,
+          },
+          "oneTime": {
+            "credit": 0,
+            "debit": 0,
+          },
+        },
+      },
+    ],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 15`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {
+        "funds": [
+          {
+            "amount": 10,
+            "name": "",
+          },
+        ],
+        "monthlyDebits": [
+          {
+            "amount": 1,
+            "name": "",
+          },
+          {
+            "amount": 3,
+            "name": "",
+          },
+        ],
+        "name": "More monthly expenses",
+      },
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 6,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 4,
+            "label": "May 24",
+          },
+          {
+            "balance": {
+              "end": 2,
+              "start": 6,
+            },
+            "credit": 0,
+            "debit": 4,
+            "label": "Jun 24",
+          },
+          {
+            "balance": {
+              "end": -2,
+              "start": 2,
+            },
+            "credit": 0,
+            "debit": 4,
+            "label": "Jul 24",
+          },
+        ],
+        "name": "More monthly expenses",
+        "total": {
+          "funds": 10,
+          "monthly": {
+            "credit": 0,
+            "debit": 4,
+          },
+          "oneTime": {
+            "credit": 0,
+            "debit": 0,
+          },
+        },
+      },
+    ],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 16`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {
+        "funds": [
+          {
+            "amount": 10,
+            "name": "",
+          },
+        ],
+        "monthlyCredits": [
+          {
+            "amount": 1,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "name": "",
+          },
+        ],
+        "monthlyDebits": [
+          {
+            "amount": 4,
+            "name": "",
+          },
+        ],
+        "name": "More monthly income",
+      },
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 8,
+              "start": 10,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "May 24",
+          },
+          {
+            "balance": {
+              "end": 6,
+              "start": 8,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jun 24",
+          },
+          {
+            "balance": {
+              "end": 4,
+              "start": 6,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jul 24",
+          },
+          {
+            "balance": {
+              "end": 2,
+              "start": 4,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Aug 24",
+          },
+          {
+            "balance": {
+              "end": 0,
+              "start": 2,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Sep 24",
+          },
+        ],
+        "name": "More monthly income",
+        "total": {
+          "funds": 10,
+          "monthly": {
+            "credit": 2,
+            "debit": 4,
+          },
+          "oneTime": {
+            "credit": 0,
+            "debit": 0,
+          },
+        },
+      },
+    ],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 17`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {
+        "funds": [
+          {
+            "amount": 10,
+            "name": "",
+          },
+        ],
+        "monthlyCredits": [
+          {
+            "amount": 2,
+            "name": "",
+          },
+        ],
+        "monthlyDebits": [
+          {
+            "amount": 4,
+            "name": "",
+          },
+        ],
+        "name": "Additional expenses",
+        "oneTimeDebits": [
+          {
+            "amount": 1,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "name": "",
+          },
+        ],
+      },
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 5,
+              "start": 7,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "May 24",
+          },
+          {
+            "balance": {
+              "end": 3,
+              "start": 5,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jun 24",
+          },
+          {
+            "balance": {
+              "end": 1,
+              "start": 3,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jul 24",
+          },
+          {
+            "balance": {
+              "end": -1,
+              "start": 1,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Aug 24",
+          },
+        ],
+        "name": "Additional expenses",
+        "total": {
+          "funds": 10,
+          "monthly": {
+            "credit": 2,
+            "debit": 4,
+          },
+          "oneTime": {
+            "credit": 0,
+            "debit": 3,
+          },
+        },
+      },
+    ],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 18`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {
+        "funds": [
+          {
+            "amount": 10,
+            "name": "",
+          },
+        ],
+        "monthlyCredits": [
+          {
+            "amount": 2,
+            "name": "",
+          },
+        ],
+        "monthlyDebits": [
+          {
+            "amount": 4,
+            "name": "",
+          },
+        ],
+        "name": "Additional income",
+        "oneTimeCredits": [
+          {
+            "amount": 1,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "name": "",
+          },
+        ],
+        "oneTimeDebits": [
+          {
+            "amount": 3,
+            "name": "",
+          },
+        ],
+      },
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 9,
+              "start": 11,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "May 24",
+          },
+          {
+            "balance": {
+              "end": 7,
+              "start": 9,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jun 24",
+          },
+          {
+            "balance": {
+              "end": 5,
+              "start": 7,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jul 24",
+          },
+          {
+            "balance": {
+              "end": 3,
+              "start": 5,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Aug 24",
+          },
+          {
+            "balance": {
+              "end": 1,
+              "start": 3,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Sep 24",
+          },
+          {
+            "balance": {
+              "end": -1,
+              "start": 1,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Oct 24",
+          },
+        ],
+        "name": "Additional income",
+        "total": {
+          "funds": 10,
+          "monthly": {
+            "credit": 2,
+            "debit": 4,
+          },
+          "oneTime": {
+            "credit": 4,
+            "debit": 3,
+          },
+        },
+      },
+    ],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 19`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {
+        "funds": [
+          {
+            "amount": 10,
+            "name": "",
+          },
+        ],
+        "monthlyCredits": [
+          {
+            "amount": 2,
+            "name": "",
+          },
+        ],
+        "monthlyDebits": [
+          {
+            "amount": 4,
+            "name": "",
+          },
+        ],
+        "name": "Additional expenses in August & January",
+        "oneTimeCredits": [
+          {
+            "amount": 4,
+            "name": "",
+          },
+        ],
+        "oneTimeDebits": [
+          {
+            "amount": 1,
+            "date": "2025-01-21",
+            "name": "",
+          },
+          {
+            "amount": 3,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2024-08-21",
+            "name": "",
+          },
+        ],
+      },
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 9,
+              "start": 11,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "May 24",
+          },
+          {
+            "balance": {
+              "end": 7,
+              "start": 9,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jun 24",
+          },
+          {
+            "balance": {
+              "end": 5,
+              "start": 7,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jul 24",
+          },
+          {
+            "balance": {
+              "end": 2,
+              "start": 5,
+            },
+            "credit": 2,
+            "debit": 5,
+            "label": "Aug 24",
+          },
+          {
+            "balance": {
+              "end": 0,
+              "start": 2,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Sep 24",
+          },
+        ],
+        "name": "Additional expenses in August & January",
+        "total": {
+          "funds": 10,
+          "monthly": {
+            "credit": 2,
+            "debit": 4,
+          },
+          "oneTime": {
+            "credit": 4,
+            "debit": 5,
+          },
+        },
+      },
+    ],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 20`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {
+        "funds": [
+          {
+            "amount": 10,
+            "name": "",
+          },
+        ],
+        "monthlyCredits": [
+          {
+            "amount": 2,
+            "name": "",
+          },
+        ],
+        "monthlyDebits": [
+          {
+            "amount": 4,
+            "name": "",
+          },
+        ],
+        "name": "Additional income in August & January",
+        "oneTimeCredits": [
+          {
+            "amount": 1,
+            "date": "2025-01-21",
+            "name": "",
+          },
+          {
+            "amount": 4,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2024-08-21",
+            "name": "",
+          },
+        ],
+        "oneTimeDebits": [
+          {
+            "amount": 1,
+            "date": "2025-01-21",
+            "name": "",
+          },
+          {
+            "amount": 3,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2024-08-21",
+            "name": "",
+          },
+        ],
+      },
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 9,
+              "start": 11,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "May 24",
+          },
+          {
+            "balance": {
+              "end": 7,
+              "start": 9,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jun 24",
+          },
+          {
+            "balance": {
+              "end": 5,
+              "start": 7,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jul 24",
+          },
+          {
+            "balance": {
+              "end": 3,
+              "start": 5,
+            },
+            "credit": 3,
+            "debit": 5,
+            "label": "Aug 24",
+          },
+          {
+            "balance": {
+              "end": 1,
+              "start": 3,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Sep 24",
+          },
+          {
+            "balance": {
+              "end": -1,
+              "start": 1,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Oct 24",
+          },
+          {
+            "balance": {
+              "end": -3,
+              "start": -1,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Nov 24",
+          },
+          {
+            "balance": {
+              "end": -5,
+              "start": -3,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Dec 24",
+          },
+          {
+            "balance": {
+              "end": -7,
+              "start": -5,
+            },
+            "credit": 3,
+            "debit": 5,
+            "label": "Jan 25",
+          },
+        ],
+        "name": "Additional income in August & January",
+        "total": {
+          "funds": 10,
+          "monthly": {
+            "credit": 2,
+            "debit": 4,
+          },
+          "oneTime": {
+            "credit": 6,
+            "debit": 5,
+          },
+        },
+      },
+    ],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 21`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {
+        "funds": [
+          {
+            "amount": 10,
+            "name": "",
+          },
+        ],
+        "monthlyCredits": [
+          {
+            "amount": 2,
+            "name": "",
+          },
+        ],
+        "monthlyDebits": [
+          {
+            "amount": 4,
+            "name": "",
+          },
+        ],
+        "name": "Double the base",
+        "oneTimeCredits": [
+          {
+            "amount": 1,
+            "date": "2025-01-21",
+            "name": "",
+          },
+          {
+            "amount": 4,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2024-08-21",
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2025-05-01",
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2025-04-25",
+            "name": "",
+          },
+        ],
+        "oneTimeDebits": [
+          {
+            "amount": 1,
+            "date": "2025-01-21",
+            "name": "",
+          },
+          {
+            "amount": 3,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2024-08-21",
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2025-05-01",
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2025-04-25",
+            "name": "",
+          },
+        ],
+      },
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 9,
+              "start": 11,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "May 24",
+          },
+          {
+            "balance": {
+              "end": 7,
+              "start": 9,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jun 24",
+          },
+          {
+            "balance": {
+              "end": 5,
+              "start": 7,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jul 24",
+          },
+          {
+            "balance": {
+              "end": 3,
+              "start": 5,
+            },
+            "credit": 3,
+            "debit": 5,
+            "label": "Aug 24",
+          },
+          {
+            "balance": {
+              "end": 1,
+              "start": 3,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Sep 24",
+          },
+          {
+            "balance": {
+              "end": -1,
+              "start": 1,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Oct 24",
+          },
+          {
+            "balance": {
+              "end": -3,
+              "start": -1,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Nov 24",
+          },
+          {
+            "balance": {
+              "end": -5,
+              "start": -3,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Dec 24",
+          },
+          {
+            "balance": {
+              "end": -7,
+              "start": -5,
+            },
+            "credit": 3,
+            "debit": 5,
+            "label": "Jan 25",
+          },
+          {
+            "balance": {
+              "end": -9,
+              "start": -7,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Feb 25",
+          },
+          {
+            "balance": {
+              "end": -11,
+              "start": -9,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Mar 25",
+          },
+          {
+            "balance": {
+              "end": -13,
+              "start": -11,
+            },
+            "credit": 3,
+            "debit": 5,
+            "label": "Apr 25",
+          },
+          {
+            "balance": {
+              "end": -15,
+              "start": -13,
+            },
+            "credit": 3,
+            "debit": 5,
+            "label": "May 25",
+          },
+        ],
+        "name": "Double the base",
+        "total": {
+          "funds": 10,
+          "monthly": {
+            "credit": 2,
+            "debit": 4,
+          },
+          "oneTime": {
+            "credit": 8,
+            "debit": 7,
+          },
+        },
+      },
+    ],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
+        "debit": 7,
+      },
+    },
+  },
+}
+`;
+
+exports[`RunwayProvider buildRenderData() transforms form data to visualizer schema 22`] = `
+{
+  "given": {
+    "funds": [
+      {
+        "amount": 10,
+        "name": "",
+      },
+    ],
+    "monthlyCredits": [
+      {
+        "amount": 2,
+        "name": "",
+      },
+    ],
+    "monthlyDebits": [
+      {
+        "amount": 4,
+        "name": "",
+      },
+    ],
+    "oneTimeCredits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 4,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "oneTimeDebits": [
+      {
+        "amount": 1,
+        "date": "2025-01-21",
+        "name": "",
+      },
+      {
+        "amount": 3,
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2024-08-21",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-05-01",
+        "name": "",
+      },
+      {
+        "amount": 1,
+        "date": "2025-04-25",
+        "name": "",
+      },
+    ],
+    "scenarios": [
+      {
+        "funds": [
+          {
+            "amount": 10,
+            "name": "",
+          },
+        ],
+        "name": "Found money in the couch",
+      },
+      {
+        "funds": [
+          {
+            "amount": 10,
+            "name": "",
+          },
+        ],
+        "monthlyCredits": [
+          {
+            "amount": 2,
+            "name": "",
+          },
+        ],
+        "monthlyDebits": [
+          {
+            "amount": 4,
+            "name": "",
+          },
+        ],
+        "name": "Double the base",
+        "oneTimeCredits": [
+          {
+            "amount": 1,
+            "date": "2025-01-21",
+            "name": "",
+          },
+          {
+            "amount": 4,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2024-08-21",
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2025-05-01",
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2025-04-25",
+            "name": "",
+          },
+        ],
+        "oneTimeDebits": [
+          {
+            "amount": 1,
+            "date": "2025-01-21",
+            "name": "",
+          },
+          {
+            "amount": 3,
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2024-08-21",
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2025-05-01",
+            "name": "",
+          },
+          {
+            "amount": 1,
+            "date": "2025-04-25",
+            "name": "",
+          },
+        ],
+      },
+    ],
+  },
+  "returns": {
+    "months": [
+      {
+        "balance": {
+          "end": 9,
+          "start": 11,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "May 24",
+      },
+      {
+        "balance": {
+          "end": 7,
+          "start": 9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jun 24",
+      },
+      {
+        "balance": {
+          "end": 5,
+          "start": 7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Jul 24",
+      },
+      {
+        "balance": {
+          "end": 3,
+          "start": 5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Aug 24",
+      },
+      {
+        "balance": {
+          "end": 1,
+          "start": 3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Sep 24",
+      },
+      {
+        "balance": {
+          "end": -1,
+          "start": 1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Oct 24",
+      },
+      {
+        "balance": {
+          "end": -3,
+          "start": -1,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Nov 24",
+      },
+      {
+        "balance": {
+          "end": -5,
+          "start": -3,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Dec 24",
+      },
+      {
+        "balance": {
+          "end": -7,
+          "start": -5,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Jan 25",
+      },
+      {
+        "balance": {
+          "end": -9,
+          "start": -7,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Feb 25",
+      },
+      {
+        "balance": {
+          "end": -11,
+          "start": -9,
+        },
+        "credit": 2,
+        "debit": 4,
+        "label": "Mar 25",
+      },
+      {
+        "balance": {
+          "end": -13,
+          "start": -11,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "Apr 25",
+      },
+      {
+        "balance": {
+          "end": -15,
+          "start": -13,
+        },
+        "credit": 3,
+        "debit": 5,
+        "label": "May 25",
+      },
+    ],
+    "scenarios": [
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "May 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Jun 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Jul 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Aug 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Sep 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Oct 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Nov 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Dec 24",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Jan 25",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Feb 25",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Mar 25",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "Apr 25",
+          },
+          {
+            "balance": {
+              "end": 10,
+              "start": 10,
+            },
+            "credit": 0,
+            "debit": 0,
+            "label": "May 25",
+          },
+        ],
+        "name": "Found money in the couch",
+        "total": {
+          "funds": 10,
+          "monthly": {
+            "credit": 0,
+            "debit": 0,
+          },
+          "oneTime": {
+            "credit": 0,
+            "debit": 0,
+          },
+        },
+      },
+      {
+        "months": [
+          {
+            "balance": {
+              "end": 9,
+              "start": 11,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "May 24",
+          },
+          {
+            "balance": {
+              "end": 7,
+              "start": 9,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jun 24",
+          },
+          {
+            "balance": {
+              "end": 5,
+              "start": 7,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Jul 24",
+          },
+          {
+            "balance": {
+              "end": 3,
+              "start": 5,
+            },
+            "credit": 3,
+            "debit": 5,
+            "label": "Aug 24",
+          },
+          {
+            "balance": {
+              "end": 1,
+              "start": 3,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Sep 24",
+          },
+          {
+            "balance": {
+              "end": -1,
+              "start": 1,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Oct 24",
+          },
+          {
+            "balance": {
+              "end": -3,
+              "start": -1,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Nov 24",
+          },
+          {
+            "balance": {
+              "end": -5,
+              "start": -3,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Dec 24",
+          },
+          {
+            "balance": {
+              "end": -7,
+              "start": -5,
+            },
+            "credit": 3,
+            "debit": 5,
+            "label": "Jan 25",
+          },
+          {
+            "balance": {
+              "end": -9,
+              "start": -7,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Feb 25",
+          },
+          {
+            "balance": {
+              "end": -11,
+              "start": -9,
+            },
+            "credit": 2,
+            "debit": 4,
+            "label": "Mar 25",
+          },
+          {
+            "balance": {
+              "end": -13,
+              "start": -11,
+            },
+            "credit": 3,
+            "debit": 5,
+            "label": "Apr 25",
+          },
+          {
+            "balance": {
+              "end": -15,
+              "start": -13,
+            },
+            "credit": 3,
+            "debit": 5,
+            "label": "May 25",
+          },
+        ],
+        "name": "Double the base",
+        "total": {
+          "funds": 10,
+          "monthly": {
+            "credit": 2,
+            "debit": 4,
+          },
+          "oneTime": {
+            "credit": 8,
+            "debit": 7,
+          },
+        },
+      },
+    ],
+    "total": {
+      "funds": 10,
+      "monthly": {
+        "credit": 2,
+        "debit": 4,
+      },
+      "oneTime": {
+        "credit": 8,
         "debit": 7,
       },
     },

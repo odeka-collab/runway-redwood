@@ -8,6 +8,11 @@ exports[`HomePage renders the onboarding form 1`] = `
       <form
         class="flex flex-col gap-4 sm:gap-8"
       >
+        <input
+          id="id"
+          name="id"
+          type="hidden"
+        />
         <h2
           class="py-4 sm:py-8 text-center text-2xl"
         >
@@ -349,16 +354,7 @@ exports[`HomePage renders the onboarding form 1`] = `
       "date": null
     }
   ],
-  "scenarios": [
-    {
-      "name": "",
-      "funds": [],
-      "monthlyDebits": [],
-      "monthlyCredits": [],
-      "oneTimeDebits": [],
-      "oneTimeCredits": []
-    }
-  ]
+  "scenarios": []
 }
           </pre>
         </div>
@@ -369,6 +365,11 @@ exports[`HomePage renders the onboarding form 1`] = `
     <form
       class="flex flex-col gap-4 sm:gap-8"
     >
+      <input
+        id="id"
+        name="id"
+        type="hidden"
+      />
       <h2
         class="py-4 sm:py-8 text-center text-2xl"
       >
@@ -710,16 +711,7 @@ exports[`HomePage renders the onboarding form 1`] = `
       "date": null
     }
   ],
-  "scenarios": [
-    {
-      "name": "",
-      "funds": [],
-      "monthlyDebits": [],
-      "monthlyCredits": [],
-      "oneTimeDebits": [],
-      "oneTimeCredits": []
-    }
-  ]
+  "scenarios": []
 }
         </pre>
       </div>

@@ -7,13 +7,21 @@ export const DEFAULT_VALUE = {
     monthlyCredits: [{ name: '', amount: 0 }],
     oneTimeDebits: [{ name: '', amount: 0, date: null }],
     oneTimeCredits: [{ name: '', amount: 0, date: null }],
+    scenarios: [
+      {
+        name: '',
+        funds: [],
+        monthlyDebits: [],
+        monthlyCredits: [],
+        oneTimeDebits: [],
+        oneTimeCredits: [],
+      },
+    ],
   },
 }
 
-export default function RunwayProvider({ children, initialState }) {
-  const [state, dispatch] = React.useReducer(runwayReducer, {
-    ...(initialState || DEFAULT_VALUE),
-  })
+export default function RunwayProvider({ children }) {
+  const [state, dispatch] = React.useReducer(runwayReducer, DEFAULT_VALUE)
 
   return (
     <RunwayContext.Provider value={{ ...state, dispatch }}>

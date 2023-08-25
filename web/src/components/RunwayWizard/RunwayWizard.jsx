@@ -93,8 +93,15 @@ const STEPS = {
   EDIT_RUNWAY: {
     name: 'EDIT_RUNWAY',
     component: RunwayForm.AllFields,
-    prev: 'MONTHLY_CREDITS',
     display: 'compact',
+    enableScenarios: true,
+  },
+  SCENARIOS: {
+    name: 'SCENARIOS',
+    component: RunwayForm.Scenarios,
+    display: 'compact',
+    prev: 'EDIT_RUNWAY',
+    next: 'EDIT_RUNWAY',
   },
 }
 
@@ -122,7 +129,7 @@ function RunwayWizardStateMachine({ initialState }) {
     }
   }
 
-  async function onBack() {
+  function onBack() {
     setState({
       ...state,
       view: VIEWS.FORM,
@@ -133,11 +140,19 @@ function RunwayWizardStateMachine({ initialState }) {
     })
   }
 
-  async function onNext() {
+  function onNext() {
     setState({
       ...state,
       view: VIEWS.FORM,
       step: STEPS[state.step.next] || state.step,
+    })
+  }
+
+  function onClickScenarios() {
+    setState({
+      ...state,
+      view: VIEWS.FORM,
+      step: STEPS.SCENARIOS,
     })
   }
 
@@ -161,10 +176,11 @@ function RunwayWizardStateMachine({ initialState }) {
         <>
           <FormView
             {...{
-              step: state?.step,
+              step: state.step,
               data,
               onSubmit,
-              onBack: state.step.name !== 'EDIT_RUNWAY' ? onBack : undefined,
+              onBack,
+              onClickScenarios,
             }}
           />
           <Details datas={[data]} />
@@ -206,7 +222,7 @@ function RunwayView({ stepName, data, onBack, onNext }) {
   )
 }
 
-function FormView({ step, data, onSubmit, onBack }) {
+function FormView({ step, data, onSubmit, onBack, onClickScenarios }) {
   const CurrentStep = step?.component
 
   if (!CurrentStep) return null
@@ -215,6 +231,7 @@ function FormView({ step, data, onSubmit, onBack }) {
     <RunwayForm
       defaultValues={data}
       {...(step.prev && { onBack })}
+      {...(step.enableScenarios && { onClickScenarios })}
       onSubmit={onSubmit}
       render={CurrentStep}
       display={step.display}

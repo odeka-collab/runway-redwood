@@ -9,18 +9,16 @@ import {
 } from '@redwoodjs/forms'
 
 import Button from 'src/components/Button/Button'
-import useModal from 'src/hooks/UseModal'
 import useRunway from 'src/hooks/UseRunway'
 
 const COPIED_MESSAGE_TIMEOUT_MSEC = 5000
 
-const RunwayImport = () => {
+const RunwayImport = ({ onCancel, onSubmit }) => {
   const [state, setState] = React.useState({
     copyStatus: null,
   })
 
-  const { toggle } = useModal()
-  const { data, update } = useRunway()
+  const { data } = useRunway()
 
   // Hide the message after some delay
   React.useEffect(() => {
@@ -34,15 +32,6 @@ const RunwayImport = () => {
       }
     }
   }, [state])
-
-  async function onSubmit({ data }) {
-    await update(data)
-    toggle()
-  }
-
-  function onCancel() {
-    toggle()
-  }
 
   async function onCopy() {
     try {

@@ -38,6 +38,7 @@ const RunwayForm = ({
   render,
   defaultValues,
   display,
+  submitComponent: SubmitComponent,
   onSubmit,
   onBack,
   onClickScenarios,
@@ -279,9 +280,15 @@ const RunwayForm = ({
             <FloppyDiskBack className="h-4 w-auto" />
             <span className="inline sm:hidden">Save / Load</span>
           </Button>
-          <Submit className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
-            Build Runway
-            <AirplaneTakeoff className="h-4 w-auto" />
+          <Submit>
+            {SubmitComponent ? (
+              <SubmitComponent />
+            ) : (
+              <span className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
+                Build Runway
+                <AirplaneTakeoff className="h-4 w-auto" />
+              </span>
+            )}
           </Submit>
         </div>
       </div>
@@ -318,12 +325,14 @@ function AllFields({
 export function Funds({
   headerText = 'Current Funds',
   name = 'funds',
+  description,
   minRows,
   display,
 }) {
   return (
     <>
       {headerText && <Header display={display}>{headerText}</Header>}
+      {description && <Description>{description}</Description>}
       <FieldArray
         name={name}
         appendLabel="Add funds"
@@ -344,12 +353,14 @@ export function Funds({
 export function MonthlyDebits({
   headerText = 'Monthly expenses',
   name = 'monthlyDebits',
+  description,
   minRows,
   display,
 }) {
   return (
     <>
       {headerText && <Header display={display}>{headerText}</Header>}
+      {description && <Description>{description}</Description>}
       <FieldArray
         name={name}
         appendLabel="Add expense"
@@ -370,12 +381,14 @@ export function MonthlyDebits({
 export function MonthlyCredits({
   headerText = 'Monthly income',
   name = 'monthlyCredits',
+  description,
   minRows,
   display,
 }) {
   return (
     <>
       {headerText && <Header display={display}>{headerText}</Header>}
+      {description && <Description>{description}</Description>}
       <FieldArray
         name={name}
         appendLabel="Add income"
@@ -396,6 +409,7 @@ export function MonthlyCredits({
 export function OneTimeCredits({
   headerText = 'Other income',
   name = 'oneTimeCredits',
+  description,
   dateRange,
   minRows,
   display,
@@ -406,6 +420,7 @@ export function OneTimeCredits({
   return (
     <>
       {headerText && <Header display={display}>{headerText}</Header>}
+      {description && <Description>{description}</Description>}
       <FieldArray
         name={name}
         appendLabel="Add income"
@@ -443,6 +458,7 @@ export function OneTimeCredits({
 export function OneTimeDebits({
   headerText = 'Other expenses',
   name = 'oneTimeDebits',
+  description,
   dateRange,
   minRows,
   display,
@@ -453,6 +469,7 @@ export function OneTimeDebits({
   return (
     <>
       {headerText && <Header display={display}>{headerText}</Header>}
+      {description && <Description>{description}</Description>}
       <FieldArray
         name={name}
         appendLabel="Add expense"
@@ -489,6 +506,7 @@ export function OneTimeDebits({
 
 export function Scenarios({
   headerText = 'Scenarios',
+  description,
   display,
   watch,
   getValues,
@@ -499,6 +517,7 @@ export function Scenarios({
   return (
     <>
       {headerText && <Header>{headerText}</Header>}
+      {description && <Description>{description}</Description>}
       <ScenarioArray
         name="scenarios"
         appendLabel="Add scenario"
@@ -732,6 +751,10 @@ function Header({ children, display }) {
     display === 'compact' ? 'text-xl' : 'py-4 sm:py-8 text-center text-2xl'
 
   return <h2 className={className}>{children}</h2>
+}
+
+function Description({ children }) {
+  return <p className="text-md">{children}</p>
 }
 
 function Row({ children }) {

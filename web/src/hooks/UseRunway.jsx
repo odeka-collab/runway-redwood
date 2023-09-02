@@ -8,7 +8,12 @@ export default function useRunway() {
     return { ...state, data }
   }
 
+  async function skipToStep(step) {
+    dispatch({ type: 'patch', payload: step })
+  }
+
   return {
+    skipToStep,
     update,
     ...state,
   }

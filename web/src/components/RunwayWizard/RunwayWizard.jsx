@@ -9,129 +9,30 @@ import {
   PRESET_BUSINESS,
   PRESET_LAID_OFF,
 } from 'src/components/RunwayWizard/presets'
+import {
+  DEFAULT_WORKFLOW,
+  LAID_OFF_WORKFLOW,
+  VIEWS,
+} from 'src/components/RunwayWizard/workflows'
 import useModal from 'src/hooks/UseModal'
 import useRunway from 'src/hooks/UseRunway'
 import { buildRenderData } from 'src/providers/RunwayProvider'
 
-const VIEWS = {
-  WELCOME: 'WELCOME',
-  FORM: 'FORM',
-  RUNWAY: 'RUNWAY',
-}
-
-export const STEPS = {
-  WELCOME: {
-    name: 'WELCOME',
-    view: VIEWS.WELCOME,
-    next: 'FUNDS',
-  },
-  FUNDS: {
-    name: 'FUNDS',
-    component: function Funds(props) {
-      return (
-        <>
-          <RunwayForm.Funds
-            {...props}
-            headerText="How much cash do you have?"
-            description="Check your couches and piggy banks."
-          />
-        </>
-      )
-    },
-    submitComponent: NextLabel,
-    prev: 'WELCOME',
-    next: 'ONE_TIME_CREDITS',
-  },
-  ONE_TIME_CREDITS: {
-    name: 'ONE_TIME_CREDITS',
-    component: function OneTimeCredits(props) {
-      return (
-        <RunwayForm.OneTimeCredits
-          {...props}
-          headerText="Are you expecting any money?"
-          description="Add anything you're pretty sure is coming in. We'll add less sure things later."
-        />
-      )
-    },
-    submitComponent: NextLabel,
-    prev: 'FUNDS',
-    next: 'MONTHLY_CREDITS',
-  },
-  MONTHLY_CREDITS: {
-    name: 'MONTHLY_CREDITS',
-    component: function MonthlyCredits(props) {
-      return (
-        <RunwayForm.MonthlyCredits
-          {...props}
-          headerText="Do you have any regular monthly earnings?"
-          description="Add any income you are expecting each month."
-        />
-      )
-    },
-    submitComponent: NextLabel,
-    prev: 'ONE_TIME_CREDITS',
-    next: 'MONTHLY_DEBITS',
-  },
-  MONTHLY_DEBITS: {
-    name: 'MONTHLY_DEBITS',
-    component: function MonthlyDebits(props) {
-      return (
-        <>
-          <RunwayForm.MonthlyDebits
-            {...props}
-            headerText="How much are you spending each month?"
-            description=""
-          />
-        </>
-      )
-    },
-    submitComponent: NextLabel,
-    prev: 'MONTHLY_CREDITS',
-    next: 'ONE_TIME_DEBITS',
-  },
-  ONE_TIME_DEBITS: {
-    name: 'ONE_TIME_DEBITS',
-    component: function OneTimeDebits(props) {
-      return (
-        <RunwayForm.OneTimeDebits
-          {...props}
-          headerText="Do you have any expenses coming up?"
-        />
-      )
-    },
-    prev: 'MONTHLY_DEBITS',
-    next: 'VIEW_RUNWAY',
-  },
-  VIEW_RUNWAY: {
-    view: VIEWS.RUNWAY,
-    next: 'EDIT_RUNWAY',
-  },
-  EDIT_RUNWAY: {
-    name: 'EDIT_RUNWAY',
-    component: RunwayForm.AllFields,
-    display: 'compact',
-    enableScenarios: true,
-    next: 'VIEW_RUNWAY',
-  },
-  SCENARIOS: {
-    name: 'SCENARIOS',
-    component: RunwayForm.Scenarios,
-    display: 'compact',
-    prev: 'EDIT_RUNWAY',
-    next: 'VIEW_RUNWAY',
-  },
-}
-
-const DEFAULT_STEP = STEPS.WELCOME
+const DEFAULT_STEP = DEFAULT_WORKFLOW.WELCOME
 
 function RunwayWizard() {
+  const [workflow, setWorkflow] = React.useState(DEFAULT_WORKFLOW)
   const [step, setStep] = React.useState(DEFAULT_STEP)
   const { open, toggle } = useModal()
   const { data, update } = useRunway()
 
-  async function onClickOnboarding(presetFormData) {
+  async function onClickOnboarding(
+    presetFormData,
+    updatedWorkflow = DEFAULT_WORKFLOW
+  ) {
     await update(presetFormData)
-    onNext()
+    setWorkflow(updatedWorkflow)
+    setStep(updatedWorkflow[updatedWorkflow[step.name].next] || step)
   }
 
   async function onSubmit(formData, options = {}) {
@@ -140,20 +41,20 @@ function RunwayWizard() {
     if (options?.save) {
       toggle()
     } else {
-      setStep(STEPS[step.next] || step)
+      setStep(workflow[step.next] || step)
     }
   }
 
   function onBack() {
-    setStep(STEPS[step.prev] || step)
+    setStep(workflow[step.prev] || step)
   }
 
   function onNext() {
-    setStep(STEPS?.[step.next] || step)
+    setStep(workflow[step.next] || step)
   }
 
   function onClickScenarios() {
-    setStep(STEPS.SCENARIOS)
+    setStep(workflow.SCENARIOS)
   }
 
   async function onCancelImport() {
@@ -162,7 +63,7 @@ function RunwayWizard() {
 
   async function onImport({ data }) {
     await update(data)
-    setStep(STEPS.EDIT_RUNWAY)
+    setStep(workflow.EDIT_RUNWAY || step)
     toggle()
   }
 
@@ -233,15 +134,31 @@ function Welcome({ onClickOnboarding }) {
   return (
     <>
       <h2 className="py-4 text-center text-2xl sm:py-8">Welcome text</h2>
-      <div className="grid grid-flow-col content-stretch">
-        <button onClick={() => onClickOnboarding(PRESET_BUSINESS)}>
+      <p className="text-md pb-4 text-center sm:pb-8">
+        Lorem ipsum dolor sit amet
+      </p>
+      <div className="grid content-stretch gap-4 sm:grid-cols-2">
+        <Card onClick={() => onClickOnboarding(PRESET_BUSINESS)}>
           I am starting a business
-        </button>
-        <button onClick={() => onClickOnboarding(PRESET_LAID_OFF)}>
+        </Card>
+        <Card
+          onClick={() => onClickOnboarding(PRESET_LAID_OFF, LAID_OFF_WORKFLOW)}
+        >
           I was just laid off
-        </button>
+        </Card>
       </div>
     </>
+  )
+}
+
+function Card({ children, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className="h-64 rounded-3xl border-4 border-double border-black text-xl sm:h-80"
+    >
+      {children}
+    </button>
   )
 }
 
@@ -297,7 +214,7 @@ function Details({ datas }) {
   )
 }
 
-function NextLabel() {
+export function NextLabel() {
   return (
     <span className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
       Next

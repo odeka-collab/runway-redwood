@@ -1,4 +1,8 @@
-import { ArrowFatRight, PencilSimple } from '@phosphor-icons/react'
+import {
+  ArrowFatRight,
+  PencilSimple,
+  PersonSimpleRun,
+} from '@phosphor-icons/react'
 import { v4 as uuidv4 } from 'uuid'
 
 import Button from 'src/components/Button/Button'
@@ -12,11 +16,12 @@ import {
 import {
   DEFAULT_WORKFLOW,
   LAID_OFF_WORKFLOW,
+  SKIP_WORKFLOW,
   VIEWS,
 } from 'src/components/RunwayWizard/workflows'
 import useModal from 'src/hooks/UseModal'
 import useRunway from 'src/hooks/UseRunway'
-import { buildRenderData } from 'src/providers/RunwayProvider'
+import { DEFAULT_VALUE, buildRenderData } from 'src/providers/RunwayProvider'
 
 const DEFAULT_STEP = DEFAULT_WORKFLOW.WELCOME
 
@@ -27,7 +32,7 @@ function RunwayWizard() {
   const { data, update } = useRunway()
 
   async function onClickOnboarding(
-    presetFormData,
+    presetFormData = DEFAULT_VALUE.data,
     updatedWorkflow = DEFAULT_WORKFLOW
   ) {
     await update(presetFormData)
@@ -132,12 +137,13 @@ function RunwayWizardView({
 
 function Welcome({ onClickOnboarding }) {
   return (
-    <>
-      <h2 className="py-4 text-center text-2xl sm:py-8">Welcome text</h2>
-      <p className="text-md pb-4 text-center sm:pb-8">
-        Lorem ipsum dolor sit amet
+    <div className="flex flex-col gap-4 sm:gap-8">
+      <h2 className="text-center text-2xl">Howdy!</h2>
+      <p className="text-md text-center">
+        Check out a sample financial runway for the situations below or try it
+        for yourself!
       </p>
-      <div className="grid content-stretch gap-4 sm:grid-cols-2">
+      <div className="grid content-stretch gap-4 xs:grid-cols-2 xs:py-8">
         <Card onClick={() => onClickOnboarding(PRESET_BUSINESS)}>
           I am starting a business
         </Card>
@@ -147,7 +153,23 @@ function Welcome({ onClickOnboarding }) {
           I was just laid off
         </Card>
       </div>
-    </>
+      <div className="flex flex-col-reverse justify-between gap-4 pt-4 sm:flex-row sm:pt-8">
+        <Button onClick={() => onClickOnboarding()}>
+          <span className="flex items-center justify-center gap-2">
+            Try it myself
+            <ArrowFatRight />
+          </span>
+        </Button>
+        <Button
+          onClick={() => onClickOnboarding(DEFAULT_VALUE.data, SKIP_WORKFLOW)}
+        >
+          <span className="flex items-center justify-center gap-2">
+            I know what I&apos;m doing
+            <PersonSimpleRun className="h-6 w-auto" />
+          </span>
+        </Button>
+      </div>
+    </div>
   )
 }
 
@@ -155,7 +177,7 @@ function Card({ children, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="h-64 rounded-3xl border-4 border-double border-black text-xl sm:h-80"
+      className="h-48 rounded-3xl border-4 border-double border-black p-1 text-xl sm:h-60"
     >
       {children}
     </button>

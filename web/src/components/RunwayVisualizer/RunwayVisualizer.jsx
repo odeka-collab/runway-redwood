@@ -23,7 +23,7 @@ const DISPLAY = {
   SEGMENT: {
     BAR: {
       WIDTH: 80,
-      HEIGHT: 110,
+      HEIGHT: 100,
       DEPTH: 60,
       COLOR: {
         FUNDED: {
@@ -58,17 +58,23 @@ const DISPLAY = {
 const RunwayVisualizer = ({ data }) => {
   const [scenario, setScenario] = React.useState(data?.scenarios?.[0])
 
+  const showScenarios = data?.scenarios?.length > 0
+
+  const sectionClassName = showScenarios ? 'grid sm:grid-cols-2' : ''
+
   return (
     data?.months?.length > 0 && (
-      <section>
-        <h3 className="text-lg uppercase">Current runway</h3>
-        <figure>
-          <RunwayVisualizerView data={data} />
-        </figure>
-        {data?.scenarios?.length > 0 && (
-          <>
-            <div className="flex items-end gap-2">
-              <h3 className="text-lg uppercase">What if...</h3>
+      <section className={sectionClassName}>
+        <div>
+          <h3 className="text-lg uppercase">Your Runway</h3>
+          <figure>
+            <RunwayVisualizerView data={data} />
+          </figure>
+        </div>
+        {showScenarios && (
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="text-lg uppercase">What if&hellip;</h3>
               <select
                 onChange={(e) => {
                   setScenario(
@@ -77,7 +83,7 @@ const RunwayVisualizer = ({ data }) => {
                     )
                   )
                 }}
-                className="text-2xl"
+                className="text-lg font-bold"
               >
                 {!data?.scenarios?.[0] && <option>Select</option>}
                 {data?.scenarios.map((scenario, i) => (
@@ -92,7 +98,7 @@ const RunwayVisualizer = ({ data }) => {
                 <RunwayVisualizerView data={scenario} />
               </figure>
             )}
-          </>
+          </div>
         )}
       </section>
     )

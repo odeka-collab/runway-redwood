@@ -5,6 +5,8 @@
  * @property {string=} name
  * @property {Object[]=} funds
  * @property {Object[]=} monthlyDebits
+ * @property {Object[]=} monthlyDebitsFixed
+ * @property {Object[]=} monthlyDebitsFlexible
  * @property {Object[]=} monthlyCredits
  * @property {Object[]=} oneTimeDebits
  * @property {Object[]=} oneTimeCredits
@@ -35,11 +37,56 @@ export const RunwayContext = React.createContext()
 
 export const DEFAULT_VALUE = {
   data: {
-    funds: [{ name: '', amount: 0 }],
-    monthlyDebits: [{ name: '', amount: 0 }],
-    monthlyCredits: [{ name: '', amount: 0 }],
-    oneTimeDebits: [{ name: '', amount: 0, date: null }],
-    oneTimeCredits: [{ name: '', amount: 0, date: null }],
+    funds: [
+      {
+        name: '',
+        amount: 0,
+        type: null,
+        recurring: null,
+        date: null,
+        category: null,
+      },
+    ],
+    monthlyCredits: [
+      {
+        name: '',
+        amount: 0,
+        type: 'credit',
+        recurring: 'monthly',
+        date: null,
+        category: null,
+      },
+    ],
+    oneTimeCredits: [
+      {
+        name: '',
+        amount: 0,
+        type: 'credit',
+        recurring: 'one_time',
+        date: null,
+        category: null,
+      },
+    ],
+    monthlyDebits: [
+      {
+        name: '',
+        amount: 0,
+        type: 'debit',
+        recurring: 'monthly',
+        date: null,
+        category: null,
+      },
+    ],
+    oneTimeDebits: [
+      {
+        name: '',
+        amount: 0,
+        type: 'debit',
+        recurring: 'one_time',
+        date: null,
+        category: null,
+      },
+    ],
     scenarios: [],
   },
 }

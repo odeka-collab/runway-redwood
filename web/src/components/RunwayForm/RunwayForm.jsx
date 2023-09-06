@@ -2,11 +2,16 @@ import {
   AirplaneTakeoff,
   ArrowCounterClockwise,
   ArrowFatLeft,
+  ArrowFatRight,
   FloppyDiskBack,
   Plus,
+  ProjectorScreenChart,
   Question,
   Trash,
 } from '@phosphor-icons/react'
+import _get from 'lodash.get'
+import _isEqual from 'lodash.isequal'
+import _set from 'lodash.set'
 import { v4 as uuidv4 } from 'uuid'
 
 import {
@@ -29,19 +34,40 @@ const FUNDS_DEFAULT_APPEND_VALUE = DEFAULT_VALUE.data.funds[0]
 const MONTHLY_CREDITS_DEFAULT_APPEND_VALUE =
   DEFAULT_VALUE.data.monthlyCredits[0]
 const MONTHLY_DEBITS_DEFAULT_APPEND_VALUE = DEFAULT_VALUE.data.monthlyDebits[0]
+const MONTHLY_DEBITS_FIXED_DEFAULT_APPEND_VALUE = [
+  {
+    name: '',
+    amount: 0,
+    type: 'debit',
+    recurring: 'monthly',
+    date: null,
+    category: 'fixed',
+  },
+]
+const MONTHLY_DEBITS_FLEXIBLE_DEFAULT_APPEND_VALUE = [
+  {
+    name: '',
+    amount: 0,
+    type: 'debit',
+    recurring: 'monthly',
+    date: null,
+    category: 'flexible',
+  },
+]
 const ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE =
   DEFAULT_VALUE.data.oneTimeCredits[0]
 const ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE = DEFAULT_VALUE.data.oneTimeDebits[0]
 
 const RunwayForm = ({
+  backLabel = 'Back',
   children,
-  render,
   defaultValues,
   display,
-  submitComponent: SubmitComponent,
   onSubmit,
   onBack,
   onClickScenarios,
+  render,
+  submitComponent: SubmitComponent,
 }) => {
   children = render || children || AllFields
 
@@ -51,6 +77,11 @@ const RunwayForm = ({
     e.preventDefault()
     formMethods.reset()
     onBack()
+  }
+
+  function handleClickScenarios(e) {
+    e.preventDefault()
+    onClickScenarios()
   }
 
   function handleSave(e) {
@@ -72,118 +103,123 @@ const RunwayForm = ({
   function sanitize(formValues) {
     return {
       ...formValues,
-      id: formValues.id || uuidv4(), // id used by visualizater
-      ...(formValues.funds?.length > 0 && {
-        funds: formValues.funds.reduce(
-          reduceDefaultAppendValue({
-            key: 'funds',
-            defaultAppendValue: FUNDS_DEFAULT_APPEND_VALUE,
-          }),
-          []
-        ),
-      }),
-      ...(formValues.monthlyDebits?.length > 0 && {
-        monthlyDebits: formValues.monthlyDebits.reduce(
-          reduceDefaultAppendValue({
-            key: 'monthlyDebits',
-            defaultAppendValue: MONTHLY_DEBITS_DEFAULT_APPEND_VALUE,
-          }),
-          []
-        ),
-      }),
-      ...(formValues.monthlyCredits?.length > 0 && {
-        monthlyCredits: formValues.monthlyCredits.reduce(
-          reduceDefaultAppendValue({
-            key: 'monthlyCredits',
-            defaultAppendValue: MONTHLY_CREDITS_DEFAULT_APPEND_VALUE,
-          }),
-          []
-        ),
-      }),
-      ...(formValues.oneTimeCredits?.length > 0 && {
-        oneTimeCredits: formValues.oneTimeCredits.map(normalizeDate).reduce(
-          reduceDefaultAppendValue({
-            key: 'oneTimeCredits',
-            defaultAppendValue: ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE,
-          }),
-          []
-        ),
-      }),
-      ...(formValues.oneTimeDebits?.length > 0 && {
-        oneTimeDebits: formValues.oneTimeDebits.map(normalizeDate).reduce(
-          reduceDefaultAppendValue({
-            key: 'oneTimeDebits',
-            defaultAppendValue: ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE,
-          }),
-          []
-        ),
-      }),
+      id: formValues.id || uuidv4(), // id used by visualizer
+      ...reduceFormValues(formValues),
       ...(formValues.scenarios?.length > 0 && {
         scenarios: formValues.scenarios
+          .map((scenario) => ({
+            ...scenario,
+            id: scenario.id || uuidv4(), // id used by visualizater
+            ...reduceFormValues(scenario, [
+              {
+                key: `funds`,
+                defaultAppendValue: FUNDS_DEFAULT_APPEND_VALUE,
+                minRows: 0,
+              },
+              {
+                key: `monthlyCredits`,
+                defaultAppendValue: MONTHLY_CREDITS_DEFAULT_APPEND_VALUE,
+                minRows: 0,
+              },
+              {
+                key: `oneTimeCredits`,
+                defaultAppendValue: ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE,
+                minRows: 0,
+              },
+              {
+                key: `monthlyDebits`,
+                defaultAppendValue: MONTHLY_DEBITS_DEFAULT_APPEND_VALUE,
+                minRows: 0,
+              },
+              {
+                key: `oneTimeDebits`,
+                defaultAppendValue: ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE,
+                minRows: 0,
+              },
+            ]),
+          }))
           .reduce(
             reduceDefaultAppendValue({
               key: 'scenarios',
               defaultAppendValue: {
-                funds: formMethods.getValues('funds'),
-                monthlyDebits: formMethods.getValues('monthlyDebits'),
-                monthlyCredits: formMethods.getValues('monthlyCredits'),
-                oneTimeCredits: formMethods.getValues('oneTimeCredits'),
-                oneTimeDebits: formMethods.getValues('oneTimeDebits'),
+                name: '',
+                funds: formMethods.getValues('funds') || [],
+                monthlyDebits: formMethods.getValues('monthlyDebits') || [],
+                monthlyDebitsFixed:
+                  formMethods.getValues('monthlyDebitsFixed') || [],
+                monthlyDebitsFlexible:
+                  formMethods.getValues('monthlyDebitsFlexible') || [],
+                monthlyCredits: formMethods.getValues('monthlyCredits') || [],
+                oneTimeCredits:
+                  formMethods.getValues('oneTimeCredits')?.map(normalizeDate) ||
+                  [],
+                oneTimeDebits:
+                  formMethods.getValues('oneTimeDebits')?.map(normalizeDate) ||
+                  [],
               },
             }),
             []
-          )
-          .map((scenario, i) => ({
-            ...scenario,
-            id: scenario.id || uuidv4(), // id used by visualizater
-            ...(scenario.funds?.length > 0 && {
-              funds: scenario.funds.reduce(
-                reduceDefaultAppendValue({
-                  key: `scenarios.${i}.funds`,
-                  defaultAppendValue: FUNDS_DEFAULT_APPEND_VALUE,
-                }),
-                []
-              ),
-            }),
-            ...(scenario.monthlyDebits?.length > 0 && {
-              monthlyDebits: scenario.monthlyDebits.reduce(
-                reduceDefaultAppendValue({
-                  key: `scenarios.${i}.monthlyDebits`,
-                  defaultAppendValue: MONTHLY_DEBITS_DEFAULT_APPEND_VALUE,
-                }),
-                []
-              ),
-            }),
-            ...(scenario.monthlyCredits?.length > 0 && {
-              monthlyCredits: scenario.monthlyCredits.reduce(
-                reduceDefaultAppendValue({
-                  key: `scenarios.${i}.monthlyCredits`,
-                  defaultAppendValue: MONTHLY_CREDITS_DEFAULT_APPEND_VALUE,
-                }),
-                []
-              ),
-            }),
-            ...(scenario.oneTimeCredits?.length > 0 && {
-              oneTimeCredits: scenario.oneTimeCredits.map(normalizeDate).reduce(
-                reduceDefaultAppendValue({
-                  key: `scenarios.${i}.oneTimeCredits`,
-                  defaultAppendValue: ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE,
-                }),
-                []
-              ),
-            }),
-            ...(scenario.oneTimeDebits?.length > 0 && {
-              oneTimeDebits: scenario.oneTimeDebits.map(normalizeDate).reduce(
-                reduceDefaultAppendValue({
-                  key: `scenarios.${i}.oneTimeDebits`,
-                  defaultAppendValue: ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE,
-                }),
-                []
-              ),
-            }),
-          })),
+          ),
       }),
     }
+  }
+
+  function reduceFormValues(
+    formValues,
+    config = [
+      {
+        key: 'funds',
+        defaultAppendValue: FUNDS_DEFAULT_APPEND_VALUE,
+        minRows: 1,
+      },
+      {
+        key: 'monthlyCredits',
+        defaultAppendValue: MONTHLY_CREDITS_DEFAULT_APPEND_VALUE,
+        minRows: 1,
+      },
+      {
+        key: 'oneTimeCredits',
+        defaultAppendValue: ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE,
+        minRows: 1,
+      },
+      {
+        key: 'monthlyDebits',
+        defaultAppendValue: MONTHLY_DEBITS_DEFAULT_APPEND_VALUE,
+        minRows: 1,
+      },
+      {
+        key: 'monthlyDebitsFixed',
+        defaultAppendValue: MONTHLY_DEBITS_FIXED_DEFAULT_APPEND_VALUE,
+        minRows: 1,
+      },
+      {
+        key: 'monthlyDebitsFlexible',
+        defaultAppendValue: MONTHLY_DEBITS_FLEXIBLE_DEFAULT_APPEND_VALUE,
+        minRows: 1,
+      },
+      {
+        key: 'oneTimeDebits',
+        defaultAppendValue: ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE,
+        minRows: 1,
+      },
+    ]
+  ) {
+    return config?.reduce((acc, { key, defaultAppendValue, minRows }) => {
+      if (_get(formValues, key)?.length > 0) {
+        _set(
+          acc,
+          key,
+          _get(formValues, key, [])
+            ?.map(normalizeDate)
+            ?.reduce(
+              reduceDefaultAppendValue({ key, defaultAppendValue, minRows }),
+              []
+            )
+        )
+      }
+
+      return acc
+    }, {})
   }
 
   function reduceDefaultAppendValue({
@@ -192,8 +228,8 @@ const RunwayForm = ({
     minRows = true,
   }) {
     return (acc, row, i) => {
-      // Keep rows with values
-      if (isValued({ name: `${key}.${i}`, defaultAppendValue })) {
+      // Keep rows with updated values
+      if (isDirty({ name: `${key}.${i}`, defaultAppendValue })) {
         acc = [...acc, row]
       }
 
@@ -206,9 +242,11 @@ const RunwayForm = ({
     }
   }
 
-  function isValued({ name, defaultAppendValue }) {
-    const { id: _, ...formValues } = formMethods.getValues(name)
-    return JSON.stringify(formValues) !== JSON.stringify(defaultAppendValue)
+  function isDirty({ name, defaultAppendValue }) {
+    const { id: _, ...formValues } = normalizeDate(
+      formMethods.getValues(name) || []
+    )
+    return !_isEqual(formValues, defaultAppendValue)
   }
 
   /**
@@ -244,6 +282,41 @@ const RunwayForm = ({
           : 'flex flex-col gap-4 sm:gap-8'
       }
     >
+      {display === 'compact' && (
+        <div className="mb-4 flex flex-col items-stretch gap-2 border-b border-double border-black pb-8 pt-4 sm:flex-row sm:justify-between">
+          {onClickScenarios && (
+            <button
+              className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+              onClick={handleClickScenarios}
+            >
+              <Question className="h-4 w-auto sm:hidden" />
+              What if&hellip;
+              <Question className="hidden h-4 w-auto sm:inline" />
+            </button>
+          )}
+          {onBack && (
+            <button
+              className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+              onClick={handleBack}
+            >
+              <ArrowFatLeft className="h-4 w-auto" />
+              {backLabel}
+            </button>
+          )}
+          <div className="flex flex-col-reverse items-stretch gap-2 sm:ml-auto sm:flex-row">
+            <Button
+              className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase sm:p-3"
+              onClick={handleSave}
+            >
+              <FloppyDiskBack className="h-4 w-auto" />
+              <span className="inline sm:hidden">Save / Load</span>
+            </Button>
+            <Submit>
+              {SubmitComponent ? <SubmitComponent /> : <NextLabel />}
+            </Submit>
+          </div>
+        </div>
+      )}
       <HiddenField name="id" />
       {children({ ...formMethods, display })}
       <div
@@ -257,19 +330,7 @@ const RunwayForm = ({
             onClick={handleBack}
           >
             <ArrowFatLeft className="h-4 w-auto" />
-            Back
-          </button>
-        )}
-        {onClickScenarios && (
-          <button
-            className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
-            onClick={(e) => {
-              e.preventDefault()
-              onClickScenarios()
-            }}
-          >
-            What if...
-            <Question className="h-4 w-auto" />
+            {backLabel}
           </button>
         )}
         <div className="flex flex-col-reverse items-stretch gap-2 sm:ml-auto sm:flex-row">
@@ -281,14 +342,7 @@ const RunwayForm = ({
             <span className="inline sm:hidden">Save / Load</span>
           </Button>
           <Submit>
-            {SubmitComponent ? (
-              <SubmitComponent />
-            ) : (
-              <span className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
-                Build Runway
-                <AirplaneTakeoff className="h-4 w-auto" />
-              </span>
-            )}
+            {SubmitComponent ? <SubmitComponent /> : <NextLabel />}
           </Submit>
         </div>
       </div>
@@ -297,13 +351,19 @@ const RunwayForm = ({
 }
 
 RunwayForm.AllFields = AllFields
-RunwayForm.FieldArray = FieldArray
+RunwayForm.Transactions = Transactions
 RunwayForm.Funds = Funds
 RunwayForm.MonthlyCredits = MonthlyCredits
 RunwayForm.MonthlyDebits = MonthlyDebits
+RunwayForm.MonthlyDebitsFixed = MonthlyDebitsFixed
+RunwayForm.MonthlyDebitsFlexible = MonthlyDebitsFlexible
 RunwayForm.OneTimeCredits = OneTimeCredits
 RunwayForm.OneTimeDebits = OneTimeDebits
 RunwayForm.Scenarios = Scenarios
+RunwayForm.FieldArray = FieldArray
+RunwayForm.NextLabel = NextLabel
+RunwayForm.BuildRunwayLabel = BuildRunwayLabel
+RunwayForm.BuildScenarioLabel = BuildScenarioLabel
 export default RunwayForm
 
 function AllFields({
@@ -322,194 +382,212 @@ function AllFields({
   )
 }
 
+export function Transactions({
+  appendLabel = 'Add row',
+  dateRange = {},
+  defaultAppendValue = { name: '', amount: 0 },
+  description,
+  display,
+  headerText = 'Transactions',
+  minRows = 1,
+  name,
+  watch,
+}) {
+  const { start, end } = initDateRange(dateRange)
+
+  return (
+    name && (
+      <>
+        {headerText && <Header display={display}>{headerText}</Header>}
+        {description && <Description>{description}</Description>}
+        <FieldArray
+          name={name}
+          appendLabel={appendLabel}
+          defaultAppendValue={defaultAppendValue}
+          minRows={minRows}
+          display={display}
+        >
+          {({ field, index }) => (
+            <Row>
+              <HiddenField name={`${name}.${index}.type`} emptyAs={null} />
+              <HiddenField name={`${name}.${index}.recurring`} emptyAs={null} />
+              <HiddenField name={`${name}.${index}.category`} emptyAs={null} />
+              <TextFieldSet name={`${name}.${index}.name`} />
+              <CurrencyFieldSet name={`${name}.${index}.amount`} />
+              {field.recurring === 'one_time' && (
+                <DateFieldSet
+                  name={`${name}.${index}.date`}
+                  min={start}
+                  max={end}
+                  validation={{
+                    validate: {
+                      requiredIfAmountFieldPositive(value) {
+                        return watch(`${name}.${index}.amount`) > 0 &&
+                          // <DateField> given a null value, returns unix epoch
+                          (!value ||
+                            value.toISOString() === '1970-01-01T00:00:00.000Z')
+                          ? 'Required'
+                          : undefined
+                      },
+                    },
+                  }}
+                />
+              )}
+            </Row>
+          )}
+        </FieldArray>
+      </>
+    )
+  )
+}
+
 export function Funds({
+  appendLabel = 'Add funds',
+  defaultAppendValue = { ...FUNDS_DEFAULT_APPEND_VALUE },
   headerText = 'Current Funds',
   name = 'funds',
-  description,
-  minRows,
-  display,
+  ...props
 }) {
   return (
-    <>
-      {headerText && <Header display={display}>{headerText}</Header>}
-      {description && <Description>{description}</Description>}
-      <FieldArray
-        name={name}
-        appendLabel="Add funds"
-        defaultAppendValue={{ ...FUNDS_DEFAULT_APPEND_VALUE }}
-        display={display}
-        minRows={minRows}
-        render={({ index }) => (
-          <Row>
-            <TextFieldSet name={`${name}.${index}.name`} />
-            <CurrencyFieldSet name={`${name}.${index}.amount`} />
-          </Row>
-        )}
-      />
-    </>
+    <Transactions
+      {...{
+        ...props,
+        appendLabel,
+        defaultAppendValue,
+        headerText,
+        name,
+      }}
+    />
   )
 }
 
 export function MonthlyDebits({
+  appendLabel = 'Add expense',
+  defaultAppendValue = { ...MONTHLY_DEBITS_DEFAULT_APPEND_VALUE },
   headerText = 'Monthly expenses',
   name = 'monthlyDebits',
-  description,
-  minRows,
-  display,
+  ...props
 }) {
   return (
-    <>
-      {headerText && <Header display={display}>{headerText}</Header>}
-      {description && <Description>{description}</Description>}
-      <FieldArray
-        name={name}
-        appendLabel="Add expense"
-        defaultAppendValue={{ ...MONTHLY_DEBITS_DEFAULT_APPEND_VALUE }}
-        display={display}
-        minRows={minRows}
-        render={({ index }) => (
-          <Row>
-            <TextFieldSet name={`${name}.${index}.name`} />
-            <CurrencyFieldSet name={`${name}.${index}.amount`} />
-          </Row>
-        )}
-      />
-    </>
+    <Transactions
+      {...{
+        ...props,
+        appendLabel,
+        defaultAppendValue,
+        headerText,
+        name,
+      }}
+    />
+  )
+}
+
+export function MonthlyDebitsFixed({
+  appendLabel = 'Add expense',
+  defaultAppendValue = { ...MONTHLY_DEBITS_FIXED_DEFAULT_APPEND_VALUE },
+  headerText = 'Fixed monthly expenses',
+  name = 'monthlyDebitsFixed',
+  ...props
+}) {
+  return (
+    <Transactions
+      {...{
+        ...props,
+        appendLabel,
+        defaultAppendValue,
+        headerText,
+        name,
+      }}
+    />
+  )
+}
+
+export function MonthlyDebitsFlexible({
+  appendLabel = 'Add expense',
+  headerText = 'Flexible monthly expenses',
+  name = 'monthlyDebitsFlexible',
+  defaultAppendValue = { ...MONTHLY_DEBITS_FLEXIBLE_DEFAULT_APPEND_VALUE },
+  ...props
+}) {
+  return (
+    <Transactions
+      {...{
+        ...props,
+        appendLabel,
+        defaultAppendValue,
+        headerText,
+        name,
+      }}
+    />
   )
 }
 
 export function MonthlyCredits({
+  appendLabel = 'Add income',
+  defaultAppendValue = { ...MONTHLY_CREDITS_DEFAULT_APPEND_VALUE },
   headerText = 'Monthly income',
   name = 'monthlyCredits',
-  description,
-  minRows,
-  display,
+  ...props
 }) {
   return (
-    <>
-      {headerText && <Header display={display}>{headerText}</Header>}
-      {description && <Description>{description}</Description>}
-      <FieldArray
-        name={name}
-        appendLabel="Add income"
-        defaultAppendValue={{ ...MONTHLY_CREDITS_DEFAULT_APPEND_VALUE }}
-        display={display}
-        minRows={minRows}
-        render={({ index }) => (
-          <Row>
-            <TextFieldSet name={`${name}.${index}.name`} />
-            <CurrencyFieldSet name={`${name}.${index}.amount`} />
-          </Row>
-        )}
-      />
-    </>
+    <Transactions
+      {...{
+        ...props,
+        appendLabel,
+        defaultAppendValue,
+        headerText,
+        name,
+      }}
+    />
   )
 }
 
 export function OneTimeCredits({
+  appendLabel = 'Add income',
+  defaultAppendValue = { ...ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE },
   headerText = 'Other income',
   name = 'oneTimeCredits',
-  description,
-  dateRange,
-  minRows,
-  display,
-  watch,
+  ...props
 }) {
-  const { start, end } = initDateRange(dateRange)
-
   return (
-    <>
-      {headerText && <Header display={display}>{headerText}</Header>}
-      {description && <Description>{description}</Description>}
-      <FieldArray
-        name={name}
-        appendLabel="Add income"
-        defaultAppendValue={{ ...ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE }}
-        display={display}
-        minRows={minRows}
-        render={({ index }) => (
-          <Row>
-            <TextFieldSet name={`${name}.${index}.name`} />
-            <CurrencyFieldSet name={`${name}.${index}.amount`} />
-            <DateFieldSet
-              name={`${name}.${index}.date`}
-              min={start}
-              max={end}
-              validation={{
-                validate: {
-                  requiredIfAmountFieldPositive(value) {
-                    return watch(`${name}.${index}.amount`) > 0 &&
-                      // <DateField> given a null value, returns unix epoch
-                      (!value ||
-                        value.toISOString() === '1970-01-01T00:00:00.000Z')
-                      ? 'Required'
-                      : undefined
-                  },
-                },
-              }}
-            />
-          </Row>
-        )}
-      />
-    </>
+    <Transactions
+      {...{
+        ...props,
+        appendLabel,
+        defaultAppendValue,
+        headerText,
+        name,
+      }}
+    />
   )
 }
 
 export function OneTimeDebits({
+  appendLabel = 'Add expense',
+  defaultAppendValue = { ...ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE },
   headerText = 'Other expenses',
   name = 'oneTimeDebits',
-  description,
-  dateRange,
-  minRows,
-  display,
-  watch,
+  ...props
 }) {
-  const { start, end } = initDateRange(dateRange)
-
   return (
-    <>
-      {headerText && <Header display={display}>{headerText}</Header>}
-      {description && <Description>{description}</Description>}
-      <FieldArray
-        name={name}
-        appendLabel="Add expense"
-        defaultAppendValue={{ ...ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE }}
-        display={display}
-        minRows={minRows}
-        render={({ index }) => (
-          <Row>
-            <TextFieldSet name={`${name}.${index}.name`} />
-            <CurrencyFieldSet name={`${name}.${index}.amount`} />
-            <DateFieldSet
-              name={`${name}.${index}.date`}
-              min={start}
-              max={end}
-              validation={{
-                validate: {
-                  requiredIfAmountFieldPositive(value) {
-                    return watch(`${name}.${index}.amount`) > 0 &&
-                      // <DateField> given a null value, returns unix epoch
-                      (!value ||
-                        value.toISOString() === '1970-01-01T00:00:00.000Z')
-                      ? 'Required'
-                      : undefined
-                  },
-                },
-              }}
-            />
-          </Row>
-        )}
-      />
-    </>
+    <Transactions
+      {...{
+        ...props,
+        appendLabel,
+        defaultAppendValue,
+        headerText,
+        name,
+      }}
+    />
   )
 }
 
 export function Scenarios({
-  headerText = 'Scenarios',
+  appendLabel = 'Add scenario',
   description,
   display,
-  watch,
   getValues,
+  headerText = 'Scenarios',
+  watch,
 }) {
   // eslint-disable-next-line no-unused-vars
   const { id, name, scenarios, ...defaultAppendValue } = getValues()
@@ -519,21 +597,22 @@ export function Scenarios({
       {headerText && <Header>{headerText}</Header>}
       {description && <Description>{description}</Description>}
       <ScenarioArray
-        name="scenarios"
-        appendLabel="Add scenario"
-        defaultAppendValue={defaultAppendValue}
+        appendLabel={appendLabel}
+        defaultAppendValue={{ ...defaultAppendValue, name: '' }}
         display={display}
         deleteLabel="Delete Scenario"
+        name="scenarios"
         resetLabel="Reset Scenario"
-        render={({ index }) => <Scenario {...{ index, display, watch }} />}
-      />
+      >
+        {({ index }) => <Scenario {...{ index, display, watch }} />}
+      </ScenarioArray>
     </>
   )
 }
 
 function Scenario({ index, display, watch }) {
   return (
-    <div className="flex flex-grow flex-col gap-2">
+    <div className="flex flex-grow flex-col gap-8">
       <HiddenField name={`scenarios.${index}.id`} />
       <div className="flex items-end gap-4">
         <h3 className="text-xl font-semibold">What if&hellip;</h3>
@@ -544,7 +623,7 @@ function Scenario({ index, display, watch }) {
           }}
         />
       </div>
-      <div>
+      <div className="flex flex-col gap-6">
         <Funds
           {...{ name: `scenarios.${index}.funds`, minRows: 0, display, watch }}
         />
@@ -586,15 +665,15 @@ function Scenario({ index, display, watch }) {
 }
 
 export function FieldArray({
-  children,
-  render,
-  name,
-  display,
   appendLabel = 'Add Row',
-  deleteLabel = 'Delete',
-  resetLabel = 'Reset',
+  children,
   defaultAppendValue = {},
+  deleteLabel = 'Delete',
+  display,
   minRows = 1,
+  name,
+  render,
+  resetLabel = 'Reset',
 }) {
   children = render || children
 
@@ -622,7 +701,7 @@ export function FieldArray({
                 e.preventDefault()
                 remove(index)
                 if (minRows > 0 && fields.length <= minRows) {
-                  append({ ...defaultAppendValue })
+                  append(defaultAppendValue)
                 }
               }}
             >
@@ -630,16 +709,16 @@ export function FieldArray({
                 <span className="flex items-center gap-2 text-xs uppercase ">
                   {fields.length === minRows ? (
                     <>
+                      <span className="xs:hidden">{resetLabel}</span>
                       <ArrowCounterClockwise
                         className="h-4 w-auto"
                         aria-hidden
                       />
-                      <span className="xs:hidden">{resetLabel}</span>
                     </>
                   ) : (
                     <>
-                      <Trash className="h-4 w-auto" aria-hidden />
                       <span className="xs:hidden">{deleteLabel}</span>
+                      <Trash className="h-4 w-auto" aria-hidden />
                     </>
                   )}
                 </span>
@@ -649,7 +728,6 @@ export function FieldArray({
         ))}
       </ul>
       <Button
-        type="button"
         onClick={(e) => {
           e.preventDefault()
           append({ ...defaultAppendValue })
@@ -665,25 +743,25 @@ export function FieldArray({
 }
 
 export function ScenarioArray({
-  children,
-  render,
-  name,
-  display,
   appendLabel = 'Add Row',
-  deleteLabel = 'Delete',
-  resetLabel = 'Reset',
+  children,
   defaultAppendValue = {},
+  deleteLabel = 'Delete',
+  display,
   minRows = 1,
+  name,
+  render,
+  resetLabel = 'Reset',
 }) {
   children = render || children
 
   const { fields, append, remove } = useFieldArray({ name })
 
   React.useEffect(() => {
-    if (!fields?.length) {
+    if (fields?.length < minRows) {
       append({ ...defaultAppendValue })
     }
-  }, [defaultAppendValue, fields, append])
+  }, [defaultAppendValue, fields, append, minRows])
 
   return (
     <div
@@ -699,7 +777,7 @@ export function ScenarioArray({
             </div>
             <button
               type="button"
-              className="mt-0 flex-grow rounded-lg border-4 border-double border-black p-2 xs:mt-6 xs:flex-shrink xs:flex-grow-0 sm:mt-0"
+              className="mt-0 flex-grow rounded-lg border-4 border-double border-black p-2 xs:mt-2 xs:flex-shrink xs:flex-grow-0 sm:mt-0"
               onClick={(e) => {
                 e.preventDefault()
                 remove(index)
@@ -709,19 +787,19 @@ export function ScenarioArray({
               }}
             >
               <span className="flex items-center justify-evenly">
-                <span className="flex items-center gap-2 text-xs uppercase ">
+                <span className="flex items-center gap-2 text-xs uppercase">
                   {fields.length === minRows ? (
                     <>
+                      <span>{resetLabel}</span>
                       <ArrowCounterClockwise
                         className="h-4 w-auto"
                         aria-hidden
                       />
-                      <span>{resetLabel}</span>
                     </>
                   ) : (
                     <>
+                      {deleteLabel}
                       <Trash className="h-4 w-auto" aria-hidden />
-                      <span>{deleteLabel}</span>
                     </>
                   )}
                 </span>
@@ -746,15 +824,43 @@ export function ScenarioArray({
   )
 }
 
+function NextLabel() {
+  return (
+    <span className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
+      Next
+      <ArrowFatRight className="h-4 w-auto" />
+    </span>
+  )
+}
+
+function BuildRunwayLabel() {
+  return (
+    <span className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
+      <AirplaneTakeoff className="h-4 w-auto sm:hidden" />
+      Build Runway
+      <AirplaneTakeoff className="hidden h-4 w-auto sm:inline" />
+    </span>
+  )
+}
+
+function BuildScenarioLabel() {
+  return (
+    <span className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
+      <ProjectorScreenChart className="h-4 w-auto sm:hidden" />
+      Calculate Scenario
+      <ProjectorScreenChart className="hidden h-4 w-auto sm:inline" />
+    </span>
+  )
+}
+
 function Header({ children, display }) {
-  const className =
-    display === 'compact' ? 'text-xl' : 'py-4 sm:py-8 text-center text-2xl'
+  const className = display === 'compact' ? 'text-xl' : 'text-center text-2xl'
 
   return <h2 className={className}>{children}</h2>
 }
 
 function Description({ children }) {
-  return <p className="text-md">{children}</p>
+  return <p className="text-md text-center">{children}</p>
 }
 
 function Row({ children }) {
@@ -765,7 +871,7 @@ function Row({ children }) {
   )
 }
 
-function TextFieldSet({ name, label = 'Name', validation }) {
+function TextFieldSet({ label = 'Name', name, validation }) {
   return (
     <div className="flex flex-grow flex-col flex-wrap gap-2">
       <Label
@@ -784,7 +890,7 @@ function TextFieldSet({ name, label = 'Name', validation }) {
   )
 }
 
-function CurrencyFieldSet({ label = 'Amount', name, min = 0 }) {
+function CurrencyFieldSet({ label = 'Amount', min = 0, name }) {
   return (
     <div className="flex flex-grow flex-col flex-wrap gap-2">
       <Label
@@ -808,7 +914,7 @@ function CurrencyFieldSet({ label = 'Amount', name, min = 0 }) {
   )
 }
 
-function DateFieldSet({ label = 'Date', name, min, max, validation }) {
+function DateFieldSet({ label = 'Date', max, min, name, validation }) {
   return (
     <div className="flex flex-grow flex-col flex-wrap gap-2">
       <Label
@@ -834,22 +940,28 @@ function DateFieldSet({ label = 'Date', name, min, max, validation }) {
 
 function initDateRange(dateRange) {
   let { start, end } = dateRange || {}
-  const today = new Date()
-  const nextYear = new Date()
-  nextYear.setFullYear(today.getFullYear() + 1)
+
+  // default start next month
+  const defaultStart = new Date()
+  defaultStart.setMonth(defaultStart.getMonth() + 1)
+
+  // default duration 1 year (12 months)
+  const defaultEnd = new Date()
+  defaultEnd.setMonth(defaultStart.getMonth() + 12)
+
   start =
     start ||
     [
-      today.getFullYear(),
-      String(today.getMonth() + 1).padStart(2, '0'),
-      String(today.getDate()).padStart(2, '0'),
+      defaultStart.getFullYear(),
+      String(defaultStart.getMonth()).padStart(2, '0'),
+      String(defaultStart.getDate()).padStart(2, '0'),
     ].join('-')
   end =
     end ||
     [
-      nextYear.getFullYear(),
-      String(nextYear.getMonth() + 1).padStart(2, '0'),
-      String(nextYear.getDate()).padStart(2, '0'),
+      defaultEnd.getFullYear(),
+      String(defaultEnd.getMonth()).padStart(2, '0'),
+      String(defaultEnd.getDate()).padStart(2, '0'),
     ].join('-')
 
   return { start, end }

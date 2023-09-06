@@ -1,8 +1,4 @@
-import {
-  ArrowFatRight,
-  PencilSimple,
-  PersonSimpleRun,
-} from '@phosphor-icons/react'
+import { ArrowFatRight, PersonSimpleRun } from '@phosphor-icons/react'
 import { v4 as uuidv4 } from 'uuid'
 
 import Button from 'src/components/Button/Button'
@@ -14,26 +10,27 @@ import {
   PRESET_LAID_OFF,
 } from 'src/components/RunwayWizard/presets'
 import {
-  DEFAULT_WORKFLOW,
+  BASE_WORKFLOW,
+  WIZARD_WORKFLOW,
+  BUSINESS_WORKFLOW,
   LAID_OFF_WORKFLOW,
-  SKIP_WORKFLOW,
   VIEWS,
 } from 'src/components/RunwayWizard/workflows'
 import useModal from 'src/hooks/UseModal'
 import useRunway from 'src/hooks/UseRunway'
 import { DEFAULT_VALUE, buildRenderData } from 'src/providers/RunwayProvider'
 
-const DEFAULT_STEP = DEFAULT_WORKFLOW.WELCOME
+const DEFAULT_STEP = WIZARD_WORKFLOW.WELCOME
 
 function RunwayWizard() {
-  const [workflow, setWorkflow] = React.useState(DEFAULT_WORKFLOW)
+  const [workflow, setWorkflow] = React.useState(WIZARD_WORKFLOW)
   const [step, setStep] = React.useState(DEFAULT_STEP)
   const { open, toggle } = useModal()
   const { data, update } = useRunway()
 
   async function onClickOnboarding(
     presetFormData = DEFAULT_VALUE.data,
-    updatedWorkflow = DEFAULT_WORKFLOW
+    updatedWorkflow = WIZARD_WORKFLOW
   ) {
     await update(presetFormData)
     setWorkflow(updatedWorkflow)
@@ -41,7 +38,9 @@ function RunwayWizard() {
   }
 
   async function onSubmit(formData, options = {}) {
-    await update(formData)
+    await update(
+      step.next === 'EDIT_RUNWAY' ? aggregateFields(formData) : formData
+    )
 
     if (options?.save) {
       toggle()
@@ -50,12 +49,29 @@ function RunwayWizard() {
     }
   }
 
-  function onBack() {
-    setStep(workflow[step.prev] || step)
+  // WARNING: overwrites monthlyDebits with aggregate rows from monthlyDebits*
+  function aggregateFields(formData) {
+    if (
+      formData.monthlyDebitsFixed?.length > 0 ||
+      formData.monthlyDebitsFlexible?.length > 0
+    ) {
+      formData.monthlyDebits = [
+        'monthlyDebitsFixed',
+        'monthlyDebitsFlexible',
+      ].reduce((acc, field, i, arr) => {
+        const rows = formData[field] || []
+        delete formData[field]
+        // Maintain one pristine row
+        return i === arr.length - 1 && !acc.length
+          ? [DEFAULT_VALUE.data.monthlyDebits[0]]
+          : [...acc, ...rows]
+      }, [])
+    }
+    return { ...formData }
   }
 
-  function onNext() {
-    setStep(workflow[step.next] || step)
+  function onBack() {
+    setStep(workflow[step.prev] || step)
   }
 
   function onClickScenarios() {
@@ -67,7 +83,7 @@ function RunwayWizard() {
   }
 
   async function onImport({ data }) {
-    await update(data)
+    await update(aggregateFields(data))
     setStep(workflow.EDIT_RUNWAY || step)
     toggle()
   }
@@ -81,7 +97,6 @@ function RunwayWizard() {
         onBack={onBack}
         onClickOnboarding={onClickOnboarding}
         onClickScenarios={onClickScenarios}
-        onNext={onNext}
         onSubmit={onSubmit}
       />
       {open && <RunwayImport onCancel={onCancelImport} onSubmit={onImport} />}
@@ -95,22 +110,22 @@ function RunwayWizardView({
   onBack,
   onClickOnboarding,
   onClickScenarios,
-  onNext,
   onSubmit,
 }) {
-  console.log('<RunwayWizardStateMachine>', step)
-
   switch (step.view) {
     case VIEWS.WELCOME:
       return <Welcome onClickOnboarding={onClickOnboarding} />
     case VIEWS.RUNWAY:
       return (
         <>
-          <RunwayView
+          <RunwayVisualizer data={buildRenderData(data)} />
+          <FormView
             {...{
-              data: buildRenderData(data),
+              step,
+              data,
+              onSubmit,
               onBack,
-              onNext,
+              onClickScenarios,
             }}
           />
           <Details datas={[data, buildRenderData(data)]} />
@@ -144,7 +159,9 @@ function Welcome({ onClickOnboarding }) {
         for yourself!
       </p>
       <div className="grid content-stretch gap-4 xs:grid-cols-2 xs:py-8">
-        <Card onClick={() => onClickOnboarding(PRESET_BUSINESS)}>
+        <Card
+          onClick={() => onClickOnboarding(PRESET_BUSINESS, BUSINESS_WORKFLOW)}
+        >
           I am starting a business
         </Card>
         <Card
@@ -161,7 +178,7 @@ function Welcome({ onClickOnboarding }) {
           </span>
         </Button>
         <Button
-          onClick={() => onClickOnboarding(DEFAULT_VALUE.data, SKIP_WORKFLOW)}
+          onClick={() => onClickOnboarding(DEFAULT_VALUE.data, BASE_WORKFLOW)}
         >
           <span className="flex items-center justify-center gap-2">
             I know what I&apos;m doing
@@ -184,22 +201,6 @@ function Card({ children, onClick }) {
   )
 }
 
-function RunwayView({ data, onNext }) {
-  return (
-    <>
-      <RunwayVisualizer data={data} />
-      <div className="flex justify-end">
-        <Button onClick={onNext}>
-          <span className="flex items-center gap-2">
-            <PencilSimple className="h-4 w-auto" />
-            Edit Runway
-          </span>
-        </Button>
-      </div>
-    </>
-  )
-}
-
 function FormView({ step, data, onSubmit, onBack, onClickScenarios }) {
   const CurrentStep = step?.component
 
@@ -209,6 +210,7 @@ function FormView({ step, data, onSubmit, onBack, onClickScenarios }) {
       {...(step.prev && { onBack })}
       {...(step.enableScenarios && { onClickScenarios })}
       {...(step.submitComponent && { submitComponent: step.submitComponent })}
+      {...(step.backLabel && { backLabel: step.backLabel })}
       onSubmit={onSubmit}
       render={CurrentStep}
       display={step.display}
@@ -233,15 +235,6 @@ function Details({ datas }) {
         </div>
       )}
     </details>
-  )
-}
-
-export function NextLabel() {
-  return (
-    <span className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
-      Next
-      <ArrowFatRight className="h-4 w-auto" />
-    </span>
   )
 }
 

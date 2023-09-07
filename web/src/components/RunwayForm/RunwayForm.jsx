@@ -106,60 +106,11 @@ const RunwayForm = ({
       id: formValues.id || uuidv4(), // id used by visualizer
       ...reduceFormValues(formValues),
       ...(formValues.scenarios?.length > 0 && {
-        scenarios: formValues.scenarios
-          .map((scenario) => ({
-            ...scenario,
-            id: scenario.id || uuidv4(), // id used by visualizater
-            ...reduceFormValues(scenario, [
-              {
-                key: `funds`,
-                defaultAppendValue: FUNDS_DEFAULT_APPEND_VALUE,
-                minRows: 0,
-              },
-              {
-                key: `monthlyCredits`,
-                defaultAppendValue: MONTHLY_CREDITS_DEFAULT_APPEND_VALUE,
-                minRows: 0,
-              },
-              {
-                key: `oneTimeCredits`,
-                defaultAppendValue: ONE_TIME_CREDITS_DEFAULT_APPEND_VALUE,
-                minRows: 0,
-              },
-              {
-                key: `monthlyDebits`,
-                defaultAppendValue: MONTHLY_DEBITS_DEFAULT_APPEND_VALUE,
-                minRows: 0,
-              },
-              {
-                key: `oneTimeDebits`,
-                defaultAppendValue: ONE_TIME_DEBITS_DEFAULT_APPEND_VALUE,
-                minRows: 0,
-              },
-            ]),
-          }))
-          .reduce(
-            reduceDefaultAppendValue({
-              key: 'scenarios',
-              defaultAppendValue: {
-                name: '',
-                funds: formMethods.getValues('funds') || [],
-                monthlyDebits: formMethods.getValues('monthlyDebits') || [],
-                monthlyDebitsFixed:
-                  formMethods.getValues('monthlyDebitsFixed') || [],
-                monthlyDebitsFlexible:
-                  formMethods.getValues('monthlyDebitsFlexible') || [],
-                monthlyCredits: formMethods.getValues('monthlyCredits') || [],
-                oneTimeCredits:
-                  formMethods.getValues('oneTimeCredits')?.map(normalizeDate) ||
-                  [],
-                oneTimeDebits:
-                  formMethods.getValues('oneTimeDebits')?.map(normalizeDate) ||
-                  [],
-              },
-            }),
-            []
-          ),
+        scenarios: formValues.scenarios.map((scenario) => ({
+          ...scenario,
+          id: scenario.id || uuidv4(), // id used by visualizater
+          ...reduceFormValues(scenario),
+        })),
       }),
     }
   }
@@ -209,12 +160,15 @@ const RunwayForm = ({
         _set(
           acc,
           key,
-          _get(formValues, key, [])
-            ?.map(normalizeDate)
-            ?.reduce(
-              reduceDefaultAppendValue({ key, defaultAppendValue, minRows }),
-              []
-            )
+          _get(formValues, key, [])?.map(normalizeDate)?.reduce(
+            reduceDefaultAppendValue({
+              formValues,
+              key,
+              defaultAppendValue,
+              minRows,
+            }),
+            []
+          )
         )
       }
 
@@ -223,30 +177,31 @@ const RunwayForm = ({
   }
 
   function reduceDefaultAppendValue({
+    formValues,
     key,
     defaultAppendValue,
-    minRows = true,
+    minRows = 1,
   }) {
-    return (acc, row, i) => {
+    return (acc, row, i, arr) => {
       // Keep rows with updated values
-      if (isDirty({ name: `${key}.${i}`, defaultAppendValue })) {
+      if (
+        isDirty({ value: _get(formValues, `${key}.${i}`), defaultAppendValue })
+      ) {
         acc = [...acc, row]
       }
 
-      // Maintain at least 1 pristine row
-      if (minRows && !acc.length) {
-        acc = [defaultAppendValue]
+      // Maintain at pristine row min
+      while (i === arr.length - 1 && minRows && acc.length < minRows) {
+        acc = [...acc, defaultAppendValue]
       }
 
       return acc
     }
   }
 
-  function isDirty({ name, defaultAppendValue }) {
-    const { id: _, ...formValues } = normalizeDate(
-      formMethods.getValues(name) || []
-    )
-    return !_isEqual(formValues, defaultAppendValue)
+  function isDirty({ value, defaultAppendValue }) {
+    const { id: _, ...formValue } = normalizeDate(value)
+    return !_isEqual(formValue, defaultAppendValue)
   }
 
   /**
@@ -312,7 +267,11 @@ const RunwayForm = ({
               <span className="inline sm:hidden">Save / Load</span>
             </Button>
             <Submit>
-              {SubmitComponent ? <SubmitComponent /> : <NextLabel />}
+              {SubmitComponent ? (
+                <SubmitComponent formMethods={formMethods} />
+              ) : (
+                <NextLabel />
+              )}
             </Submit>
           </div>
         </div>
@@ -342,7 +301,11 @@ const RunwayForm = ({
             <span className="inline sm:hidden">Save / Load</span>
           </Button>
           <Submit>
-            {SubmitComponent ? <SubmitComponent /> : <NextLabel />}
+            {SubmitComponent ? (
+              <SubmitComponent formMethods={formMethods} />
+            ) : (
+              <NextLabel />
+            )}
           </Submit>
         </div>
       </div>
@@ -619,7 +582,7 @@ function Scenario({ index, display, watch }) {
         <TextFieldSet
           {...{
             name: `scenarios.${index}.name`,
-            validation: { required: 'A scenario name is required' },
+            // validation: { required: 'A scenario name is required' },
           }}
         />
       </div>
@@ -759,9 +722,16 @@ export function ScenarioArray({
 
   React.useEffect(() => {
     if (fields?.length < minRows) {
-      append({ ...defaultAppendValue })
+      append({ ...defaultAppendValue, name: '' })
     }
   }, [defaultAppendValue, fields, append, minRows])
+
+  function handleRemove(index) {
+    remove(index)
+    if (minRows > 0 && fields.length <= minRows) {
+      append({ ...defaultAppendValue })
+    }
+  }
 
   return (
     <div
@@ -776,14 +746,10 @@ export function ScenarioArray({
               {children({ item, index })}
             </div>
             <button
-              type="button"
               className="mt-0 flex-grow rounded-lg border-4 border-double border-black p-2 xs:mt-2 xs:flex-shrink xs:flex-grow-0 sm:mt-0"
               onClick={(e) => {
                 e.preventDefault()
-                remove(index)
-                if (minRows > 0 && fields.length <= minRows) {
-                  append({ ...defaultAppendValue })
-                }
+                handleRemove(index)
               }}
             >
               <span className="flex items-center justify-evenly">
@@ -843,11 +809,18 @@ function BuildRunwayLabel() {
   )
 }
 
-function BuildScenarioLabel() {
+function BuildScenarioLabel({ formMethods }) {
+  const { getValues } = formMethods
+
+  const label =
+    getValues('scenarios')?.length > 1
+      ? 'Calculate Scenarios'
+      : 'Calculate Scenario'
+
   return (
     <span className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase">
       <ProjectorScreenChart className="h-4 w-auto sm:hidden" />
-      Calculate Scenario
+      {label}
       <ProjectorScreenChart className="hidden h-4 w-auto sm:inline" />
     </span>
   )

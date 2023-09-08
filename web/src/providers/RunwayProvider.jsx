@@ -35,6 +35,8 @@
 
 export const RunwayContext = React.createContext()
 
+export const RUNWAY_MONTHS_MAX = 6
+
 export const DEFAULT_VALUE = {
   data: {
     funds: [
@@ -178,8 +180,14 @@ export function buildRunway({ data, currentDate, endDate }) {
 
     const month = {
       label: currentDate.toLocaleDateString('en-us', {
-        year: '2-digit',
+        year: 'numeric',
+        month: 'long',
+      }),
+      monthLabel: currentDate.toLocaleDateString('en-us', {
         month: 'short',
+      }),
+      yearLabel: currentDate.toLocaleDateString('en-us', {
+        year: 'numeric',
       }),
       ...currentMonth,
     }
@@ -204,7 +212,7 @@ export function buildRunway({ data, currentDate, endDate }) {
 export function getDateRange() {
   const currentDate = new Date()
   const endDate = new Date()
-  endDate.setMonth(currentDate.getMonth() + 6)
+  endDate.setMonth(currentDate.getMonth() + RUNWAY_MONTHS_MAX)
 
   return { currentDate, endDate }
 }
@@ -214,7 +222,7 @@ export function filterBeforeDate(endDate) {
     // Keep undated items
     if (!date) return true
     date = convertStringToDate(date)
-    return date < endDate && !equalsYearAndMonth(date, endDate)
+    return date < endDate || equalsYearAndMonth(date, endDate)
   }
 }
 

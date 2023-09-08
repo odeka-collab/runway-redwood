@@ -28,7 +28,7 @@ import {
 } from '@redwoodjs/forms'
 
 import Button from 'src/components/Button/Button'
-import { DEFAULT_VALUE } from 'src/providers/RunwayProvider'
+import { DEFAULT_VALUE, RUNWAY_MONTHS_MAX } from 'src/providers/RunwayProvider'
 
 const FUNDS_DEFAULT_APPEND_VALUE = DEFAULT_VALUE.data.funds[0]
 const MONTHLY_CREDITS_DEFAULT_APPEND_VALUE =
@@ -63,9 +63,9 @@ const RunwayForm = ({
   children,
   defaultValues,
   display,
+  enableScenarios,
   onSubmit,
   onBack,
-  onClickScenarios,
   render,
   submitComponent: SubmitComponent,
 }) => {
@@ -81,16 +81,19 @@ const RunwayForm = ({
 
   function handleClickScenarios(e) {
     e.preventDefault()
-    onClickScenarios()
+    formMethods.handleSubmit(submitter({ goto: 'scenario' }))()
   }
 
   function handleSave(e) {
     e.preventDefault()
-    onSubmit(sanitize(formMethods.getValues()), { save: true })
+    // bypass validation
+    onSubmit(sanitize(formMethods.getValues()), { goto: 'save' })
   }
 
-  function handleSubmit(formValues) {
-    onSubmit(sanitize(formValues))
+  function submitter(options) {
+    return (formValues) => {
+      onSubmit(sanitize(formValues), options)
+    }
   }
 
   /**
@@ -230,7 +233,7 @@ const RunwayForm = ({
   return (
     <Form
       formMethods={formMethods}
-      onSubmit={handleSubmit}
+      onSubmit={submitter()}
       className={
         display === 'compact'
           ? 'flex flex-col gap-2'
@@ -238,9 +241,10 @@ const RunwayForm = ({
       }
     >
       {display === 'compact' && (
-        <div className="mb-4 flex flex-col items-stretch gap-2 border-b border-double border-black pb-8 pt-4 sm:flex-row sm:justify-between">
-          {onClickScenarios && (
+        <div className="mb-4 flex flex-col items-stretch gap-2 border-b border-double border-black py-8 sm:flex-row sm:justify-between">
+          {enableScenarios && (
             <button
+              type="button"
               className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
               onClick={handleClickScenarios}
             >
@@ -251,6 +255,7 @@ const RunwayForm = ({
           )}
           {onBack && (
             <button
+              type="button"
               className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
               onClick={handleBack}
             >
@@ -260,6 +265,7 @@ const RunwayForm = ({
           )}
           <div className="flex flex-col-reverse items-stretch gap-2 sm:ml-auto sm:flex-row">
             <Button
+              type="button"
               className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase sm:p-3"
               onClick={handleSave}
             >
@@ -918,9 +924,8 @@ function initDateRange(dateRange) {
   const defaultStart = new Date()
   defaultStart.setMonth(defaultStart.getMonth() + 1)
 
-  // default duration 1 year (12 months)
   const defaultEnd = new Date()
-  defaultEnd.setMonth(defaultStart.getMonth() + 12)
+  defaultEnd.setMonth(defaultStart.getMonth() + RUNWAY_MONTHS_MAX)
 
   start =
     start ||

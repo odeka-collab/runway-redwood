@@ -2,6 +2,8 @@ import anime from 'animejs'
 import Zdog, { TAU } from 'zdog'
 import Zfont from 'zfont'
 
+import { ScenarioContext } from '../RunwayWizard'
+
 Zfont.init(Zdog)
 
 // Set up a font to use
@@ -56,7 +58,7 @@ const DISPLAY = {
 }
 
 const RunwayVisualizer = ({ data }) => {
-  const [scenario, setScenario] = React.useState(data?.scenarios?.[0])
+  const { scenario, setScenario } = React.useContext(ScenarioContext)
 
   const showScenarios = data?.scenarios?.length > 0
 
@@ -152,8 +154,11 @@ function useVisualizer({
     const runway = { root: new Zdog.Anchor() }
     root.addChild(runway.root)
 
-    runway.segments = months.map((month, i) => {
-      const segment = renderSegment(month)
+    runway.segments = months.map((month, i, arr) => {
+      const segment = renderSegment(month, {
+        isFirst: i === 0,
+        isLast: i === arr.length - 1,
+      })
       segment.root.translate.x = i * DISPLAY.SEGMENT.BAR.WIDTH
       runway.root.addChild(segment.root)
       return { root, ...segment }
@@ -191,7 +196,10 @@ function useVisualizer({
   return state
 }
 
-function renderSegment({ label, balance }) {
+function renderSegment(
+  { balance, monthLabel, yearLabel },
+  { isFirst, isLast }
+) {
   const bar = new Zdog.Box({
     width: DISPLAY.SEGMENT.BAR.WIDTH,
     height: 1,
@@ -202,9 +210,11 @@ function renderSegment({ label, balance }) {
       : DISPLAY.SEGMENT.BAR.COLOR.PARTIAL),
   })
 
-  const text = new Zdog.Text({
+  const text = new Zdog.Group()
+
+  const month = new Zdog.Text({
     font: FONT,
-    value: label,
+    value: monthLabel,
     fontSize: DISPLAY.SEGMENT.TEXT.FONT_SIZE,
     fill: true,
     color:
@@ -222,8 +232,34 @@ function renderSegment({ label, balance }) {
   const root = new Zdog.Anchor()
   root.addChild(bar)
   root.addChild(text)
+  text.addChild(month)
 
-  return { root, bar, text }
+  let year
+  if (monthLabel === 'Jan' || isFirst || isLast) {
+    year = new Zdog.Text({
+      font: FONT,
+      value: yearLabel,
+      fontSize: DISPLAY.SEGMENT.TEXT.FONT_SIZE,
+      fill: true,
+      color:
+        // highlight when the month's ending balance is positive
+        balance.end >= 0
+          ? DISPLAY.SEGMENT.TEXT.COLOR.FUNDED
+          : DISPLAY.SEGMENT.TEXT.COLOR.PARTIAL,
+      translate: {
+        x: -bar.width / 2,
+        y:
+          bar.height / 2 +
+          DISPLAY.SEGMENT.TEXT.MARGIN +
+          DISPLAY.SEGMENT.TEXT.FONT_SIZE,
+        z: bar.depth / 2 + DISPLAY.SEGMENT.TEXT.MARGIN,
+      },
+    })
+
+    text.addChild(year)
+  }
+
+  return { root, bar, text: { month, year } }
 }
 
 function renderAirplane() {

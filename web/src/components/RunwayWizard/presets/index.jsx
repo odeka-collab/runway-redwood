@@ -196,7 +196,7 @@ export const PRESET_LAID_OFF = {
   monthlyDebitsFixed: [
     {
       name: 'Mortgage',
-      amount: 2180,
+      amount: 2195,
       type: 'debit',
       recurring: 'monthly',
       date: null,
@@ -238,7 +238,7 @@ export const PRESET_LAID_OFF = {
     },
     {
       name: 'Entertainment',
-      amount: 100,
+      amount: 200,
       type: 'debit',
       recurring: 'monthly',
       date: null,
@@ -247,8 +247,24 @@ export const PRESET_LAID_OFF = {
   ],
   oneTimeDebits: [
     {
+      name: 'CA Fair Plan',
+      amount: 7388,
+      type: 'debit',
+      recurring: 'one_time',
+      date: getFutureDate(0, 2, 17),
+      category: null,
+    },
+    {
+      name: 'Supplemental Coverage',
+      amount: 1255,
+      type: 'debit',
+      recurring: 'one_time',
+      date: getFutureDate(0, 2, 17),
+      category: null,
+    },
+    {
       name: 'Fix well',
-      amount: 550,
+      amount: 650,
       type: 'debit',
       recurring: 'one_time',
       date: getFutureDate(0, 1, 3),
@@ -295,7 +311,7 @@ export const PRESET_LAID_OFF = {
       amount: 21635,
       type: 'credit',
       recurring: 'one_time',
-      date: getFutureDate(0, 0, 13),
+      date: getFutureDate(0, 0, 14),
       category: null,
     },
     {
@@ -303,7 +319,7 @@ export const PRESET_LAID_OFF = {
       amount: 200,
       type: 'credit',
       recurring: 'one_time',
-      date: getFutureDate(0, 0, 13),
+      date: getFutureDate(0, 0, 15),
       category: null,
     },
   ],

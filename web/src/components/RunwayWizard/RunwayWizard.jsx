@@ -18,9 +18,20 @@ import {
 } from 'src/components/RunwayWizard/workflows'
 import useModal from 'src/hooks/UseModal'
 import useRunway from 'src/hooks/UseRunway'
-import { DEFAULT_VALUE, buildRenderData } from 'src/providers/RunwayProvider'
+import {
+  DEFAULT_VALUE,
+  RUNWAY_MONTHS_MAX,
+  buildRenderData,
+} from 'src/providers/RunwayProvider'
 
 const DEFAULT_STEP = WIZARD_WORKFLOW.WELCOME
+
+const usd = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  notation: 'standard',
+  maximumFractionDigits: 0,
+})
 
 function RunwayWizard() {
   const [workflow, setWorkflow] = React.useState(WIZARD_WORKFLOW)
@@ -42,8 +53,10 @@ function RunwayWizard() {
       step.next === 'EDIT_RUNWAY' ? aggregateFields(formData) : formData
     )
 
-    if (options?.save) {
+    if (options?.goto === 'save') {
       toggle()
+    } else if (options?.goto === 'scenario') {
+      setStep(workflow.SCENARIOS)
     } else {
       setStep(workflow[step.next] || step)
     }
@@ -74,10 +87,6 @@ function RunwayWizard() {
     setStep(workflow[step.prev] || step)
   }
 
-  function onClickScenarios() {
-    setStep(workflow.SCENARIOS)
-  }
-
   async function onCancelImport() {
     toggle()
   }
@@ -96,7 +105,6 @@ function RunwayWizard() {
         step={step}
         onBack={onBack}
         onClickOnboarding={onClickOnboarding}
-        onClickScenarios={onClickScenarios}
         onSubmit={onSubmit}
       />
       {open && <RunwayImport onCancel={onCancelImport} onSubmit={onImport} />}
@@ -104,32 +112,20 @@ function RunwayWizard() {
   )
 }
 
-function RunwayWizardView({
-  data,
-  step,
-  onBack,
-  onClickOnboarding,
-  onClickScenarios,
-  onSubmit,
-}) {
+function RunwayWizardView({ data, step, onBack, onClickOnboarding, onSubmit }) {
   switch (step.view) {
     case VIEWS.WELCOME:
       return <Welcome onClickOnboarding={onClickOnboarding} />
     case VIEWS.RUNWAY:
       return (
-        <>
-          <RunwayVisualizer data={buildRenderData(data)} />
-          <FormView
-            {...{
-              step,
-              data,
-              onSubmit,
-              onBack,
-              onClickScenarios,
-            }}
-          />
-          <Details datas={[data, buildRenderData(data)]} />
-        </>
+        <RunwayView
+          {...{
+            step,
+            data,
+            onSubmit,
+            onBack,
+          }}
+        />
       )
     case VIEWS.FORM:
     default:
@@ -141,7 +137,6 @@ function RunwayWizardView({
               data,
               onSubmit,
               onBack,
-              onClickScenarios,
             }}
           />
           <Details datas={[data]} />
@@ -153,16 +148,14 @@ function RunwayWizardView({
 function Welcome({ onClickOnboarding }) {
   return (
     <div className="flex flex-col gap-4 sm:gap-8">
-      <h2 className="text-center text-2xl">Howdy!</h2>
-      <p className="text-md text-center">
+      <h2 className="text-center text-3xl">Howdy!</h2>
+      <p className="text-md text-center text-lg">
         Check out a sample financial runway or try it for yourself!
       </p>
-      <p className="text-center text-lg">
+      <p className="text-center text-base">
         Sh*t just got real. No one&apos;s financial future is certain.
         <br />
-        <span className="text-sm">
-          Look at a few scenarios we&apos;ve already been through.
-        </span>
+        Look at a few scenarios we&apos;ve already been through.
       </p>
       <div className="grid content-stretch gap-4 xs:grid-cols-2 xs:py-8">
         <Card
@@ -207,14 +200,113 @@ function Card({ children, onClick }) {
   )
 }
 
-function FormView({ step, data, onSubmit, onBack, onClickScenarios }) {
+function RunwayView({ data, ...props }) {
+  const renderData = buildRenderData(data)
+  const [scenario, setScenario] = React.useState(renderData?.scenarios?.[0])
+
+  return (
+    <ScenarioContext.Provider value={{ scenario, setScenario }}>
+      <RunwayVisualizer data={renderData} />
+      <Summary data={renderData} />
+      {scenario && (
+        <div className="mt-8">
+          <Summary data={scenario} title={`What if ${scenario.name}`} />
+        </div>
+      )}
+      <FormView
+        {...{
+          ...props,
+          data,
+        }}
+      />
+      <Details datas={[data, renderData]} />
+    </ScenarioContext.Provider>
+  )
+}
+
+export const ScenarioContext = React.createContext()
+
+function Summary({ data, title = 'Summary' }) {
+  const lastMonth = data.months[data.months.length - 1]
+  const lastMonthLabel = lastMonth.label
+  const balanceStart = usd.format(data.months[0].balance.start)
+  const hasSurplus = lastMonth.balance.end > 0
+  const balanceEnd = usd.format(lastMonth.balance.end)
+  const surplusAvgPerMo = usd.format(lastMonth.balance.end / RUNWAY_MONTHS_MAX)
+  const shakyMonths = data.months.filter(({ balance: { end } }) => end < 0)
+  const monthsCalculated = Math.min(RUNWAY_MONTHS_MAX, data.months.length)
+
+  return (
+    <section className="flex flex-col gap-x-8 gap-y-4 sm:flex-row">
+      <div className="grow">
+        <h3 className="py-4 text-xl uppercase">{title}</h3>
+        <p className="sm:text-lg">
+          We&apos;ve calculated your financial runway for the next{' '}
+          <em className="whitespace-nowrap text-xl">
+            {monthsCalculated} months
+          </em>
+          .
+        </p>
+        <p className="sm:text-lg">
+          You have runway to{' '}
+          <span className="text-xl font-semibold">{lastMonthLabel}</span>.
+        </p>
+        <p className="sm:text-lg">
+          Your starting balance is{' '}
+          <span className="text-xl font-semibold">{balanceStart}</span>.
+        </p>
+      </div>
+      {hasSurplus && (
+        <div className="sm:self-end sm:text-right">
+          <p className="text-lg">
+            You have a{' '}
+            <span className="text-xl font-semibold">{balanceEnd}</span> surplus!
+          </p>
+          <p>
+            That&apos;s an extra{' '}
+            <span className="font-semibold">{surplusAvgPerMo}</span> per month!
+          </p>
+        </div>
+      )}
+      {shakyMonths.length > 0 && (
+        <div>
+          <h4 className="py-4 text-lg uppercase sm:text-right">Shaky months</h4>
+          <ul>
+            {shakyMonths.map((month) => (
+              <ShakyMonth key={month.label} {...month} />
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
+  )
+}
+
+function ShakyMonth({ debit, monthLabel, yearLabel, balance: { start, end } }) {
+  const startedGood = start > 0
+  const deficit = usd.format(Math.abs(end))
+  const short = startedGood ? deficit : usd.format(Math.abs(debit))
+
+  return (
+    <li className="flex flex-wrap items-center gap-2 sm:justify-end">
+      <span className="text-xl">
+        {monthLabel} {yearLabel}
+      </span>
+      <span>
+        You&apos;re short <span className="text-lg font-semibold">{short}</span>
+      </span>
+    </li>
+  )
+}
+
+function FormView({ step, data, onSubmit, onBack }) {
   const CurrentStep = step?.component
 
   return (
     <RunwayForm
       defaultValues={data}
       {...(step.prev && { onBack })}
-      {...(step.enableScenarios && { onClickScenarios })}
+      {...(step.enableScenarios && { enableScenarios: true })}
       {...(step.submitComponent && { submitComponent: step.submitComponent })}
       {...(step.backLabel && { backLabel: step.backLabel })}
       onSubmit={onSubmit}

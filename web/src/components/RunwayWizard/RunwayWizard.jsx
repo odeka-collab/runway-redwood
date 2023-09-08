@@ -176,7 +176,7 @@ function Welcome({ onClickOnboarding }) {
           I was just laid off
         </Card>
       </div>
-      <div className="flex flex-col-reverse justify-between gap-4 pt-4 sm:flex-row sm:pt-8">
+      <div className="flex flex-col justify-between gap-4 pt-4 sm:flex-row sm:pt-8">
         <Button onClick={() => onClickOnboarding()}>
           <span className="flex items-center justify-center gap-2">
             Try it myself

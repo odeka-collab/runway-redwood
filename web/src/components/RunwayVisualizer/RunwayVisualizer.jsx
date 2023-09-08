@@ -23,7 +23,7 @@ const DISPLAY = {
   SEGMENT: {
     BAR: {
       WIDTH: 80,
-      HEIGHT: 100,
+      HEIGHT: 10,
       DEPTH: 60,
       COLOR: {
         FUNDED: {
@@ -31,7 +31,7 @@ const DISPLAY = {
           rearFace: 'hsla(43, 89%, 38%, 1.0)',
           leftFace: 'hsla(43, 74%, 49%, 1.0)',
           rightFace: 'hsla(43, 89%, 38%, 1.0)',
-          topFace: 'hsla(43, 74%, 49%, 1.0)',
+          topFace: 'hsla(153, 74%, 49%, 1.0)',
           bottomFace: 'hsla(43, 89%, 38%, 1.0)',
         },
         PARTIAL: {

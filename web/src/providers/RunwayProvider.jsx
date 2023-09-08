@@ -204,8 +204,7 @@ export function buildRunway({ data, currentDate, endDate }) {
 export function getDateRange() {
   const currentDate = new Date()
   const endDate = new Date()
-  endDate.setMonth(currentDate.getMonth() + 1)
-  endDate.setFullYear(currentDate.getFullYear() + 1)
+  endDate.setMonth(currentDate.getMonth() + 6)
 
   return { currentDate, endDate }
 }

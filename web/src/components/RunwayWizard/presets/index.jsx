@@ -19,24 +19,24 @@ export const PRESET_BUSINESS = {
   ],
   monthlyDebitsFixed: [
     {
-      name: 'Full Support (5)',
-      amount: 4200,
+      name: 'Full Support Crew Pay (x5)',
+      amount: 21000,
       type: 'debit',
       recurring: 'monthly',
       date: null,
       category: 'fixed',
     },
     {
-      name: 'Partial Assist (2)',
-      amount: 2000,
+      name: 'Partial Assist Crew Pay (x2)',
+      amount: 4000,
       type: 'debit',
       recurring: 'monthly',
       date: null,
       category: 'fixed',
     },
     {
-      name: 'Moonlighters (4)',
-      amount: 200,
+      name: 'Moonlighter Crew Pay (x4)',
+      amount: 800,
       type: 'debit',
       recurring: 'monthly',
       date: null,
@@ -53,7 +53,7 @@ export const PRESET_BUSINESS = {
       category: 'flexible',
     },
     {
-      name: 'Cloud Hosts (non-client)',
+      name: 'Cloud Infrastructure (non-client)',
       amount: 350,
       type: 'debit',
       recurring: 'monthly',
@@ -79,7 +79,7 @@ export const PRESET_BUSINESS = {
   ],
   oneTimeDebits: [
     {
-      name: 'New dev tower for X',
+      name: 'New dev tower for Joe',
       amount: 1300,
       type: 'debit',
       recurring: 'one_time',
@@ -95,7 +95,7 @@ export const PRESET_BUSINESS = {
       category: null,
     },
     {
-      name: 'Yearly docusub re-up',
+      name: 'Yearly DocuSub re-up',
       amount: 400,
       type: 'debit',
       recurring: 'one_time',
@@ -186,7 +186,7 @@ export const PRESET_LAID_OFF = {
   funds: [
     {
       name: 'Checking & Savings',
-      amount: 20000,
+      amount: 9000,
       type: null,
       recurring: null,
       date: null,
@@ -203,8 +203,24 @@ export const PRESET_LAID_OFF = {
       category: 'fixed',
     },
     {
-      name: 'Communications',
-      amount: 450,
+      name: 'Utilities',
+      amount: 600,
+      type: 'debit',
+      recurring: 'monthly',
+      date: null,
+      category: 'fixed',
+    },
+    {
+      name: 'Vehicles',
+      amount: 1500,
+      type: 'debit',
+      recurring: 'monthly',
+      date: null,
+      category: 'fixed',
+    },
+    {
+      name: 'Credit card min payment',
+      amount: 90,
       type: 'debit',
       recurring: 'monthly',
       date: null,
@@ -213,8 +229,16 @@ export const PRESET_LAID_OFF = {
   ],
   monthlyDebitsFlexible: [
     {
-      name: 'Groceries',
+      name: 'Food & Groceries',
       amount: 1500,
+      type: 'debit',
+      recurring: 'monthly',
+      date: null,
+      category: 'flexible',
+    },
+    {
+      name: 'Entertainment',
+      amount: 100,
       type: 'debit',
       recurring: 'monthly',
       date: null,
@@ -230,6 +254,14 @@ export const PRESET_LAID_OFF = {
       date: getFutureDate(0, 1, 3),
       category: null,
     },
+    {
+      name: 'Birthday party',
+      amount: 80,
+      type: 'debit',
+      recurring: 'one_time',
+      date: getFutureDate(0, 3, 0),
+      category: null,
+    },
   ],
   monthlyCredits: [
     {
@@ -240,8 +272,32 @@ export const PRESET_LAID_OFF = {
       date: null,
       category: null,
     },
+    {
+      name: 'Unemployment Ins',
+      amount: 900,
+      type: 'credit',
+      recurring: 'monthly',
+      date: null,
+      category: null,
+    },
+    {
+      name: 'Weekend gig',
+      amount: 600,
+      type: 'credit',
+      recurring: 'monthly',
+      date: null,
+      category: null,
+    },
   ],
   oneTimeCredits: [
+    {
+      name: 'Severance',
+      amount: 21635,
+      type: 'credit',
+      recurring: 'one_time',
+      date: getFutureDate(0, 0, 13),
+      category: null,
+    },
     {
       name: 'Sell some stuff',
       amount: 200,

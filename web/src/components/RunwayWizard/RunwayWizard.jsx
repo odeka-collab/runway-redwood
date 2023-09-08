@@ -155,14 +155,20 @@ function Welcome({ onClickOnboarding }) {
     <div className="flex flex-col gap-4 sm:gap-8">
       <h2 className="text-center text-2xl">Howdy!</h2>
       <p className="text-md text-center">
-        Check out a sample financial runway for the situations below or try it
-        for yourself!
+        Check out a sample financial runway or try it for yourself!
+      </p>
+      <p className="text-center text-lg">
+        Sh*t just got real. No one&apos;s financial future is certain.
+        <br />
+        <span className="text-sm">
+          Look at a few scenarios we&apos;ve already been through.
+        </span>
       </p>
       <div className="grid content-stretch gap-4 xs:grid-cols-2 xs:py-8">
         <Card
           onClick={() => onClickOnboarding(PRESET_BUSINESS, BUSINESS_WORKFLOW)}
         >
-          I am starting a business
+          Living off the Business with Friends
         </Card>
         <Card
           onClick={() => onClickOnboarding(PRESET_LAID_OFF, LAID_OFF_WORKFLOW)}

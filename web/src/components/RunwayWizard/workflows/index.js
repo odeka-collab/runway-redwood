@@ -138,7 +138,7 @@ export const BUSINESS_WORKFLOW = {
         <>
           <RunwayForm.MonthlyDebitsFixed
             {...props}
-            headerText="How much are you each surviving on?"
+            headerText="How much is everyone surviving on each month?"
             description="&hellip;to each according to their need."
           />
         </>
@@ -197,7 +197,7 @@ export const BUSINESS_WORKFLOW = {
       return (
         <RunwayForm.OneTimeCredits
           {...props}
-          headerText="For ongoing projects and the day to day, what invoices are out or contracted and scheduled?"
+          headerText="For ongoing projects and the day-to-day, what invoices are out or contracted and scheduled?"
           description="Short-term, one-off, or chronically tight-fisted client payment events."
         />
       )
@@ -237,7 +237,7 @@ export const LAID_OFF_WORKFLOW = {
         <RunwayForm.OneTimeCredits
           {...props}
           headerText="Are you expecting any money?"
-          description="Add anything you're pretty sure is coming in. We'll add less sure things later."
+          description="Add anything you're pretty sure is coming in. You can add less sure things later."
         />
       )
     },
@@ -266,7 +266,7 @@ export const LAID_OFF_WORKFLOW = {
           <RunwayForm.MonthlyDebitsFixed
             {...props}
             headerText="What fixed expenses must you pay every month?"
-            description="These are your expenses that have a regular amount. We'll include varied expenses later."
+            description="These are your expenses that have a regular amount. You can include varied expenses later."
           />
         </>
       )
@@ -282,7 +282,7 @@ export const LAID_OFF_WORKFLOW = {
           <RunwayForm.MonthlyDebitsFlexible
             {...props}
             headerText="What other expenses do you usually have every month?"
-            description="These amounts may not be consistent, so you may use a low, high, or average of your spending."
+            description="These amounts may not be consistent, so you may use a high, low, or average of your spending."
           />
         </>
       )

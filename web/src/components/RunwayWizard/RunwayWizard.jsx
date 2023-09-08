@@ -147,21 +147,21 @@ function RunwayWizardView({ data, step, onBack, onClickOnboarding, onSubmit }) {
 
 function Welcome({ onClickOnboarding }) {
   return (
-    <div className="flex flex-col gap-4 sm:gap-8">
-      <h2 className="text-center text-3xl">Howdy!</h2>
-      <p className="text-md text-center text-lg">
-        Check out a sample financial runway or try it for yourself!
+    <div className="flex flex-col sm:gap-8">
+      <h2 className="py-4 text-center text-3xl">Howdy!</h2>
+      <p className="text-md mx-auto px-8 py-2 text-center text-lg sm:w-7/12">
+        This tool is built for the harsh financial realities we are all dealing
+        with. Check out a sample financial runway, or try it for yourself!
       </p>
-      <p className="text-center text-base">
-        Sh*t just got real. No one&apos;s financial future is certain.
-        <br />
-        Look at a few scenarios we&apos;ve already been through.
+      <p className="mx-auto px-6 py-2 text-center text-base sm:w-2/3">
+        Sh*t just got real. No one&apos;s financial future is certain. Look at a
+        few scenarios we&apos;ve already been through.
       </p>
-      <div className="grid content-stretch gap-4 xs:grid-cols-2 xs:py-8">
+      <div className="grid content-stretch gap-6 p-6 sm:grid-cols-2">
         <Card
           onClick={() => onClickOnboarding(PRESET_BUSINESS, BUSINESS_WORKFLOW)}
         >
-          Living off the Business with Friends
+          Living off the business with friends
         </Card>
         <Card
           onClick={() => onClickOnboarding(PRESET_LAID_OFF, LAID_OFF_WORKFLOW)}
@@ -169,7 +169,7 @@ function Welcome({ onClickOnboarding }) {
           I was just laid off
         </Card>
       </div>
-      <div className="flex flex-col justify-between gap-4 pt-4 sm:flex-row sm:pt-8">
+      <div className="flex flex-col justify-between gap-6 p-6 pt-0 sm:flex-row">
         <Button onClick={() => onClickOnboarding()}>
           <span className="flex items-center justify-center gap-2">
             Try it myself
@@ -193,7 +193,7 @@ function Card({ children, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="h-48 rounded-3xl border-4 border-double border-black p-1 text-xl sm:h-60"
+      className="h-36 rounded-3xl border-4 border-double border-black p-4 text-xl xs:p-8 sm:h-auto sm:py-24"
     >
       {children}
     </button>
@@ -229,7 +229,6 @@ export const ScenarioContext = React.createContext()
 function Summary({ data, title = 'Summary' }) {
   const lastMonth = data.months[data.months.length - 1]
   const lastMonthLabel = lastMonth.label
-  const balanceStart = usd.format(data.months[0].balance.start)
   const hasSurplus = lastMonth.balance.end > 0
   const balanceEnd = usd.format(lastMonth.balance.end)
   const surplusAvgPerMo = usd.format(lastMonth.balance.end / RUNWAY_MONTHS_MAX)
@@ -237,40 +236,43 @@ function Summary({ data, title = 'Summary' }) {
   const monthsCalculated = Math.min(RUNWAY_MONTHS_MAX, data.months.length)
 
   return (
-    <section className="flex flex-col gap-x-8 gap-y-4 sm:flex-row">
-      <div className="grow">
-        <h3 className="py-4 text-xl uppercase">{title}</h3>
-        <p className="sm:text-lg">
-          We&apos;ve calculated your financial runway for the next{' '}
+    <section className="rounded-xl border border-black p-4">
+      <h3 className="text-xl uppercase">{title}</h3>
+      <p className="p-4 sm:text-lg">
+        We&apos;ve calculated your financial runway for the next{' '}
+        {monthsCalculated > 1 ? (
           <em className="whitespace-nowrap text-xl">
             {monthsCalculated} months
           </em>
-          .
-        </p>
+        ) : (
+          'month'
+        )}
+        .
+      </p>
+      <div className="px-4">
         <p className="sm:text-lg">
           You have runway to{' '}
-          <span className="text-xl font-semibold">{lastMonthLabel}</span>.
-        </p>
-        <p className="sm:text-lg">
-          Your starting balance is{' '}
-          <span className="text-xl font-semibold">{balanceStart}</span>.
+          <span className="whitespace-nowrap text-xl font-semibold">
+            {lastMonthLabel}
+          </span>
+          .
         </p>
       </div>
       {hasSurplus && (
-        <div className="sm:self-end sm:text-right">
-          <p className="text-lg">
-            You have a{' '}
+        <div className="px-4">
+          <p className="sm:text-lg">
+            You&apos;ll have a{' '}
             <span className="text-xl font-semibold">{balanceEnd}</span> surplus!
           </p>
-          <p>
+          <p className="sm:text-lg">
             That&apos;s an extra{' '}
             <span className="font-semibold">{surplusAvgPerMo}</span> per month!
           </p>
         </div>
       )}
       {shakyMonths.length > 0 && (
-        <div>
-          <h4 className="py-4 text-lg uppercase sm:text-right">Shaky months</h4>
+        <div className="px-4">
+          <h4 className="py-4 uppercase">Shaky months</h4>
           <ul>
             {shakyMonths.map((month) => (
               <ShakyMonth key={month.label} {...month} />
@@ -288,11 +290,11 @@ function ShakyMonth({ debit, monthLabel, yearLabel, balance: { start, end } }) {
   const short = startedGood ? deficit : usd.format(Math.abs(debit))
 
   return (
-    <li className="flex flex-wrap items-center gap-2 sm:justify-end">
+    <li className="flex flex-wrap gap-4">
       <span className="text-xl">
         {monthLabel} {yearLabel}
       </span>
-      <span>
+      <span className="">
         You&apos;re short <span className="text-lg font-semibold">{short}</span>
       </span>
     </li>

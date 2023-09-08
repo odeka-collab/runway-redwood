@@ -253,7 +253,7 @@ const RunwayForm = ({
               <Question className="hidden h-4 w-auto sm:inline" />
             </button>
           )}
-          {onBack && (
+          {onBack && !enableScenarios && (
             <button
               type="button"
               className="flex items-center justify-center gap-2 rounded-lg border-4 border-double border-black px-4 py-2 uppercase"

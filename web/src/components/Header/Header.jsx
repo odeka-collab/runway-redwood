@@ -6,7 +6,9 @@ const Header = () => {
       <a href="https://odeka.io">
         <img src={logo} alt="Odeka" width="120" />
       </a>
-      <h1 className="select-none text-2xl font-bold">Runway App</h1>
+      <a href="/">
+        <h1 className="select-none text-2xl font-bold">Runway App</h1>
+      </a>
     </header>
   )
 }

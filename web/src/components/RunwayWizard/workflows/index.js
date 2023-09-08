@@ -19,6 +19,8 @@ export const BASE_WORKFLOW = {
     display: 'compact',
     submitComponent: RunwayForm.BuildRunwayLabel,
     enableScenarios: true,
+    backLabel: 'Start Over',
+    prev: 'WELCOME',
   },
   SCENARIOS: {
     name: 'SCENARIOS',

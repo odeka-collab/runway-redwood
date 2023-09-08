@@ -20,7 +20,7 @@ export const PRESET_BUSINESS = {
   monthlyDebitsFixed: [
     {
       name: 'Full Support Crew Pay (x5)',
-      amount: 21000,
+      amount: 26000,
       type: 'debit',
       recurring: 'monthly',
       date: null,
@@ -28,7 +28,7 @@ export const PRESET_BUSINESS = {
     },
     {
       name: 'Partial Assist Crew Pay (x2)',
-      amount: 4000,
+      amount: 6000,
       type: 'debit',
       recurring: 'monthly',
       date: null,
@@ -36,7 +36,7 @@ export const PRESET_BUSINESS = {
     },
     {
       name: 'Moonlighter Crew Pay (x4)',
-      amount: 800,
+      amount: 1000,
       type: 'debit',
       recurring: 'monthly',
       date: null,
@@ -281,7 +281,7 @@ export const PRESET_LAID_OFF = {
   ],
   monthlyCredits: [
     {
-      name: 'Side project',
+      name: 'Business with friends',
       amount: 1600,
       type: 'credit',
       recurring: 'monthly',

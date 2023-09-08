@@ -11,12 +11,58 @@ const FONT = new Zdog.Font({
   src: '/fonts/Ubuntu-Regular.ttf',
 })
 
-const DISPLAY = {
+export const DISPLAY_DEFAULT = {
   AIRPLANE: {
     COLOR: {
       FUSELAGE: 'darkorange',
       TAIL_Y: 'darkorange',
       TAIL_X: 'darkcyan',
+      WINGS: 'darkcyan',
+      WINDOW: 'lightskyblue',
+    },
+    SIZE: 1,
+  },
+  SEGMENT: {
+    BAR: {
+      WIDTH: 80,
+      HEIGHT: 10,
+      DEPTH: 60,
+      COLOR: {
+        FUNDED: {
+          frontFace: 'hsla(43, 74%, 49%, 1.0)',
+          rearFace: 'hsla(43, 89%, 38%, 1.0)',
+          leftFace: 'hsla(43, 74%, 49%, 1.0)',
+          rightFace: 'hsla(43, 89%, 38%, 1.0)',
+          topFace: 'hsla(153, 74%, 49%, 1.0)',
+          bottomFace: 'hsla(43, 89%, 38%, 1.0)',
+        },
+        PARTIAL: {
+          frontFace: 'hsla(43, 74%, 49%, 0.5)',
+          rearFace: 'hsla(43, 89%, 38%, 0.5)',
+          leftFace: 'hsla(43, 74%, 49%, 0.5)',
+          rightFace: 'hsla(43, 89%, 38%, 0.5)',
+          topFace: 'hsla(43, 74%, 49%, 0.5)',
+          bottomFace: 'hsla(43, 89%, 38%, 0.5)',
+        },
+      },
+    },
+    TEXT: {
+      MARGIN: 20,
+      FONT_SIZE: 24,
+      COLOR: {
+        FUNDED: '#66f',
+        PARTIAL: '#99f',
+      },
+    },
+  },
+}
+
+export const DISPLAY_SCENARIO = {
+  AIRPLANE: {
+    COLOR: {
+      FUSELAGE: 'green',
+      TAIL_Y: 'green',
+      TAIL_X: 'green',
       WINGS: 'darkcyan',
       WINDOW: 'lightskyblue',
     },
@@ -97,7 +143,10 @@ const RunwayVisualizer = ({ data }) => {
             </div>
             {scenario && (
               <figure>
-                <RunwayVisualizerView data={scenario} />
+                <RunwayVisualizerView
+                  data={scenario}
+                  display={DISPLAY_SCENARIO}
+                />
               </figure>
             )}
           </div>
@@ -107,19 +156,23 @@ const RunwayVisualizer = ({ data }) => {
   )
 }
 
-function RunwayVisualizerView({ data: { id, months } }) {
+function RunwayVisualizerView({
+  data: { id, months },
+  display = DISPLAY_DEFAULT,
+}) {
   const canvasRef = React.useRef()
 
   id = `zdog-canvas-${id}`
 
   const runway = useVisualizer({
+    display,
     element: `.${id}`,
     canvasRef,
     months,
     dragRotate: true,
   })
 
-  useAnime(runway)
+  useAnime(runway, { display })
 
   return <canvas ref={canvasRef} className={id} />
 }
@@ -130,6 +183,7 @@ function useVisualizer({
   months,
   width,
   height,
+  display,
   dragRotate = false,
 }) {
   const [state, setState] = React.useState({})
@@ -158,17 +212,18 @@ function useVisualizer({
       const segment = renderSegment(month, {
         isFirst: i === 0,
         isLast: i === arr.length - 1,
+        display,
       })
-      segment.root.translate.x = i * DISPLAY.SEGMENT.BAR.WIDTH
+      segment.root.translate.x = i * display.SEGMENT.BAR.WIDTH
       runway.root.addChild(segment.root)
       return { root, ...segment }
     })
 
-    const airplane = renderAirplane()
+    const airplane = renderAirplane({ display })
     airplane.root.translate.y =
-      -DISPLAY.SEGMENT.BAR.HEIGHT -
-      DISPLAY.SEGMENT.TEXT.MARGIN -
-      DISPLAY.AIRPLANE.SIZE
+      -display.SEGMENT.BAR.HEIGHT -
+      display.SEGMENT.TEXT.MARGIN -
+      display.AIRPLANE.SIZE
 
     root.addChild(airplane.root)
 
@@ -191,23 +246,23 @@ function useVisualizer({
         cancelAnimationFrame(_animationId)
       }
     }
-  }, [element, canvasRef, months, width, height, dragRotate])
+  }, [element, canvasRef, months, width, height, dragRotate, display])
 
   return state
 }
 
 function renderSegment(
   { balance, monthLabel, yearLabel },
-  { isFirst, isLast }
+  { isFirst, isLast, display }
 ) {
   const bar = new Zdog.Box({
-    width: DISPLAY.SEGMENT.BAR.WIDTH,
+    width: display.SEGMENT.BAR.WIDTH,
     height: 1,
-    depth: DISPLAY.SEGMENT.BAR.DEPTH,
+    depth: display.SEGMENT.BAR.DEPTH,
     // highlight when the month's ending balance is positive
     ...(balance.end >= 0
-      ? DISPLAY.SEGMENT.BAR.COLOR.FUNDED
-      : DISPLAY.SEGMENT.BAR.COLOR.PARTIAL),
+      ? display.SEGMENT.BAR.COLOR.FUNDED
+      : display.SEGMENT.BAR.COLOR.PARTIAL),
   })
 
   const text = new Zdog.Group()
@@ -215,17 +270,17 @@ function renderSegment(
   const month = new Zdog.Text({
     font: FONT,
     value: monthLabel,
-    fontSize: DISPLAY.SEGMENT.TEXT.FONT_SIZE,
+    fontSize: display.SEGMENT.TEXT.FONT_SIZE,
     fill: true,
     color:
       // highlight when the month's ending balance is positive
       balance.end >= 0
-        ? DISPLAY.SEGMENT.TEXT.COLOR.FUNDED
-        : DISPLAY.SEGMENT.TEXT.COLOR.PARTIAL,
+        ? display.SEGMENT.TEXT.COLOR.FUNDED
+        : display.SEGMENT.TEXT.COLOR.PARTIAL,
     translate: {
       x: -bar.width / 2,
-      y: bar.height / 2 + DISPLAY.SEGMENT.TEXT.MARGIN,
-      z: bar.depth / 2 + DISPLAY.SEGMENT.TEXT.MARGIN,
+      y: bar.height / 2 + display.SEGMENT.TEXT.MARGIN,
+      z: bar.depth / 2 + display.SEGMENT.TEXT.MARGIN,
     },
   })
 
@@ -239,20 +294,20 @@ function renderSegment(
     year = new Zdog.Text({
       font: FONT,
       value: yearLabel,
-      fontSize: DISPLAY.SEGMENT.TEXT.FONT_SIZE,
+      fontSize: display.SEGMENT.TEXT.FONT_SIZE,
       fill: true,
       color:
         // highlight when the month's ending balance is positive
         balance.end >= 0
-          ? DISPLAY.SEGMENT.TEXT.COLOR.FUNDED
-          : DISPLAY.SEGMENT.TEXT.COLOR.PARTIAL,
+          ? display.SEGMENT.TEXT.COLOR.FUNDED
+          : display.SEGMENT.TEXT.COLOR.PARTIAL,
       translate: {
         x: -bar.width / 2,
         y:
           bar.height / 2 +
-          DISPLAY.SEGMENT.TEXT.MARGIN +
-          DISPLAY.SEGMENT.TEXT.FONT_SIZE,
-        z: bar.depth / 2 + DISPLAY.SEGMENT.TEXT.MARGIN,
+          display.SEGMENT.TEXT.MARGIN +
+          display.SEGMENT.TEXT.FONT_SIZE,
+        z: bar.depth / 2 + display.SEGMENT.TEXT.MARGIN,
       },
     })
 
@@ -262,78 +317,78 @@ function renderSegment(
   return { root, bar, text: { month, year } }
 }
 
-function renderAirplane() {
+function renderAirplane({ display }) {
   const root = new Zdog.Anchor()
 
   const fuselage = new Zdog.Group()
 
   const cabin = new Zdog.Hemisphere({
-    diameter: DISPLAY.AIRPLANE.SIZE * 36,
-    color: DISPLAY.AIRPLANE.COLOR.FUSELAGE,
+    diameter: display.AIRPLANE.SIZE * 36,
+    color: display.AIRPLANE.COLOR.FUSELAGE,
     rotate: { x: TAU / 4, y: -TAU / 4 },
   })
 
   const firstClass = new Zdog.Cylinder({
     diameter: cabin.diameter,
-    length: DISPLAY.AIRPLANE.SIZE * 10,
-    color: DISPLAY.AIRPLANE.COLOR.FUSELAGE,
-    translate: { x: DISPLAY.AIRPLANE.SIZE * -6 },
+    length: display.AIRPLANE.SIZE * 10,
+    color: display.AIRPLANE.COLOR.FUSELAGE,
+    translate: { x: display.AIRPLANE.SIZE * -6 },
     rotate: { x: TAU / 4, y: TAU / 4 },
   })
 
   const coach = new Zdog.Cone({
     diameter: cabin.diameter,
-    length: DISPLAY.AIRPLANE.SIZE * 48,
-    color: DISPLAY.AIRPLANE.COLOR.FUSELAGE,
-    translate: { x: DISPLAY.AIRPLANE.SIZE * -12 },
+    length: display.AIRPLANE.SIZE * 48,
+    color: display.AIRPLANE.COLOR.FUSELAGE,
+    translate: { x: display.AIRPLANE.SIZE * -12 },
     rotate: { x: TAU / 4, y: TAU / 4 },
   })
 
   const tailV = new Zdog.Shape({
     path: [
-      { x: DISPLAY.AIRPLANE.SIZE * -48, y: DISPLAY.AIRPLANE.SIZE * -2 },
-      { x: DISPLAY.AIRPLANE.SIZE * -68, y: DISPLAY.AIRPLANE.SIZE * -24 },
-      { x: DISPLAY.AIRPLANE.SIZE * -82, y: DISPLAY.AIRPLANE.SIZE * -24 },
-      { x: DISPLAY.AIRPLANE.SIZE * -70, y: DISPLAY.AIRPLANE.SIZE * -2 },
+      { x: display.AIRPLANE.SIZE * -48, y: display.AIRPLANE.SIZE * -2 },
+      { x: display.AIRPLANE.SIZE * -68, y: display.AIRPLANE.SIZE * -24 },
+      { x: display.AIRPLANE.SIZE * -82, y: display.AIRPLANE.SIZE * -24 },
+      { x: display.AIRPLANE.SIZE * -70, y: display.AIRPLANE.SIZE * -2 },
     ],
     closed: true,
-    stroke: DISPLAY.AIRPLANE.SIZE * 8,
-    color: DISPLAY.AIRPLANE.COLOR.TAIL_Y,
-    fill: DISPLAY.AIRPLANE.COLOR.TAIL_Y,
+    stroke: display.AIRPLANE.SIZE * 8,
+    color: display.AIRPLANE.COLOR.TAIL_Y,
+    fill: display.AIRPLANE.COLOR.TAIL_Y,
   })
 
   const tailR = tailV.copyGraph({
-    color: DISPLAY.AIRPLANE.COLOR.TAIL_X,
-    fill: DISPLAY.AIRPLANE.COLOR.TAIL_X,
+    color: display.AIRPLANE.COLOR.TAIL_X,
+    fill: display.AIRPLANE.COLOR.TAIL_X,
     rotate: { x: -TAU / 4 },
     scale: 0.8,
     translate: {
-      x: DISPLAY.AIRPLANE.SIZE * -24,
-      y: DISPLAY.AIRPLANE.SIZE * -12,
-      z: DISPLAY.AIRPLANE.SIZE * 8,
+      x: display.AIRPLANE.SIZE * -24,
+      y: display.AIRPLANE.SIZE * -12,
+      z: display.AIRPLANE.SIZE * 8,
     },
   })
 
   const tailL = tailR.copyGraph({
     rotate: { x: TAU / 4 },
     translate: {
-      x: DISPLAY.AIRPLANE.SIZE * -24,
-      y: DISPLAY.AIRPLANE.SIZE * -12,
-      z: DISPLAY.AIRPLANE.SIZE * -8,
+      x: display.AIRPLANE.SIZE * -24,
+      y: display.AIRPLANE.SIZE * -12,
+      z: display.AIRPLANE.SIZE * -8,
     },
   })
 
   const wingR = new Zdog.Shape({
     path: [
-      { x: DISPLAY.AIRPLANE.SIZE * -12, y: DISPLAY.AIRPLANE.SIZE * -24 },
-      { x: DISPLAY.AIRPLANE.SIZE * -20, y: DISPLAY.AIRPLANE.SIZE * -56 },
-      { x: DISPLAY.AIRPLANE.SIZE * -42, y: DISPLAY.AIRPLANE.SIZE * -58 },
-      { x: DISPLAY.AIRPLANE.SIZE * -38, y: DISPLAY.AIRPLANE.SIZE * -14 },
+      { x: display.AIRPLANE.SIZE * -12, y: display.AIRPLANE.SIZE * -24 },
+      { x: display.AIRPLANE.SIZE * -20, y: display.AIRPLANE.SIZE * -56 },
+      { x: display.AIRPLANE.SIZE * -42, y: display.AIRPLANE.SIZE * -58 },
+      { x: display.AIRPLANE.SIZE * -38, y: display.AIRPLANE.SIZE * -14 },
     ],
     closed: true,
-    stroke: DISPLAY.AIRPLANE.SIZE * 8,
-    fill: DISPLAY.AIRPLANE.COLOR.WINGS,
-    color: DISPLAY.AIRPLANE.COLOR.WINGS,
+    stroke: display.AIRPLANE.SIZE * 8,
+    fill: display.AIRPLANE.COLOR.WINGS,
+    color: display.AIRPLANE.COLOR.WINGS,
     rotate: { x: -TAU / 4 },
   })
 
@@ -342,11 +397,11 @@ function renderAirplane() {
   })
 
   const window = new Zdog.Ellipse({
-    diameter: DISPLAY.AIRPLANE.SIZE * 14,
+    diameter: display.AIRPLANE.SIZE * 14,
     quarters: 1,
-    stroke: DISPLAY.AIRPLANE.SIZE * 6,
-    color: DISPLAY.AIRPLANE.COLOR.WINDOW,
-    translate: { x: DISPLAY.AIRPLANE.SIZE * 6, y: DISPLAY.AIRPLANE.SIZE * -12 },
+    stroke: display.AIRPLANE.SIZE * 6,
+    color: display.AIRPLANE.COLOR.WINDOW,
+    translate: { x: display.AIRPLANE.SIZE * 6, y: display.AIRPLANE.SIZE * -12 },
     rotate: { x: TAU / 4, z: TAU / 8 },
   })
 
@@ -375,7 +430,7 @@ function renderAirplane() {
   }
 }
 
-function useAnime(runway) {
+function useAnime(runway, { display }) {
   React.useEffect(() => {
     if (runway?.illo) {
       const timeline = anime.timeline({
@@ -401,7 +456,7 @@ function useAnime(runway) {
           targets: rootState.translate,
           duration: runway.runway.segments.length * (1000 - 700),
           easing: 'easeInOutCubic',
-          x: -(runway.runway.segments.length * DISPLAY.SEGMENT.BAR.WIDTH),
+          x: -(runway.runway.segments.length * display.SEGMENT.BAR.WIDTH),
           update: function () {
             runway.runway.root.translate.x = rootState.translate.x
           },
@@ -419,7 +474,7 @@ function useAnime(runway) {
             targets: segmentState,
             easing: 'easeInOutSine',
             duration: 1000,
-            height: DISPLAY.SEGMENT.BAR.HEIGHT,
+            height: display.SEGMENT.BAR.HEIGHT,
             update: function () {
               const prevBar = segment.bar
               const height = anime.get(segmentState, 'height')
@@ -444,7 +499,7 @@ function useAnime(runway) {
         '-=500'
       )
     }
-  }, [runway])
+  }, [runway, display])
 }
 
 export default RunwayVisualizer

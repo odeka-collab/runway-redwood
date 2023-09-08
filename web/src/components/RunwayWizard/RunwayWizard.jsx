@@ -207,12 +207,12 @@ function RunwayView({ data, ...props }) {
   return (
     <ScenarioContext.Provider value={{ scenario, setScenario }}>
       <RunwayVisualizer data={renderData} />
-      <Summary data={renderData} />
-      {scenario && (
-        <div className="mt-8">
+      <div className="grid gap-2 sm:grid-flow-col">
+        <Summary data={renderData} />
+        {scenario && (
           <Summary data={scenario} title={`What if ${scenario.name}`} />
-        </div>
-      )}
+        )}
+      </div>
       <FormView
         {...{
           ...props,
@@ -236,7 +236,7 @@ function Summary({ data, title = 'Summary' }) {
   const monthsCalculated = Math.min(RUNWAY_MONTHS_MAX, data.months.length)
 
   return (
-    <section className="rounded-xl border border-black p-4">
+    <section className="rounded-xl border-b border-t border-black p-4">
       <h3 className="text-xl uppercase">{title}</h3>
       <p className="p-4 sm:text-lg">
         We&apos;ve calculated your financial runway for the next{' '}

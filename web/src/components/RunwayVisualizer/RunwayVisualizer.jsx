@@ -14,11 +14,11 @@ const FONT = new Zdog.Font({
 export const DISPLAY_DEFAULT = {
   AIRPLANE: {
     COLOR: {
-      FUSELAGE: 'darkorange',
-      TAIL_Y: 'darkorange',
-      TAIL_X: 'darkcyan',
-      WINGS: 'darkcyan',
-      WINDOW: 'lightskyblue',
+      FUSELAGE: 'hsl(210, 100%, 56%)', // dodgerblue
+      TAIL_Y: 'hsl(0, 0%, 75%)', // silver
+      TAIL_X: 'hsl(210, 100%, 56%', // dodgerblue
+      WINGS: 'hsl(0, 0%, 75%)', // silver
+      WINDOW: 'hsl(203, 92%, 75%)', // lightskyblue
     },
     SIZE: 1,
   },
@@ -29,20 +29,20 @@ export const DISPLAY_DEFAULT = {
       DEPTH: 60,
       COLOR: {
         FUNDED: {
-          frontFace: 'hsla(43, 74%, 49%, 1.0)',
-          rearFace: 'hsla(43, 89%, 38%, 1.0)',
-          leftFace: 'hsla(43, 74%, 49%, 1.0)',
-          rightFace: 'hsla(43, 89%, 38%, 1.0)',
-          topFace: 'hsla(153, 74%, 49%, 1.0)',
-          bottomFace: 'hsla(43, 89%, 38%, 1.0)',
+          frontFace: 'hsl(30, 100%, 56%)',
+          rearFace: 'hsl(30, 100%, 56%)',
+          leftFace: 'hsl(30, 100%, 56%)',
+          rightFace: 'hsl(90, 100%, 56%)',
+          topFace: 'hsl(0, 0%, 56%)',
+          bottomFace: 'hsl(30, 100%, 56%)',
         },
         PARTIAL: {
-          frontFace: 'hsla(43, 74%, 49%, 0.5)',
-          rearFace: 'hsla(43, 89%, 38%, 0.5)',
-          leftFace: 'hsla(43, 74%, 49%, 0.5)',
-          rightFace: 'hsla(43, 89%, 38%, 0.5)',
-          topFace: 'hsla(43, 74%, 49%, 0.5)',
-          bottomFace: 'hsla(43, 89%, 38%, 0.5)',
+          frontFace: 'hsla(30, 100%, 56%, 0.5)',
+          rearFace: 'hsla(30, 100%, 56%, 0.5)',
+          leftFace: false,
+          rightFace: 'hsla(30, 100%, 56%, 0.5)',
+          topFace: 'hsla(30, 100%, 56%, 0.5)',
+          bottomFace: 'hsla(30, 100%, 56%, 0.5)',
         },
       },
     },
@@ -50,8 +50,8 @@ export const DISPLAY_DEFAULT = {
       MARGIN: 20,
       FONT_SIZE: 24,
       COLOR: {
-        FUNDED: '#66f',
-        PARTIAL: '#99f',
+        FUNDED: 'hsl(19, 56%, 40%)', // sienna
+        PARTIAL: 'hsl(30, 59%, 53%)', // maroon
       },
     },
   },
@@ -60,11 +60,11 @@ export const DISPLAY_DEFAULT = {
 export const DISPLAY_SCENARIO = {
   AIRPLANE: {
     COLOR: {
-      FUSELAGE: 'green',
-      TAIL_Y: 'green',
-      TAIL_X: 'green',
-      WINGS: 'darkcyan',
-      WINDOW: 'lightskyblue',
+      FUSELAGE: 'hsl(339, 79%, 66%)',
+      TAIL_Y: 'hsl(39, 79%, 66%)',
+      TAIL_X: 'hsl(339, 79%, 66%)',
+      WINGS: 'hsl(39, 79%, 66%)',
+      WINDOW: 'hsl(159, 79%, 66%)',
     },
     SIZE: 1,
   },
@@ -75,20 +75,20 @@ export const DISPLAY_SCENARIO = {
       DEPTH: 60,
       COLOR: {
         FUNDED: {
-          frontFace: 'hsla(43, 74%, 49%, 1.0)',
-          rearFace: 'hsla(43, 89%, 38%, 1.0)',
-          leftFace: 'hsla(43, 74%, 49%, 1.0)',
-          rightFace: 'hsla(43, 89%, 38%, 1.0)',
-          topFace: 'hsla(153, 74%, 49%, 1.0)',
-          bottomFace: 'hsla(43, 89%, 38%, 1.0)',
+          frontFace: 'hsl(174, 79%, 66%)',
+          rearFace: 'hsl(174, 79%, 66%)',
+          leftFace: 'hsl(54, 87%, 58%)',
+          rightFace: 'hsl(54, 87%, 58%)',
+          topFace: 'hsl(264, 79%, 66%)',
+          bottomFace: 'hsl(174, 79%, 66%)',
         },
         PARTIAL: {
-          frontFace: 'hsla(43, 74%, 49%, 0.5)',
-          rearFace: 'hsla(43, 89%, 38%, 0.5)',
-          leftFace: 'hsla(43, 74%, 49%, 0.5)',
-          rightFace: 'hsla(43, 89%, 38%, 0.5)',
-          topFace: 'hsla(43, 74%, 49%, 0.5)',
-          bottomFace: 'hsla(43, 89%, 38%, 0.5)',
+          frontFace: 'hsla(174, 79%, 66%, 0.5)',
+          rearFace: 'hsla(174, 79%, 66%, 0.5)',
+          leftFace: 'hsla(54, 87%, 58%, 0.5)',
+          rightFace: 'hsla(54, 87%, 58%, 0.5)',
+          topFace: 'hsla(264, 79%, 66%, 0.5)',
+          bottomFace: 'hsla(174, 79%, 66%, 0.5)',
         },
       },
     },
@@ -174,7 +174,7 @@ function RunwayVisualizerView({
 
   useAnime(runway, { display })
 
-  return <canvas ref={canvasRef} className={id} />
+  return <canvas ref={canvasRef} className={`${id}`} />
 }
 
 function useVisualizer({
@@ -222,7 +222,7 @@ function useVisualizer({
     const airplane = renderAirplane({ display })
     airplane.root.translate.y =
       -display.SEGMENT.BAR.HEIGHT -
-      display.SEGMENT.TEXT.MARGIN -
+      display.SEGMENT.TEXT.MARGIN * 2 -
       display.AIRPLANE.SIZE
 
     root.addChild(airplane.root)
@@ -443,8 +443,8 @@ function useAnime(runway, { display }) {
         targets: runway.root.rotate,
         duration: runway.runway.segments.length * (1000 - 700),
         easing: 'easeInOutCubic',
-        x: -TAU / 30,
-        y: TAU / 18,
+        x: -TAU / 16,
+        y: TAU / 10,
       })
 
       const rootState = {
@@ -478,7 +478,7 @@ function useAnime(runway, { display }) {
             update: function () {
               const prevBar = segment.bar
               const height = anime.get(segmentState, 'height')
-              segment.bar = segment.bar.copy({
+              segment.bar = segment.bar.copyGraph({
                 height,
                 translate: { y: -height / 2 },
               })

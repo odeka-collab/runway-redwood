@@ -151,7 +151,7 @@ function RunwayWizardView({ data, step, onBack, onClickOnboarding, onSubmit }) {
               onBack,
             }}
           />
-          <Details datas={[data]} />
+          {/* <Details datas={[data]} /> */}
         </>
       )
   }
@@ -231,7 +231,7 @@ function RunwayView({ data, ...props }) {
           data,
         }}
       />
-      <Details datas={[data, renderData]} />
+      {/* <Details datas={[data, renderData]} /> */}
     </ScenarioContext.Provider>
   )
 }

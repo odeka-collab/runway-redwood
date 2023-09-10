@@ -169,7 +169,7 @@ function RunwayVisualizerView({
     element: `.${id}`,
     canvasRef,
     months,
-    dragRotate: true,
+    dragRotate: false,
   })
 
   useAnime(runway, { display })

@@ -34,6 +34,7 @@ const usd = new Intl.NumberFormat('en-US', {
 })
 
 function RunwayWizard() {
+  const topRef = React.useRef()
   const [workflow, setWorkflow] = React.useState(WIZARD_WORKFLOW)
   const [step, setStep] = React.useState(DEFAULT_STEP)
   const { open, toggle } = useModal()
@@ -59,6 +60,7 @@ function RunwayWizard() {
       setStep(workflow.SCENARIOS)
     } else {
       setStep(workflow[step.next] || step)
+      scrollToTop()
     }
   }
 
@@ -85,20 +87,30 @@ function RunwayWizard() {
 
   function onBack() {
     setStep(workflow[step.prev] || step)
+    scrollToTop()
   }
 
   async function onCancelImport() {
     toggle()
+    scrollToTop()
   }
 
   async function onImport({ data }) {
     await update(aggregateFields(data))
     setStep(workflow.EDIT_RUNWAY || step)
     toggle()
+    scrollToTop()
+  }
+
+  function scrollToTop() {
+    topRef.current.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
   }
 
   return (
-    <>
+    <div ref={topRef} className="relative">
       <RunwayWizardView
         key={uuidv4()} // always re-render to sync with <RunwayProvider> data
         data={data}
@@ -108,7 +120,7 @@ function RunwayWizard() {
         onSubmit={onSubmit}
       />
       {open && <RunwayImport onCancel={onCancelImport} onSubmit={onImport} />}
-    </>
+    </div>
   )
 }
 

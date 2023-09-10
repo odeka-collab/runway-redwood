@@ -13,7 +13,9 @@ import useRunway from 'src/hooks/UseRunway'
 
 const COPIED_MESSAGE_TIMEOUT_MSEC = 5000
 
-const RunwayImport = ({ onCancel, onSubmit }) => {
+function RunwayImport({ onCancel, onSubmit }) {
+  const ref = React.useRef()
+
   const [state, setState] = React.useState({
     copyStatus: null,
   })
@@ -31,7 +33,10 @@ const RunwayImport = ({ onCancel, onSubmit }) => {
         clearInterval(id)
       }
     }
-  }, [state])
+
+    // Scroll to this module when it renders
+    ref.current?.scrollIntoView()
+  }, [state, ref])
 
   async function onCopy() {
     try {
@@ -44,7 +49,7 @@ const RunwayImport = ({ onCancel, onSubmit }) => {
   }
 
   return (
-    <div className="absolute left-0 top-0 h-full w-full bg-white">
+    <div ref={ref} className="absolute left-0 top-0 h-full w-full bg-white">
       <Form
         onSubmit={onSubmit}
         className="flex flex-col gap-4"

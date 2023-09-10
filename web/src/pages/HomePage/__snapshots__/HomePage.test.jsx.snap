@@ -6,6 +6,94 @@ exports[`HomePage renders the onboarding form 1`] = `
   "baseElement": <body>
     <div>
       <div
+        class="relative"
+      >
+        <div
+          class="flex flex-col sm:gap-8"
+        >
+          <h2
+            class="py-4 text-center text-3xl"
+          >
+            Howdy!
+          </h2>
+          <p
+            class="text-md mx-auto px-8 py-2 text-center text-lg sm:w-7/12"
+          >
+            This tool is built for the harsh financial realities we are all dealing with. Check out a sample financial runway, or try it for yourself!
+          </p>
+          <p
+            class="mx-auto px-6 py-2 text-center text-base sm:w-2/3"
+          >
+            Sh*t just got real. No one's financial future is certain. Look at a few scenarios we've already been through.
+          </p>
+          <div
+            class="grid content-stretch gap-6 p-6 sm:grid-cols-2"
+          >
+            <button
+              class="h-36 rounded-3xl border-4 border-double border-black p-4 text-xl xs:p-8 sm:h-auto sm:py-24"
+            >
+              Living off the business with friends
+            </button>
+            <button
+              class="h-36 rounded-3xl border-4 border-double border-black p-4 text-xl xs:p-8 sm:h-auto sm:py-24"
+            >
+              I was just laid off
+            </button>
+          </div>
+          <div
+            class="flex flex-col justify-between gap-6 p-6 pt-0 sm:flex-row"
+          >
+            <button
+              class="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+            >
+              <span
+                class="flex items-center justify-center gap-2"
+              >
+                Try it myself
+                <svg
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 256 256"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M237.66,122.34l-96-96A8,8,0,0,0,128,32V72H48A16,16,0,0,0,32,88v80a16,16,0,0,0,16,16h80v40a8,8,0,0,0,13.66,5.66l96-96A8,8,0,0,0,237.66,122.34ZM144,204.69V176a8,8,0,0,0-8-8H48V88h88a8,8,0,0,0,8-8V51.31L220.69,128Z"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button
+              class="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
+            >
+              <span
+                class="flex items-center justify-center gap-2"
+              >
+                I know what I'm doing
+                <svg
+                  class="h-6 w-auto"
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 256 256"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M152,88a32,32,0,1,0-32-32A32,32,0,0,0,152,88Zm0-48a16,16,0,1,1-16,16A16,16,0,0,1,152,40Zm67.31,100.68c-.61.28-7.49,3.28-19.67,3.28-13.85,0-34.55-3.88-60.69-20a169.31,169.31,0,0,1-15.41,32.34,104.29,104.29,0,0,1,31.31,15.81C173.92,186.65,184,207.35,184,232a8,8,0,0,1-16,0c0-41.7-34.69-56.71-54.14-61.85-.55.7-1.12,1.41-1.69,2.1-19.64,23.8-44.25,36.18-71.63,36.18A92.29,92.29,0,0,1,31.2,208,8,8,0,0,1,32.8,192c25.92,2.58,48.47-7.49,67-30,12.49-15.14,21-33.61,25.25-47C86.13,92.35,61.27,111.63,61,111.84A8,8,0,1,1,51,99.36c1.5-1.2,37.22-29,89.51,6.57,45.47,30.91,71.93,20.31,72.18,20.19a8,8,0,1,1,6.63,14.56Z"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>,
+  "container": <div>
+    <div
+      class="relative"
+    >
+      <div
         class="flex flex-col sm:gap-8"
       >
         <h2
@@ -82,86 +170,6 @@ exports[`HomePage renders the onboarding form 1`] = `
             </span>
           </button>
         </div>
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div
-      class="flex flex-col sm:gap-8"
-    >
-      <h2
-        class="py-4 text-center text-3xl"
-      >
-        Howdy!
-      </h2>
-      <p
-        class="text-md mx-auto px-8 py-2 text-center text-lg sm:w-7/12"
-      >
-        This tool is built for the harsh financial realities we are all dealing with. Check out a sample financial runway, or try it for yourself!
-      </p>
-      <p
-        class="mx-auto px-6 py-2 text-center text-base sm:w-2/3"
-      >
-        Sh*t just got real. No one's financial future is certain. Look at a few scenarios we've already been through.
-      </p>
-      <div
-        class="grid content-stretch gap-6 p-6 sm:grid-cols-2"
-      >
-        <button
-          class="h-36 rounded-3xl border-4 border-double border-black p-4 text-xl xs:p-8 sm:h-auto sm:py-24"
-        >
-          Living off the business with friends
-        </button>
-        <button
-          class="h-36 rounded-3xl border-4 border-double border-black p-4 text-xl xs:p-8 sm:h-auto sm:py-24"
-        >
-          I was just laid off
-        </button>
-      </div>
-      <div
-        class="flex flex-col justify-between gap-6 p-6 pt-0 sm:flex-row"
-      >
-        <button
-          class="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
-        >
-          <span
-            class="flex items-center justify-center gap-2"
-          >
-            Try it myself
-            <svg
-              fill="currentColor"
-              height="1em"
-              viewBox="0 0 256 256"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M237.66,122.34l-96-96A8,8,0,0,0,128,32V72H48A16,16,0,0,0,32,88v80a16,16,0,0,0,16,16h80v40a8,8,0,0,0,13.66,5.66l96-96A8,8,0,0,0,237.66,122.34ZM144,204.69V176a8,8,0,0,0-8-8H48V88h88a8,8,0,0,0,8-8V51.31L220.69,128Z"
-              />
-            </svg>
-          </span>
-        </button>
-        <button
-          class="rounded-lg border-4 border-double border-black px-4 py-2 uppercase"
-        >
-          <span
-            class="flex items-center justify-center gap-2"
-          >
-            I know what I'm doing
-            <svg
-              class="h-6 w-auto"
-              fill="currentColor"
-              height="1em"
-              viewBox="0 0 256 256"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M152,88a32,32,0,1,0-32-32A32,32,0,0,0,152,88Zm0-48a16,16,0,1,1-16,16A16,16,0,0,1,152,40Zm67.31,100.68c-.61.28-7.49,3.28-19.67,3.28-13.85,0-34.55-3.88-60.69-20a169.31,169.31,0,0,1-15.41,32.34,104.29,104.29,0,0,1,31.31,15.81C173.92,186.65,184,207.35,184,232a8,8,0,0,1-16,0c0-41.7-34.69-56.71-54.14-61.85-.55.7-1.12,1.41-1.69,2.1-19.64,23.8-44.25,36.18-71.63,36.18A92.29,92.29,0,0,1,31.2,208,8,8,0,0,1,32.8,192c25.92,2.58,48.47-7.49,67-30,12.49-15.14,21-33.61,25.25-47C86.13,92.35,61.27,111.63,61,111.84A8,8,0,1,1,51,99.36c1.5-1.2,37.22-29,89.51,6.57,45.47,30.91,71.93,20.31,72.18,20.19a8,8,0,1,1,6.63,14.56Z"
-              />
-            </svg>
-          </span>
-        </button>
       </div>
     </div>
   </div>,

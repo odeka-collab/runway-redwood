@@ -103,7 +103,7 @@ function RunwayWizard() {
   }
 
   function scrollToTop() {
-    topRef.current.scrollIntoView({
+    topRef.current?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     })

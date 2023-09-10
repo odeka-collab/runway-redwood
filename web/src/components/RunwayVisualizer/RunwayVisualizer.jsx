@@ -317,7 +317,7 @@ function renderSegment(
   return { root, bar, text: { month, year } }
 }
 
-function renderAirplane({ display }) {
+export function renderAirplane({ display }) {
   const root = new Zdog.Anchor()
 
   const fuselage = new Zdog.Group()

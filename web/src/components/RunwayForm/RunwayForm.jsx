@@ -588,7 +588,7 @@ function Scenario({ index, display, watch }) {
         <TextFieldSet
           {...{
             name: `scenarios.${index}.name`,
-            // validation: { required: 'A scenario name is required' },
+            validation: { required: 'A scenario name is required' },
           }}
         />
       </div>
